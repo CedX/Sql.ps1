@@ -72,16 +72,19 @@ Describe "ColumnInfo" {
 
 	Context "GetValue" {
 		It "should return the value of the spcified property" {
-			$character = [Character]@{ LastName = "Belin" }
+			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
+			[ColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($character) | Should -BeExactly "Cédric"
 			[ColumnInfo]::new([Character].GetProperty("LastName")).GetValue($character) | Should -BeExactly "Belin"
 		}
 	}
 
 	Context "SetValue" {
 		It "should set the value of the spcified property" {
-			$character = [Character]@{ LastName = "Belin" }
-			[ColumnInfo]::new([Character].GetProperty("LastName")).SetValue($character, "New NAME")
-			$character.LastName | Should -BeExactly "New NAME"
+			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
+			[ColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($character, "Jeffrey")
+			[ColumnInfo]::new([Character].GetProperty("LastName")).SetValue($character, "Snover")
+			$character.FirstName | Should -BeExactly "Jeffrey"
+			$character.LastName | Should -BeExactly "Snover"
 		}
 	}
 }
