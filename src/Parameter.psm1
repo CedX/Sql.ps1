@@ -62,7 +62,7 @@ class Parameter {
 	#>
 	Parameter() {
 		$this.Name = "?"
-		$this.Value = $null
+		$this.Value = [DBNull]::Value
 	}
 
 	<#
@@ -72,8 +72,8 @@ class Parameter {
 		The parameter name.
 	#>
 	Parameter([string] $Name) {
-		$this.Name = $Name
-		$this.Value = $null
+		$this.Name = [Parameter]::NormalizeName($Name)
+		$this.Value = [DBNull]::Value
 	}
 
 	<#
@@ -85,8 +85,8 @@ class Parameter {
 		The parameter value.
 	#>
 	Parameter([string] $Name, [object] $Value) {
-		$this.Name = $Name
-		$this.Value = $Value
+		$this.Name = [Parameter]::NormalizeName($Name)
+		$this.Value = [Parameter]::NormalizeValue($Value)
 	}
 
 	<#
