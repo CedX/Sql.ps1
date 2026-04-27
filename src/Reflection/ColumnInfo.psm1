@@ -69,14 +69,14 @@ class ColumnInfo {
 		The property information providing the column metadata.
 	#>
 	ColumnInfo([PropertyInfo] $Property) {
-		$this.Property = $Property
+		$databaseGeneratedOption = [Attribute]::GetCustomAttribute($Property, [DatabaseGeneratedAttribute])?.DatabaseGeneratedOption ?? [DatabaseGeneratedOption]::None
 
-		$databaseGeneratedOption = [CustomAttributeExtensions]::GetCustomAttribute[DatabaseGeneratedAttribute]($Property)?.DatabaseGeneratedOption ?? [DatabaseGeneratedOption]::None
 		$this.CanRead = $Property.CanRead
 		$this.CanWrite = $Property.CanWrite
 		$this.IsComputed = $databaseGeneratedOption -ne [DatabaseGeneratedOption]::None
 		$this.IsIdentity = $databaseGeneratedOption -eq [DatabaseGeneratedOption]::Identity
-		$this.Name = [CustomAttributeExtensions]::GetCustomAttribute[ColumnAttribute]($Property)?.Name ?? $Property.Name
+		$this.Name = [Attribute]::GetCustomAttribute($Property, [ColumnAttribute])?.Name ?? $Property.Name
+		$this.Property = $Property
 		$this.Type = $Property.PropertyType
 
 		$this.IsNullable = ($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) `
