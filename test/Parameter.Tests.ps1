@@ -21,13 +21,13 @@ Describe "Parameter" {
 
 	Context "Value" {
 		It "should return the normalized value" {
-			[Parameter]::new("name", $null).Value | Should -Be ([DBNull]::Value)
-			[Parameter]::new("name", [DBNull]::Value).Value | Should -Be ([DBNull]::Value)
-			[Parameter]::new("name", 123).Value | Should -Be 123
-			[Parameter]::new("name", -123.456).Value | Should -Be -123.456
-			[Parameter]::new("name", "").Value | Should -Be ""
-			[Parameter]::new("name", "Foo").Value | Should -BeExactly "Foo"
-			[Parameter]::new("name", [datetime]::UnixEpoch).Value | Should -Be ([datetime]::UnixEpoch)
+			[Parameter]::new("Name", $null).Value | Should -Be ([DBNull]::Value)
+			[Parameter]::new("Name", [DBNull]::Value).Value | Should -Be ([DBNull]::Value)
+			[Parameter]::new("Name", 123).Value | Should -Be 123
+			[Parameter]::new("Name", -123.456).Value | Should -Be -123.456
+			[Parameter]::new("Name", "").Value | Should -Be ""
+			[Parameter]::new("Name", "Foo").Value | Should -BeExactly "Foo"
+			[Parameter]::new("Name", [datetime]::UnixEpoch).Value | Should -Be ([datetime]::UnixEpoch)
 		}
 	}
 }

@@ -1,4 +1,3 @@
-using namespace Belin.Sql
 
 <#
 .SYNOPSIS
@@ -8,7 +7,7 @@ using namespace Belin.Sql
 #>
 function Get-Mapper {
 	[CmdletBinding()]
-	[OutputType([Belin.Sql.Mapper])]
+	[OutputType([Mapper])]
 	param ()
 
 	[Mapper]::Instance

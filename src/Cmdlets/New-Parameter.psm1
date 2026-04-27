@@ -1,4 +1,3 @@
-using namespace Belin.Sql
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
 
@@ -10,7 +9,7 @@ using namespace System.Diagnostics.CodeAnalysis
 #>
 function New-Parameter {
 	[CmdletBinding()]
-	[OutputType([Belin.Sql.Parameter])]
+	[OutputType([Parameter])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The parameter name.
@@ -39,7 +38,7 @@ function New-Parameter {
 		[byte] $Scale
 	)
 
-	$parameter = [Belin.Sql.Parameter]::new($Name, $Value)
+	$parameter = [Parameter]::new($Name, $Value)
 	$parameter.DbType = $DbType
 	$parameter.Direction = $Direction
 	$parameter.Precision = $Precision

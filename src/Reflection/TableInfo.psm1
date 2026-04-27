@@ -51,7 +51,7 @@ class TableInfo {
 
 		$this.Columns = @{}
 		foreach ($property in $properties) {
-			$columnInfo = [ColumnInfo] $property
+			$columnInfo = [ColumnInfo]::new($property)
 			$this.Columns.$($columnInfo.Name) = $columnInfo
 		}
 

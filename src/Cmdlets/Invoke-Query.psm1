@@ -1,4 +1,3 @@
-using namespace Belin.Sql
 using namespace System.Data
 using namespace System.Dynamic
 
@@ -6,7 +5,7 @@ using namespace System.Dynamic
 .SYNOPSIS
 	An array of types representing the number, order, and type of the parameters of the underlying method to invoke.
 #>
-[Type[][]] $ParameterTypes = @(
+$ParameterTypes = @(
 	([IDbConnection], [string], [ParameterCollection], [QueryOptions]),
 	([IDbConnection], [string], [ParameterCollection], [string], [QueryOptions]),
 	([IDbConnection], [string], [ParameterCollection], [Nullable[ValueTuple[[string], [string]]]], [QueryOptions]),
