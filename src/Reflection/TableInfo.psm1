@@ -49,17 +49,16 @@ class TableInfo {
 			(-not [Attribute]::IsDefined($_, [NotMappedAttribute])) -and (($property.CanRead -and $property.CanWrite) -or ([Attribute]::IsDefined($_, [ColumnAttribute])))
 		}
 
-		$columnInfos = @{}
+		$this.Columns = @{}
 		foreach ($property in $properties) {
 			$columnInfo = [ColumnInfo] $property
-			$columnInfos.$($columnInfo.Name) = $columnInfo
+			$this.Columns.$($columnInfo.Name) = $columnInfo
 		}
 
-		$identityColumns = $columnInfos.Values.Where({ $_.IsIdentity }, "First", 2)
+		$identityColumns = $this.Columns.Values.Where({ $_.IsIdentity }, "First", 2)
 		$table = [Attribute]::GetCustomAttribute($Type, [TableAttribute])
 
-		$this.Columns = $columnInfos
-		$this.IdentityColumn = $identityColumns.Count -eq 1 ? $identityColumns[0] : ($columnInfos.Id ?? $null)
+		$this.IdentityColumn = $identityColumns.Count -eq 1 ? $identityColumns[0] : ($this.Columns.Id ?? $null)
 		$this.Name = ${table}?.Name ?? $Type.Name
 		$this.Schema = ${table}?.Schema
 		$this.Type = $Type
