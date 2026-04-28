@@ -15,39 +15,19 @@ class ParameterCollection: List[Parameter] {
 
 	<#
 	.SYNOPSIS
+		Creates a new parameter collection that has the specified initial capacity.
+	.PARAMETER Capacity
+		The number of parameters that the collection can initially store.
+	#>
+	ParameterCollection([int] $Capacity): base($Capacity) {}
+
+	<#
+	.SYNOPSIS
 		Creates a new parameter collection that contains the elements copied from the specified collection.
 	.PARAMETER Parameters
 		The collection whose elements are copied to the parameter collection.
 	#>
-	ParameterCollection([IEnumerable[Parameter]] $Parameters): base($Parameters) {}
-
-	<#
-	.SYNOPSIS
-		Creates a new parameter collection that contains the specified parameter.
-	.PARAMETER Name
-		The parameter name.
-	.PARAMETER Value
-		The parameter value.
-	#>
-	ParameterCollection([string] $Name, [object] $Value): base(@([Parameter]::new($Name, $Value))) {}
-
-	<#
-	.SYNOPSIS
-		Creates a new parameter collection from the specified array of positional parameters.
-	.PARAMETER Parameters
-		The array whose elements are copied to the parameter collection.
-	.OUTPUTS
-		The parameter collection corresponding to the specified array of positional parameters.
-	#>
-	static [ParameterCollection] op_Implicit([object[]] $Parameters) {
-		$parameterCollection = [ParameterCollection]::new($Parameters.Count)
-		for ($index = 0; $index -lt $Parameters.Count; $index++) {
-			$value = $Parameters[$index]
-			$parameterCollection.Add($value -is [Parameter] ? $value : [Parameter]::new("?$($index + 1)", $value))
-		}
-
-		return $parameterCollection
-	}
+	ParameterCollection([Parameter[]] $Parameters): base($Parameters) {}
 
 	<#
 	.SYNOPSIS
@@ -62,6 +42,24 @@ class ParameterCollection: List[Parameter] {
 		foreach ($key in $Parameters.Keys) {
 			$value = $Parameters.$key
 			$parameterCollection.Add($value -is [Parameter] ? $value : [Parameter]::new($key, $value))
+		}
+
+		return $parameterCollection
+	}
+
+	<#
+	.SYNOPSIS
+		Creates a new parameter collection from the specified array of positional parameters.
+	.PARAMETER Parameters
+		The array whose elements are copied to the parameter collection.
+	.OUTPUTS
+		The parameter collection corresponding to the specified array of positional parameters.
+	#>
+	static [ParameterCollection] op_Implicit([object[]] $Parameters) {
+		$parameterCollection = [ParameterCollection]::new($Parameters.Count)
+		for ($index = 0; $index -lt $Parameters.Count; $index++) {
+			$value = $Parameters[$index]
+			$parameterCollection.Add($value -is [Parameter] ? $value : [Parameter]::new("?$($index + 1)", $value))
 		}
 
 		return $parameterCollection

@@ -16,7 +16,7 @@ Describe "New-Parameter" {
 		@{ Name = ":baz"; Expected = ":baz" }
 		@{ Name = "`$qux"; Expected = "`$qux" }
 	) {
-		$parameter = New-SqlParameter $name
+		$parameter = New-Parameter $name
 		$parameter.Name | Should -BeExactly $expected
 	}
 
@@ -29,7 +29,7 @@ Describe "New-Parameter" {
 		@{ Value = "foo"; Expected = "foo" }
 		@{ Value = [datetime]::UnixEpoch; Expected = [datetime]::UnixEpoch }
 	) {
-		$parameter = New-SqlParameter "name" $value
+		$parameter = New-Parameter "name" $value
 		$parameter.Value | Should -BeExactly $expected
 	}
 }
