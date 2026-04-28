@@ -5,6 +5,20 @@ using module ../src/Parameter.psm1
 	Tests the features of the `Parameter` class.
 #>
 Describe "Parameter" {
+	Context "ImplicitConversion" {
+		[Parameter] $parameter = @()
+		$parameter.Name | Should -BeExactly "?"
+		$parameter.Value | Should -Be ([DBNull]::Value)
+
+		$parameter = , ":foo"
+		$parameter.Name | Should -BeExactly ":foo"
+		$parameter.Value | Should -Be ([DBNull]::Value)
+
+		$parameter = "foo", "bar"
+		$parameter.Name | Should -BeExactly "@foo"
+		$parameter.Value | Should -BeExactly "bar"
+	}
+
 	Context "Name" -ForEach @(
 		@{ Name = ""; Expected = "?" }
 		@{ Name = "?"; Expected = "?" }

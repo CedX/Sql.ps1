@@ -91,15 +91,14 @@ class Parameter {
 
 	<#
 	.SYNOPSIS
-		TODO ???? Creates a new parameter from the specified tuple.
+		Creates a new parameter from the specified tuple.
 	.PARAMETER Tuple
 		The tuple providing the parameter properties.
 	.OUTPUTS
 		The parameter corresponding to the specified tuple.
 	#>
 	static [Parameter] op_Implicit([object[]] $Tuple) {
-		# TODO
-		return [Parameter]::new($Tuple[0], $Tuple[1])
+		return [Parameter]::new($Tuple.Count -gt 0 ? $Tuple[0] : "?", $Tuple.Count -gt 1 ? $Tuple[1] : [DBNull]::Value)
 	}
 
 	<#
