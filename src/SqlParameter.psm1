@@ -11,7 +11,7 @@ $Prefixes = "?", "@", ":", "$"
 .SYNOPSIS
 	Represents a parameter of a parameterized SQL statement.
 #>
-class Parameter {
+class SqlParameter {
 
 	<#
 	.SYNOPSIS
@@ -60,7 +60,7 @@ class Parameter {
 	.SYNOPSIS
 		Creates a new parameter.
 	#>
-	Parameter() {
+	SqlParameter() {
 		$this.Name = "?"
 		$this.Value = [DBNull]::Value
 	}
@@ -73,9 +73,9 @@ class Parameter {
 	.PARAMETER Value
 		The parameter value.
 	#>
-	Parameter([string] $Name, [object] $Value) {
-		$this.Name = [Parameter]::NormalizeName($Name)
-		$this.Value = [Parameter]::NormalizeValue($Value)
+	SqlParameter([string] $Name, [object] $Value) {
+		$this.Name = [SqlParameter]::NormalizeName($Name)
+		$this.Value = [SqlParameter]::NormalizeValue($Value)
 	}
 
 	<#
@@ -86,8 +86,8 @@ class Parameter {
 	.OUTPUTS
 		The parameter corresponding to the specified tuple.
 	#>
-	static [Parameter] op_Implicit([object[]] $Parameter) {
-		return [Parameter]::new($Parameter[0] ?? "?", $Parameter[1] ?? [DBNull]::Value)
+	static [SqlParameter] op_Implicit([object[]] $Parameter) {
+		return [SqlParameter]::new($Parameter[0] ?? "?", $Parameter[1] ?? [DBNull]::Value)
 	}
 
 	<#
@@ -98,8 +98,8 @@ class Parameter {
 	.OUTPUTS
 		The parameter corresponding to the specified key/value pair.
 	#>
-	static [Parameter] op_Implicit([KeyValuePair[string, object]] $Parameter) {
-		return [Parameter]::new($Parameter.Key, $Parameter.Value)
+	static [SqlParameter] op_Implicit([KeyValuePair[string, object]] $Parameter) {
+		return [SqlParameter]::new($Parameter.Key, $Parameter.Value)
 	}
 
 	<#

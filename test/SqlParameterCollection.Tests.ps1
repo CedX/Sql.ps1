@@ -1,5 +1,5 @@
 using namespace System.Data
-using module ../src/Parameter.psm1
+using module ../src/SqlParameter.psm1
 using module ../src/ParameterCollection.psm1
 
 <#
@@ -11,7 +11,7 @@ Describe "ParameterCollection" {
 		$collection = [ParameterCollection]::new()
 		$collection | Should -BeNullOrEmpty
 
-		$collection = [ParameterCollection]::new([Parameter]@{ Name = "?1"; Value = 123; DbType = [DbType]::Int64 })
+		$collection = [ParameterCollection]::new(@([SqlParameter]@{ Name = "?1"; Value = 123; DbType = [DbType]::Int64 }))
 		$collection | Should -HaveCount 1
 
 		$parameter = $collection[0]
@@ -20,8 +20,8 @@ Describe "ParameterCollection" {
 		$parameter.DbType | Should -Be ([DbType]::Int64)
 
 		$collection = [ParameterCollection]::new(@(
-			[Parameter]::new("?1", 123)
-			[Parameter]@{ Name = "@Key"; Value = "Unique"; DbType = [DbType]::AnsiString }
+			[SqlParameter]::new("?1", 123)
+			[SqlParameter]@{ Name = "@Key"; Value = "Unique"; DbType = [DbType]::AnsiString }
 		))
 
 		$collection | Should -HaveCount 2

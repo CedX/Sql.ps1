@@ -1,4 +1,4 @@
-using module ../src/Parameter.psm1
+using module ../src/SqlParameter.psm1
 
 <#
 .SYNOPSIS
@@ -6,7 +6,7 @@ using module ../src/Parameter.psm1
 #>
 Describe "Parameter" {
 	Context "ImplicitConversion" {
-		[Parameter] $parameter = @()
+		[SqlParameter] $parameter = @()
 		$parameter.Name | Should -BeExactly "?"
 		$parameter.Value | Should -Be ([DBNull]::Value)
 
@@ -29,7 +29,7 @@ Describe "Parameter" {
 		@{ Name = "`$qux"; Expected = "`$qux" }
 	) {
 		It "should return the normalized name" {
-			[Parameter]::new($name, $null).Name | Should -BeExactly $expected
+			[SqlParameter]::new($name, $null).Name | Should -BeExactly $expected
 		}
 	}
 
@@ -43,7 +43,7 @@ Describe "Parameter" {
 			@{ Value = "Foo"; Expected = "Foo" }
 			@{ Value = [datetime]::UnixEpoch; Expected = [datetime]::UnixEpoch }
 		) {
-			[Parameter]::new("Name", $value).Value | Should -BeExactly $expected
+			[SqlParameter]::new("Name", $value).Value | Should -BeExactly $expected
 		}
 	}
 }

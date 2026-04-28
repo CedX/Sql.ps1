@@ -9,7 +9,7 @@ using namespace System.Diagnostics.CodeAnalysis
 #>
 function New-Parameter {
 	[CmdletBinding()]
-	[OutputType([Parameter])]
+	[OutputType([SqlParameter])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The parameter name.
@@ -38,7 +38,7 @@ function New-Parameter {
 		[byte] $Scale
 	)
 
-	$parameter = [Parameter]::new($Name, $Value)
+	$parameter = [SqlParameter]::new($Name, $Value)
 	$parameter.DbType = $DbType
 	$parameter.Direction = $Direction
 	$parameter.Precision = $Precision

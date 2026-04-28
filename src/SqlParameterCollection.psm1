@@ -1,11 +1,11 @@
 using namespace System.Collections.Generic
-using module ./Parameter.psm1
+using module ./SqlParameter.psm1
 
 <#
 .SYNOPSIS
 	Collects all parameters relevant to a parameterized SQL statement.
 #>
-class ParameterCollection: List[Parameter] {
+class ParameterCollection: List[SqlParameter] {
 
 	<#
 	.SYNOPSIS
@@ -27,7 +27,7 @@ class ParameterCollection: List[Parameter] {
 	.PARAMETER Parameters
 		The collection whose elements are copied to the parameter collection.
 	#>
-	ParameterCollection([Parameter[]] $Parameters): base($Parameters) {}
+	ParameterCollection([SqlParameter[]] $Parameters): base($Parameters) {}
 
 	<#
 	.SYNOPSIS
@@ -41,7 +41,7 @@ class ParameterCollection: List[Parameter] {
 		$parameterCollection = [ParameterCollection]::new($Parameters.Count)
 		foreach ($key in $Parameters.Keys) {
 			$value = $Parameters.$key
-			$parameterCollection.Add($value -is [Parameter] ? $value : [Parameter]::new($key, $value))
+			$parameterCollection.Add($value -is [SqlParameter] ? $value : [SqlParameter]::new($key, $value))
 		}
 
 		return $parameterCollection
@@ -59,7 +59,7 @@ class ParameterCollection: List[Parameter] {
 		$parameterCollection = [ParameterCollection]::new($Parameters.Count)
 		for ($index = 0; $index -lt $Parameters.Count; $index++) {
 			$value = $Parameters[$index]
-			$parameterCollection.Add($value -is [Parameter] ? $value : [Parameter]::new("?$($index + 1)", $value))
+			$parameterCollection.Add($value -is [SqlParameter] ? $value : [SqlParameter]::new("?$($index + 1)", $value))
 		}
 
 		return $parameterCollection
@@ -74,7 +74,7 @@ class ParameterCollection: List[Parameter] {
 		`$true` if this collection contains a parameter with the specified name, otherwise `$false`.
 	#>
 	[bool] Contains([string] $Name) {
-		$normalizedName = [Parameter]::NormalizeName($Name)
+		$normalizedName = [SqlParameter]::NormalizeName($Name)
 		return $this.Exists({ $_.Name -eq $normalizedName })
 	}
 
@@ -87,7 +87,7 @@ class ParameterCollection: List[Parameter] {
 		The index of the parameter with the specified name, or `-1` if not found.
 	#>
 	[int] IndexOf([string] $Name) {
-		$normalizedName = [Parameter]::NormalizeName($Name)
+		$normalizedName = [SqlParameter]::NormalizeName($Name)
 		return $this.FindIndex({ $_.Name -eq $normalizedName })
 	}
 
@@ -99,8 +99,8 @@ class ParameterCollection: List[Parameter] {
 	.OUTPUTS
 		The parameter with the specified name.
 	#>
-	[Parameter] Item([string] $Name) {
-		$normalizedName = [Parameter]::NormalizeName($Name)
+	[SqlParameter] Item([string] $Name) {
+		$normalizedName = [SqlParameter]::NormalizeName($Name)
 		$parameter = $this.Find({ $_.Name -eq $normalizedName })
 		if ($null -eq $parameter) { throw [ArgumentOutOfRangeException] $Name }
 		return $parameter
