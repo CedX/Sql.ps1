@@ -1,3 +1,4 @@
+using namespace System.Collections.Generic
 using namespace System.Data
 
 <#
@@ -80,13 +81,25 @@ class Parameter {
 	<#
 	.SYNOPSIS
 		Creates a new parameter from the specified tuple.
-	.PARAMETER Tuple
-		The tuple providing the parameter properties.
+	.PARAMETER Parameter
+		The tuple providing the parameter name and value.
 	.OUTPUTS
 		The parameter corresponding to the specified tuple.
 	#>
-	static [Parameter] op_Implicit([object[]] $Tuple) {
-		return [Parameter]::new($Tuple.Count -gt 0 ? $Tuple[0] : "?", $Tuple.Count -gt 1 ? $Tuple[1] : [DBNull]::Value)
+	static [Parameter] op_Implicit([object[]] $Parameter) {
+		return [Parameter]::new($Parameter[0] ?? "?", $Parameter[1] ?? [DBNull]::Value)
+	}
+
+	<#
+	.SYNOPSIS
+		Creates a new parameter from the specified key/value pair.
+	.PARAMETER Parameter
+		The key/value pair providing the parameter name and value.
+	.OUTPUTS
+		The parameter corresponding to the specified key/value pair.
+	#>
+	static [Parameter] op_Implicit([KeyValuePair[string, object]] $Parameter) {
+		return [Parameter]::new($Parameter.Key, $Parameter.Value)
 	}
 
 	<#
