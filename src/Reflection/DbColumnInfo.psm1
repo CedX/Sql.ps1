@@ -12,7 +12,7 @@ $NullabilityContext = [ThreadLocal[NullabilityInfoContext]]::new([Func[Nullabili
 .SYNOPSIS
 	Provides information about a database column.
 #>
-class ColumnInfo {
+class DbColumnInfo {
 
 	<#
 	.SYNOPSIS
@@ -68,7 +68,7 @@ class ColumnInfo {
 	.PARAMETER Property
 		The property information providing the column metadata.
 	#>
-	ColumnInfo([PropertyInfo] $Property) {
+	DbColumnInfo([PropertyInfo] $Property) {
 		$databaseGeneratedOption = [Attribute]::GetCustomAttribute($Property, [DatabaseGeneratedAttribute])?.DatabaseGeneratedOption ?? [DatabaseGeneratedOption]::None
 
 		$this.CanRead = $Property.CanRead

@@ -1,50 +1,50 @@
-using module ../../src/Reflection/ColumnInfo.psm1
+using module ../../src/Reflection/DbColumnInfo.psm1
 using module ../Fixtures/Character.psm1
 
 <#
 .SYNOPSIS
-	Tests the features of the `ColumnInfo` class.
+	Tests the features of the `DbColumnInfo` class.
 #>
-Describe "ColumnInfo" {
+Describe "DbColumnInfo" {
 	Context "CanRead" {
 		It "should return `$true if the property can be read" -ForEach @("FirstName", "FullName", "Gender", "Id") {
-			[ColumnInfo]::new([Character].GetProperty($_)).CanRead | Should -BeTrue
+			[DbColumnInfo]::new([Character].GetProperty($_)).CanRead | Should -BeTrue
 		}
 	}
 
 	Context "CanWrite" {
 		It "should return `$true if the property can be written" -ForEach @("FirstName", "FullName", "Gender", "Id") {
-			[ColumnInfo]::new([Character].GetProperty($_)).CanWrite | Should -BeTrue
+			[DbColumnInfo]::new([Character].GetProperty($_)).CanWrite | Should -BeTrue
 		}
 	}
 
 	Context "IsComputed" {
 		It "should return `$false if the property is not computed" -ForEach @("FirstName", "Gender") {
-			[ColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeFalse
+			[DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeFalse
 		}
 
 		It "should return `$true if the property is computed" -ForEach @("FullName", "Id") {
-			[ColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeTrue
+			[DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeTrue
 		}
 	}
 
 	Context "IsIdentity" {
 		It "should return `$false if the property is not an identity" -ForEach @("FirstName", "FullName", "Gender") {
-			[ColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeFalse
+			[DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeFalse
 		}
 
 		It "should return `$true if the property is an identity" -ForEach @("Id") {
-			[ColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeTrue
+			[DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeTrue
 		}
 	}
 
 	Context "IsNullable" {
 		It "should return `$false if the property is not nullable" -ForEach @("Gender", "Id") {
-			[ColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeFalse
+			[DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeFalse
 		}
 
 		It "should return `$true if the property is nullable" -ForEach @("FirstName", "FullName") {
-			[ColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeTrue
+			[DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeTrue
 		}
 	}
 
@@ -55,7 +55,7 @@ Describe "ColumnInfo" {
 			@{ Name = "Gender"; Expected = "gender" }
 			@{ Name = "Id"; Expected = "ID" }
 		) {
-			[ColumnInfo]::new([Character].GetProperty($name)).Name | Should -BeExactly $expected
+			[DbColumnInfo]::new([Character].GetProperty($name)).Name | Should -BeExactly $expected
 		}
 	}
 
@@ -66,23 +66,23 @@ Describe "ColumnInfo" {
 			@{ Name = "Gender"; Expected = [CharacterGender] }
 			@{ Name = "Id"; Expected = [int] }
 		) {
-			[ColumnInfo]::new([Character].GetProperty($name)).Type | Should -Be $expected
+			[DbColumnInfo]::new([Character].GetProperty($name)).Type | Should -Be $expected
 		}
 	}
 
 	Context "GetValue" {
 		It "should return the value of the spcified property" {
 			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
-			[ColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($character) | Should -BeExactly "Cédric"
-			[ColumnInfo]::new([Character].GetProperty("LastName")).GetValue($character) | Should -BeExactly "Belin"
+			[DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($character) | Should -BeExactly "Cédric"
+			[DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($character) | Should -BeExactly "Belin"
 		}
 	}
 
 	Context "SetValue" {
 		It "should set the value of the spcified property" {
 			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
-			[ColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($character, "Jeffrey")
-			[ColumnInfo]::new([Character].GetProperty("LastName")).SetValue($character, "Snover")
+			[DbColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($character, "Jeffrey")
+			[DbColumnInfo]::new([Character].GetProperty("LastName")).SetValue($character, "Snover")
 			$character.FirstName | Should -BeExactly "Jeffrey"
 			$character.LastName | Should -BeExactly "Snover"
 		}

@@ -1,12 +1,12 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
 using namespace System.Reflection
-using module ./ColumnInfo.psm1
+using module ./DbColumnInfo.psm1
 
 <#
 .SYNOPSIS
 	Provides information about a database table.
 #>
-class TableInfo {
+class DbTableInfo {
 
 	<#
 	.SYNOPSIS
@@ -18,7 +18,7 @@ class TableInfo {
 	.SYNOPSIS
 		The single identity column, if applicable.
 	#>
-	[ColumnInfo] $IdentityColumn
+	[DbColumnInfo] $IdentityColumn
 
 	<#
 	.SYNOPSIS
@@ -44,14 +44,14 @@ class TableInfo {
 	.PARAMETER Type
 		The type information providing the table metadata.
 	#>
-	TableInfo([Type] $Type) {
+	DbTableInfo([Type] $Type) {
 		$properties = $Type.GetProperties([BindingFlags]::Instance -bor [BindingFlags]::NonPublic -bor [BindingFlags]::Public).Where{
 			(-not [Attribute]::IsDefined($_, [NotMappedAttribute])) -and (($property.CanRead -and $property.CanWrite) -or ([Attribute]::IsDefined($_, [ColumnAttribute])))
 		}
 
 		$this.Columns = @{}
 		foreach ($property in $properties) {
-			$columnInfo = [ColumnInfo]::new($property)
+			$columnInfo = [DbColumnInfo]::new($property)
 			$this.Columns.$($columnInfo.Name) = $columnInfo
 		}
 
