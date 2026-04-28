@@ -22,7 +22,7 @@ function New-Command {
 
 		# The parameters of the SQL query.
 		[Parameter(Position = 2)]
-		[ParameterCollection] $Parameters = @(),
+		[SqlParameterCollection] $Parameters = @(),
 
 		# Value indicating how the command is interpreted.
 		[CommandType] $CommandType = [CommandType]::Text,

@@ -2,21 +2,23 @@ using module ../src/SqlParameter.psm1
 
 <#
 .SYNOPSIS
-	Tests the features of the `Parameter` class.
+	Tests the features of the `SqlParameter` class.
 #>
 Describe "Parameter" {
 	Context "ImplicitConversion" {
-		[SqlParameter] $parameter = @()
-		$parameter.Name | Should -BeExactly "?"
-		$parameter.Value | Should -Be ([DBNull]::Value)
+		It "should create a parameter from the specified tuple" {
+			[SqlParameter] $parameter = @()
+			$parameter.Name | Should -BeExactly "?"
+			$parameter.Value | Should -Be ([DBNull]::Value)
 
-		$parameter = , ":foo"
-		$parameter.Name | Should -BeExactly ":foo"
-		$parameter.Value | Should -Be ([DBNull]::Value)
+			$parameter = , ":foo"
+			$parameter.Name | Should -BeExactly ":foo"
+			$parameter.Value | Should -Be ([DBNull]::Value)
 
-		$parameter = "bar", "Baz"
-		$parameter.Name | Should -BeExactly "@bar"
-		$parameter.Value | Should -BeExactly "Baz"
+			$parameter = "bar", "Baz"
+			$parameter.Name | Should -BeExactly "@bar"
+			$parameter.Value | Should -BeExactly "Baz"
+		}
 	}
 
 	Context "Name" -ForEach @(

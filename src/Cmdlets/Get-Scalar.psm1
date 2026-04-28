@@ -4,7 +4,7 @@ using namespace System.Data
 .SYNOPSIS
 	An array of types representing the number, order, and type of the parameters of the underlying method to invoke.
 #>
-$ParameterTypes = [IDbConnection], [string], [ParameterCollection], [CommandOptions]
+$ParameterTypes = [IDbConnection], [string], [SqlParameterCollection], [CommandOptions]
 
 <#
 .SYNOPSIS
@@ -26,7 +26,7 @@ function Get-Scalar {
 
 		# The parameters of the SQL query.
 		[Parameter(Position = 2)]
-		[ParameterCollection] $Parameters = @(),
+		[SqlParameterCollection] $Parameters = @(),
 
 		# Value indicating how the command is interpreted.
 		[CommandType] $CommandType = [CommandType]::Text,

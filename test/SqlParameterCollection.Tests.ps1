@@ -1,61 +1,81 @@
 using namespace System.Data
 using module ../src/SqlParameter.psm1
-using module ../src/ParameterCollection.psm1
+using module ../src/SqlParameterCollection.psm1
 
 <#
 .SYNOPSIS
-	Tests the features of the `ParameterCollection` class.
+	Tests the features of the `SqlParameterCollection` class.
 #>
-Describe "ParameterCollection" {
+Describe "SqlParameterCollection" {
 	Context "Constructor" {
-		$collection = [ParameterCollection]::new()
-		$collection | Should -BeNullOrEmpty
+		It "should create an empty collection by default" {
+			$collection = [SqlParameterCollection]::new()
+			$collection | Should -BeNullOrEmpty
+		}
 
-		$collection = [ParameterCollection]::new(@([SqlParameter]@{ Name = "?1"; Value = 123; DbType = [DbType]::Int64 }))
-		$collection | Should -HaveCount 1
+		It "should create a collection from a single parameter" {
+			$collection = [SqlParameterCollection]::new([SqlParameter]@{ Name = "?1"; Value = 123; DbType = [DbType]::Int64 })
+			$collection | Should -HaveCount 1
 
-		$parameter = $collection[0]
-		$parameter.Name | Should -BeExactly "?1"
-		$parameter.Value | Should -Be 123
-		$parameter.DbType | Should -Be ([DbType]::Int64)
+			$parameter = $collection[0]
+			$parameter.Name | Should -BeExactly "?1"
+			$parameter.Value | Should -Be 123
+			$parameter.DbType | Should -Be ([DbType]::Int64)
+		}
 
-		$collection = [ParameterCollection]::new(@(
-			[SqlParameter]::new("?1", 123)
-			[SqlParameter]@{ Name = "@Key"; Value = "Unique"; DbType = [DbType]::AnsiString }
-		))
+		It "should create a collection from an array of parameters" {
+			$parameters = @(
+				[SqlParameter]::new("?1", 123)
+				[SqlParameter]@{ Name = "@Key"; Value = "Unique"; DbType = [DbType]::AnsiString }
+			)
 
-		$collection | Should -HaveCount 2
+			$collection = [SqlParameterCollection]::new($parameters)
+			$collection | Should -HaveCount 2
 
-		# $parameter = $collection[$collection.Count - 1]
-		# $parameter.Name | Should -BeExactly "@Key"
-		# $parameter.Value | Should -BeExactly "Unique"
-		# $parameter.DbType | Should -Be ([DbType]::AnsiString)
+			$parameter = $collection[$collection.Count - 1]
+			$parameter.Name | Should -BeExactly "@Key"
+			$parameter.Value | Should -BeExactly "Unique"
+			$parameter.DbType | Should -Be ([DbType]::AnsiString)
+		}
 	}
 
-	# Context "Contains" {
-	# 	$collection = new ParameterCollection("@Key")
-	# 	IsTrue($collection.Contains("Key"))
-	# 	IsTrue($collection.Contains("@Key"))
-	# 	IsFalse($collection.Contains("Foo"))
-	# 	IsFalse($collection.Contains("@Foo"))
-	# }
+	Context "Contains" {
+		It "should return `$true if the collection contains the specified parameter" {
+			$collection = [SqlParameterCollection]::new([SqlParameter]::new("@Key", $null))
+			$collection.Contains("Key") | Should -BeTrue
+			$collection.Contains("@Key") | Should -BeTrue
+		}
 
-	# Context "IndexOf" {
-	# 	$collection = new ParameterCollection(("?1", 123), ("@Key", "Unique"))
-	# 	AreEqual(1, $collection.IndexOf("Key"))
-	# 	AreEqual(1, $collection.IndexOf("@Key"))
-	# 	AreEqual(-1, $collection.IndexOf("Foo"))
-	# 	AreEqual(-1, $collection.IndexOf("@Foo"))
-	# }
+		It "should return `$false if the collection does not contain the specified parameter" {
+			$collection = [SqlParameterCollection]::new([SqlParameter]::new("@Key", $null))
+			$collection.Contains("Foo") | Should -BeFalse
+			$collection.Contains("@Foo") | Should -BeFalse
+		}
+	}
 
-	# Context "RemoveAt" {
-	# 	$collection = new ParameterCollection(("?1", 123), ("@Key", "Unique"))
-	# 	HasCount(2, $collection)
+	Context "IndexOf" {
+		It "should return the index if the parameter is found" {
+			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection.IndexOf("Key") | Should -Be 1
+			$collection.IndexOf("@Key") | Should -Be 1
+		}
 
-	# 	$collection.RemoveAt("Key")
-	# 	HasCount(1, $collection)
-	# 	Throws<ArgumentOutOfRangeException>(() => $collection.RemoveAt("Foo"))
-	# 	$collection.RemoveAt("?1")
-	# 	IsEmpty($collection)
-	# }
+		It "should return -1 if the parameter is not found" {
+			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection.IndexOf("Foo") | Should -Be -1
+			$collection.IndexOf("@Foo") | Should -Be -1
+		}
+	}
+
+	Context "RemoveAt" {
+		It "TODO" {
+			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection | Should -HaveCount 2
+			$collection.RemoveAt("Key")
+			$collection | Should -HaveCount 1
+			{ $collection.RemoveAt("Foo") } | Should -Throw
+			$collection.RemoveAt("?1")
+			$collection | Should -BeNullOrEmpty
+		}
+	}
 }

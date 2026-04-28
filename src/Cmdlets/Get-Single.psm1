@@ -5,7 +5,7 @@ using namespace System.Dynamic
 .SYNOPSIS
 	An array of types representing the number, order, and type of the parameters of the underlying method to invoke.
 #>
-$ParameterTypes = [IDbConnection], [string], [ParameterCollection], [CommandOptions]
+$ParameterTypes = [IDbConnection], [string], [SqlParameterCollection], [CommandOptions]
 
 <#
 .SYNOPSIS
@@ -27,7 +27,7 @@ function Get-Single {
 
 		# The parameters of the SQL query.
 		[Parameter(Position = 2)]
-		[ParameterCollection] $Parameters = @(),
+		[SqlParameterCollection] $Parameters = @(),
 
 		# The type of objects to return.
 		[Type] $As = [ExpandoObject],

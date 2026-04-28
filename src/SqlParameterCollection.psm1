@@ -5,13 +5,13 @@ using module ./SqlParameter.psm1
 .SYNOPSIS
 	Collects all parameters relevant to a parameterized SQL statement.
 #>
-class ParameterCollection: List[SqlParameter] {
+class SqlParameterCollection: List[SqlParameter] {
 
 	<#
 	.SYNOPSIS
 		Creates a new parameter collection.
 	#>
-	ParameterCollection(): base() {}
+	SqlParameterCollection(): base() {}
 
 	<#
 	.SYNOPSIS
@@ -19,7 +19,7 @@ class ParameterCollection: List[SqlParameter] {
 	.PARAMETER Capacity
 		The number of parameters that the collection can initially store.
 	#>
-	ParameterCollection([int] $Capacity): base($Capacity) {}
+	SqlParameterCollection([int] $Capacity): base($Capacity) {}
 
 	<#
 	.SYNOPSIS
@@ -27,7 +27,7 @@ class ParameterCollection: List[SqlParameter] {
 	.PARAMETER Parameters
 		The collection whose elements are copied to the parameter collection.
 	#>
-	ParameterCollection([SqlParameter[]] $Parameters): base($Parameters) {}
+	SqlParameterCollection([SqlParameter[]] $Parameters): base($Parameters) {}
 
 	<#
 	.SYNOPSIS
@@ -37,8 +37,8 @@ class ParameterCollection: List[SqlParameter] {
 	.OUTPUTS
 		The parameter collection corresponding to the specified hash table of named parameters.
 	#>
-	static [ParameterCollection] op_Implicit([hashtable] $Parameters) {
-		$parameterCollection = [ParameterCollection]::new($Parameters.Count)
+	static [SqlParameterCollection] op_Implicit([hashtable] $Parameters) {
+		$parameterCollection = [SqlParameterCollection]::new($Parameters.Count)
 		foreach ($key in $Parameters.Keys) {
 			$value = $Parameters.$key
 			$parameterCollection.Add($value -is [SqlParameter] ? $value : [SqlParameter]::new($key, $value))
@@ -55,8 +55,8 @@ class ParameterCollection: List[SqlParameter] {
 	.OUTPUTS
 		The parameter collection corresponding to the specified array of positional parameters.
 	#>
-	static [ParameterCollection] op_Implicit([object[]] $Parameters) {
-		$parameterCollection = [ParameterCollection]::new($Parameters.Count)
+	static [SqlParameterCollection] op_Implicit([object[]] $Parameters) {
+		$parameterCollection = [SqlParameterCollection]::new($Parameters.Count)
 		for ($index = 0; $index -lt $Parameters.Count; $index++) {
 			$value = $Parameters[$index]
 			$parameterCollection.Add($value -is [SqlParameter] ? $value : [SqlParameter]::new("?$($index + 1)", $value))
@@ -75,7 +75,7 @@ class ParameterCollection: List[SqlParameter] {
 	#>
 	[bool] Contains([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
-		return $this.Exists({ $_.Name -eq $normalizedName })
+		return $this.Exists({ param ($parameter) $parameter.Name -eq $normalizedName })
 	}
 
 	<#
@@ -88,7 +88,7 @@ class ParameterCollection: List[SqlParameter] {
 	#>
 	[int] IndexOf([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
-		return $this.FindIndex({ $_.Name -eq $normalizedName })
+		return $this.FindIndex({ param ($parameter) $parameter.Name -eq $normalizedName })
 	}
 
 	<#
@@ -101,9 +101,9 @@ class ParameterCollection: List[SqlParameter] {
 	#>
 	[SqlParameter] Item([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
-		$parameter = $this.Find({ $_.Name -eq $normalizedName })
-		if ($null -eq $parameter) { throw [ArgumentOutOfRangeException] $Name }
-		return $parameter
+		$parameterFound = $this.Find({ param ($parameter) $parameter.Name -eq $normalizedName })
+		if ($null -eq $parameterFound) { throw [ArgumentOutOfRangeException] $Name }
+		return $parameterFound
 	}
 
 	<#

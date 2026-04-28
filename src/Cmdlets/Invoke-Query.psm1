@@ -6,10 +6,10 @@ using namespace System.Dynamic
 	An array of types representing the number, order, and type of the parameters of the underlying method to invoke.
 #>
 $ParameterTypes = @(
-	([IDbConnection], [string], [ParameterCollection], [QueryOptions]),
-	([IDbConnection], [string], [ParameterCollection], [string], [QueryOptions]),
-	([IDbConnection], [string], [ParameterCollection], [Nullable[ValueTuple[[string], [string]]]], [QueryOptions]),
-	([IDbConnection], [string], [ParameterCollection], [Nullable[ValueTuple[[string], [string], [string]]]], [QueryOptions])
+	([IDbConnection], [string], [SqlParameterCollection], [QueryOptions]),
+	([IDbConnection], [string], [SqlParameterCollection], [string], [QueryOptions]),
+	([IDbConnection], [string], [SqlParameterCollection], [Nullable[ValueTuple[[string], [string]]]], [QueryOptions]),
+	([IDbConnection], [string], [SqlParameterCollection], [Nullable[ValueTuple[[string], [string], [string]]]], [QueryOptions])
 )
 
 <#
@@ -32,7 +32,7 @@ function Invoke-Query {
 
 		# The parameters of the SQL query.
 		[Parameter(Position = 2)]
-		[ParameterCollection] $Parameters = @(),
+		[SqlParameterCollection] $Parameters = @(),
 
 		# The type of objects to return.
 		[ValidateCount(1, 4)]
