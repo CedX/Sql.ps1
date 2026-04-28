@@ -29,7 +29,7 @@ Describe "Parameter" {
 		@{ Name = "`$qux"; Expected = "`$qux" }
 	) {
 		It "should return the normalized name" {
-			[Parameter]::new($name).Name | Should -BeExactly $expected
+			[Parameter]::new($name, $null).Name | Should -BeExactly $expected
 		}
 	}
 

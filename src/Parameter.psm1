@@ -1,5 +1,4 @@
 using namespace System.Data
-using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
@@ -62,17 +61,6 @@ class Parameter {
 	#>
 	Parameter() {
 		$this.Name = "?"
-		$this.Value = [DBNull]::Value
-	}
-
-	<#
-	.SYNOPSIS
-		Creates a new parameter.
-	.PARAMETER Name
-		The parameter name.
-	#>
-	Parameter([string] $Name) {
-		$this.Name = [Parameter]::NormalizeName($Name)
 		$this.Value = [DBNull]::Value
 	}
 
