@@ -14,9 +14,9 @@ Describe "Parameter" {
 		$parameter.Name | Should -BeExactly ":foo"
 		$parameter.Value | Should -Be ([DBNull]::Value)
 
-		$parameter = "foo", "bar"
-		$parameter.Name | Should -BeExactly "@foo"
-		$parameter.Value | Should -BeExactly "bar"
+		$parameter = "bar", "Baz"
+		$parameter.Name | Should -BeExactly "@bar"
+		$parameter.Value | Should -BeExactly "Baz"
 	}
 
 	Context "Name" -ForEach @(
@@ -34,14 +34,16 @@ Describe "Parameter" {
 	}
 
 	Context "Value" {
-		It "should return the normalized value" {
-			[Parameter]::new("Name", $null).Value | Should -Be ([DBNull]::Value)
-			[Parameter]::new("Name", [DBNull]::Value).Value | Should -Be ([DBNull]::Value)
-			[Parameter]::new("Name", 123).Value | Should -Be 123
-			[Parameter]::new("Name", -123.456).Value | Should -Be -123.456
-			[Parameter]::new("Name", "").Value | Should -Be ""
-			[Parameter]::new("Name", "Foo").Value | Should -BeExactly "Foo"
-			[Parameter]::new("Name", [datetime]::UnixEpoch).Value | Should -Be ([datetime]::UnixEpoch)
+		It "should return the normalized value" -ForEach @(
+			@{ Value = $null; Expected = [DBNull]::Value }
+			@{ Value = [DBNull]::Value; Expected = [DBNull]::Value }
+			@{ Value = 123; Expected = 123 }
+			@{ Value = -123.456; Expected = -123.456 }
+			@{ Value = ""; Expected = "" }
+			@{ Value = "Foo"; Expected = "Foo" }
+			@{ Value = [datetime]::UnixEpoch; Expected = [datetime]::UnixEpoch }
+		) {
+			[Parameter]::new("Name", $value).Value | Should -BeExactly $expected
 		}
 	}
 }
