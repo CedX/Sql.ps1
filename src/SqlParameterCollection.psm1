@@ -31,6 +31,19 @@ class SqlParameterCollection: List[SqlParameter] {
 
 	<#
 	.SYNOPSIS
+		Gets the parameter with the specified name.
+	.PARAMETER Name
+		The parameter name.
+	.OUTPUTS
+		The parameter with the specified name, or `$null` if not found.
+	#>
+	[SqlParameter] get_Item([string] $Name) {
+		$normalizedName = [SqlParameter]::NormalizeName($Name)
+		return $this.Find({ param ($parameter) $parameter.Name -eq $normalizedName })
+	}
+
+	<#
+	.SYNOPSIS
 		Creates a new parameter collection from the specified hash table of named parameters.
 	.PARAMETER Parameters
 		The hash table whose elements are copied to the parameter collection.
@@ -89,21 +102,6 @@ class SqlParameterCollection: List[SqlParameter] {
 	[int] IndexOf([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
 		return $this.FindIndex({ param ($parameter) $parameter.Name -eq $normalizedName })
-	}
-
-	<#
-	.SYNOPSIS
-		Gets the parameter with the specified name.
-	.PARAMETER Name
-		The parameter name.
-	.OUTPUTS
-		The parameter with the specified name.
-	#>
-	[SqlParameter] Item([string] $Name) {
-		$normalizedName = [SqlParameter]::NormalizeName($Name)
-		$parameterFound = $this.Find({ param ($parameter) $parameter.Name -eq $normalizedName })
-		if ($null -eq $parameterFound) { throw [ArgumentOutOfRangeException] $Name }
-		return $parameterFound
 	}
 
 	<#

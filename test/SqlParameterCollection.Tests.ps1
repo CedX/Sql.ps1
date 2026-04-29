@@ -53,6 +53,21 @@ Describe "SqlParameterCollection" {
 		}
 	}
 
+	Context "Indexer" {
+		It "should return the parameter with the specified name" {
+			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$parameter = $collection["Key"]
+			$parameter.Name | Should -BeExactly "@Key"
+			$parameter.Value | Should -BeExactly "Unique"
+			$collection[1] | Should -Be $parameter
+		}
+
+		It "should return `$null if the specified name does not exist" {
+			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection["@Foo"] | Should -BeNullOrEmpty
+		}
+	}
+
 	Context "IndexOf" {
 		It "should return the index if the parameter is found" {
 			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
@@ -68,14 +83,18 @@ Describe "SqlParameterCollection" {
 	}
 
 	Context "RemoveAt" {
-		It "TODO" {
+		It "should remove the parameter with the specified name" {
 			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
 			$collection | Should -HaveCount 2
 			$collection.RemoveAt("Key")
 			$collection | Should -HaveCount 1
-			{ $collection.RemoveAt("Foo") } | Should -Throw
 			$collection.RemoveAt("?1")
 			$collection | Should -BeNullOrEmpty
+		}
+
+		It "should throw an error if the specified name does not exist" {
+			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			{ $collection.RemoveAt("Foo") } | Should -Throw
 		}
 	}
 }
