@@ -136,8 +136,8 @@ class SqlParameter {
 	#>
 	hidden [IDbDataParameter] ToDbParameter([IDbCommand] $Command) {
 		$parameter = $Command.CreateParameter()
-		$parameter.ParameterName = $this.Name
-		$parameter.Value = $this.Value
+		$parameter.ParameterName = [SqlParameter]::NormalizeName($this.Name)
+		$parameter.Value = [SqlParameter]::NormalizeValue($this.Value)
 		if ($null -ne $this.DbType) { $parameter.DbType = $this.DbType.Value }
 		if ($null -ne $this.Direction) { $parameter.Direction = $this.Direction.Value }
 		if ($null -ne $this.Precision) { $parameter.Precision = $this.Precision.Value }

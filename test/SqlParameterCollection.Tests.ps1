@@ -62,9 +62,13 @@ Describe "SqlParameterCollection" {
 			$collection[1] | Should -Be $parameter
 		}
 
-		It "should return `$null if the specified name does not exist" {
+		It "should return `$null, or throw an error, if the specified name does not exist" {
 			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
 			$collection["@Foo"] | Should -BeNullOrEmpty
+
+			Set-StrictMode -Version Latest
+			{ $collection["@Foo"] } | Should -Throw
+			Set-StrictMode -Off
 		}
 	}
 

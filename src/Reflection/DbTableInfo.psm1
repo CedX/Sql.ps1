@@ -52,7 +52,7 @@ class DbTableInfo {
 		$this.Columns = @{}
 		foreach ($property in $properties) {
 			$columnInfo = [DbColumnInfo]::new($property)
-			$this.Columns.$($columnInfo.Name) = $columnInfo
+			$this.Columns[$columnInfo.Name] = $columnInfo
 		}
 
 		$identityColumns = $this.Columns.Values.Where({ $_.IsIdentity }, "First", 2)
