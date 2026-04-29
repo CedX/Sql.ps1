@@ -12,6 +12,7 @@ class Character {
 		The first name.
 	#>
 	[Column("firstName")]
+	[ValidateNotNull()]
 	[string] $FirstName = ""
 
 	<#
@@ -42,6 +43,7 @@ class Character {
 		The last name.
 	#>
 	[Column("lastName")]
+	[ValidateNotNull()]
 	[string] $LastName = ""
 }
 

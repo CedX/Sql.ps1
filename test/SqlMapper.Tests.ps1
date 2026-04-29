@@ -94,7 +94,7 @@ Describe "SqlMapper" {
 			$object = [SqlMapper]::Instance.CreateInstance([Character], $properties)
 			$object.FirstName | Should -BeExactly "Cédric"
 			$object.Gender | Should -Be ([CharacterGender]::Balrog)
-			$object.LastName | Should -BeNullOrEmpty
+			$object.LastName | Should -Be ""
 		}
 	}
 

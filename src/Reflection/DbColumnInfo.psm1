@@ -1,4 +1,5 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
+using namespace System.Management.Automation
 using namespace System.Reflection
 using namespace System.Threading
 
@@ -79,8 +80,8 @@ class DbColumnInfo {
 		$this.Property = $Property
 		$this.Type = $Property.PropertyType
 
-		$this.IsNullable = ($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) `
-			-or ($Script:NullabilityContext.Value.Create($Property).WriteState -ne [NullabilityState]::NotNull)
+		$this.IsNullable = (-not [Attribute]::IsDefined($Property, [ValidateNotNullAttribute])) -and `
+			(($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) -or ($Script:NullabilityContext.Value.Create($Property).WriteState -ne [NullabilityState]::NotNull))
 	}
 
 	<#
