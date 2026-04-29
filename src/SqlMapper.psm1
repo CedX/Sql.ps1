@@ -109,56 +109,40 @@ class SqlMapper {
 	# 	)
 	# }
 
-	# <#
-	# .SYNOPSIS
-	# 	Creates a new dynamic object from the specified dictionary.
-	# #>
-	# /// <param name="properties">A dictionary providing the properties to be set on the created object.</param>
-	# /// <returns>The newly created object.</returns>
-	# [psobject] CreateInstance(IDictionary<string, object?> properties) => CreateInstance[psobject](properties)
+	<#
+	.SYNOPSIS
+		Creates a new dynamic object from the specified hash table.
+	.PARAMETER Properties
+		A hash table providing the properties to be set on the created object.
+	.OUTPUTS
+		The newly created object.
+	#>
+	[psobject] CreateInstance([hashtable] $Properties) {
+		return $this.CreateInstance([psobject], $Properties)
+	}
 
-	# <#
-	# .SYNOPSIS
-	# 	Creates a new dynamic object from the specified hash table.
-	# #>
-	# /// <param name="properties">A hash table providing the properties to be set on the created object.</param>
-	# /// <returns>The newly created object.</returns>
-	# [psobject] CreateInstance(Hashtable properties) =>
-	# 	CreateInstance[psobject](properties.Cast<DictionaryEntry>().ToDictionary(entry => entry.Key.ToString() ?? "", entry => entry.Value))
+	<#
+	.SYNOPSIS
+		Creates a new object of a given type from the specified hash table.
+	.PARAMETER Type
+		The object type.
+	.PARAMETER Properties
+		A hash table providing the properties to be set on the created object.
+	.OUTPUTS
+		The newly created object.
+	#>
+	[object] CreateInstance([Type] $Type, [hashtable] $Properties) {
+		if ($Type -eq [psobject]) { return [pscustomobject] $Properties }
 
-	# <#
-	# .SYNOPSIS
-	# 	Creates a new object of a given type from the specified dictionary.
-	# #>
-	# /// <typeparam name="T">The object type.</typeparam>
-	# /// <param name="properties">A dictionary providing the properties to be set on the created object.</param>
-	# /// <returns>The newly created object.</returns>
-	# T CreateInstance<T>(IDictionary<string, object?> properties) {
-	# 	if (typeof(T) == [psobject]) {
-	# 		$expandoObject = (IDictionary<string, object?>) new ExpandoObject()
-	# 		foreach ($(key, value) in properties) expandoObject.Add(key, value)
-	# 		return (T) expandoObject
-	# 	}
+		$object = [Activator]::CreateInstance($Type)
+		$table = $this.GetTable($Type)
+		foreach ($name in $Properties.Keys.Where{ $table.Columns.ContainsKey($_) }) {
+			$column = $table.Columns[$name]
+			if ($column.CanWrite) { $column.SetValue($object, [SqlMapper]::ChangeType($Properties[$name], $column)) }
+		}
 
-	# 	$instance = Activator.CreateInstance<T>()
-	# 	$table = GetTable<T>()
-	# 	foreach ($name in properties.Keys.Where(table.Columns.ContainsKey)) {
-	# 		$column = table.Columns[name]
-	# 		if (column.CanWrite) column.SetValue(instance, ChangeType(properties[name], column))
-	# 	}
-
-	# 	return instance
-	# }
-
-	# <#
-	# .SYNOPSIS
-	# 	Creates a new object of a given type from the specified hash table.
-	# #>
-	# /// <typeparam name="T">The object type.</typeparam>
-	# /// <param name="properties">A hash table providing the properties to be set on the created object.</param>
-	# /// <returns>The newly created object.</returns>
-	# T CreateInstance<T>(Hashtable properties) =>
-	# 	CreateInstance<T>(properties.Cast<DictionaryEntry>().ToDictionary(entry => entry.Key.ToString() ?? "", entry => entry.Value))
+		return $object
+	}
 
 	# <#
 	# .SYNOPSIS

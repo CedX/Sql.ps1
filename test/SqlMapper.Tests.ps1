@@ -79,25 +79,24 @@ Describe "SqlMapper" {
 		}
 	}
 
-	# Context "CreateInstance" {
-	# 	$properties = new Dictionary<string, object?> {
-	# 		["CLASS"] = "Bard/minstrel",
-	# 		["firstName"] = "Cédric",
-	# 		["gender"] = CharacterGender.Balrog.ToString(),
-	# 		["lastName"] = $null
-	# 	}
+	Context "CreateInstance" {
+		It "should create a [PSObject] by default" {
+			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = [CharacterGender]::Balrog.ToString(); lastName = $null }
+			$object = [SqlMapper]::Instance.CreateInstance($properties)
+			$object.CLASS | Should -BeExactly "Bard/minstrel"
+			$object.firstName | Should -BeExactly "Cédric"
+			$object.gender | Should -BeExactly ([CharacterGender]::Balrog.ToString())
+			$object.lastName | Should -BeNullOrEmpty
+		}
 
-	# 	dynamic instance = [SqlMapper]::Instance.CreateInstance(properties)
-	# 	AreEqual("Bard/minstrel", instance.CLASS)
-	# 	AreEqual("Cédric", instance.firstName)
-	# 	AreEqual(CharacterGender.Balrog.ToString(), instance.gender)
-	# 	IsNull(instance.lastName)
-
-	# 	$character = [SqlMapper]::Instance.CreateInstance<Character>(properties)
-	# 	AreEqual("Cédric", character.FirstName)
-	# 	AreEqual(CharacterGender.Balrog, character.Gender)
-	# 	AreEqual("", character.LastName)
-	# }
+		It "should create an object of the specified type" {
+			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = [CharacterGender]::Balrog.ToString(); lastName = $null }
+			$object = [SqlMapper]::Instance.CreateInstance([Character], $properties)
+			$object.FirstName | Should -BeExactly "Cédric"
+			$object.Gender | Should -Be ([CharacterGender]::Balrog)
+			$object.LastName | Should -BeNullOrEmpty
+		}
+	}
 
 	Context "GetTable" {
 		It "should return detailed information about the database table associated with the specified entity class" {
