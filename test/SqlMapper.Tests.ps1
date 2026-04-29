@@ -99,21 +99,23 @@ Describe "SqlMapper" {
 	# 	AreEqual("", character.LastName)
 	# }
 
-	# Context "GetTable" {
-	# 	$table = [SqlMapper]::Instance.GetTable<Character>()
-	# 	AreEqual("main", table.Schema)
-	# 	AreEqual("Characters", table.Name)
-	# 	AreEqual(typeof(Character), table.Type)
+	Context "GetTable" {
+		It "should return detailed information about the database table associated with the specified entity class" {
+			$table = [SqlMapper]::Instance.GetTable([Character])
+			$table.Schema | Should -BeExactly "main"
+			$table.Name | Should -BeExactly "Characters"
+			$table.Type | Should -Be ([Character])
 
-	# 	HasCount(5, table.Columns.Keys)
-	# 	AreEqual(table.Columns["ID"], table.IdentityColumn)
-	# 	AreEqual(typeof(CharacterGender), table.Columns["gender"].Type)
-	# 	AreEqual(typeof(string), table.Columns["lastName"].Type)
+			$table.Columns.Keys | Should -HaveCount 5
+			$table.IdentityColumn | Should -Be $table.Columns.ID
+			$table.Columns.gender.Type | Should -Be ([CharacterGender])
+			$table.Columns.lastName.Type | Should -Be ([string])
 
-	# 	IsTrue(table.Columns["firstName"].CanWrite)
-	# 	IsTrue(table.Columns["fullName"].IsComputed)
-	# 	IsTrue(table.Columns["ID"].IsIdentity)
-	# }
+			$table.Columns.firstName.CanWrite | Should -BeTrue
+			$table.Columns.fullName.IsComputed | Should -BeTrue
+			$table.Columns.ID.IsIdentity | Should -BeTrue
+		}
+	}
 
 	Context "SplitOn" {
 		It "should return a hash table equivalent to the specified data row" {

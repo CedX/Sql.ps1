@@ -2,6 +2,7 @@ using namespace System.Collections.Concurrent
 using namespace System.Collections.Generic
 using namespace System.Data
 using namespace System.Runtime.CompilerServices
+using module ./Reflection/DbColumnInfo.psm1
 using module ./Reflection/DbTableInfo.psm1
 
 <#
@@ -47,7 +48,7 @@ class SqlMapper {
 	# /// <typeparam name="T">The object type.</typeparam>
 	# /// <param name="record">A data record providing the properties to be set on the created object.</param>
 	# /// <returns>The newly created object.</returns>
-	# T CreateInstance<T>(IDataRecord record) where T: new() => CreateInstance<T>(SplitOn(record).First())
+	# T CreateInstance<T>(IDataRecord record) => CreateInstance<T>(SplitOn(record).First())
 
 	# <#
 	# .SYNOPSIS
@@ -132,7 +133,7 @@ class SqlMapper {
 	# /// <typeparam name="T">The object type.</typeparam>
 	# /// <param name="properties">A dictionary providing the properties to be set on the created object.</param>
 	# /// <returns>The newly created object.</returns>
-	# T CreateInstance<T>(IDictionary<string, object?> properties) where T: new() {
+	# T CreateInstance<T>(IDictionary<string, object?> properties) {
 	# 	if (typeof(T) == [psobject]) {
 	# 		$expandoObject = (IDictionary<string, object?>) new ExpandoObject()
 	# 		foreach ($(key, value) in properties) expandoObject.Add(key, value)
@@ -156,7 +157,7 @@ class SqlMapper {
 	# /// <typeparam name="T">The object type.</typeparam>
 	# /// <param name="properties">A hash table providing the properties to be set on the created object.</param>
 	# /// <returns>The newly created object.</returns>
-	# T CreateInstance<T>(Hashtable properties) where T: new() =>
+	# T CreateInstance<T>(Hashtable properties) =>
 	# 	CreateInstance<T>(properties.Cast<DictionaryEntry>().ToDictionary(entry => entry.Key.ToString() ?? "", entry => entry.Value))
 
 	# <#
@@ -174,7 +175,7 @@ class SqlMapper {
 	# /// <typeparam name="T">The object type.</typeparam>
 	# /// <param name="reader">A data reader providing the properties to be set on the created objects.</param>
 	# /// <returns>An enumerable of newly created objects.</returns>
-	# IEnumerable<T> CreateInstances<T>(IDataReader reader) where T: new() {
+	# IEnumerable<T> CreateInstances<T>(IDataReader reader) {
 	# 	while (reader.Read()) yield return CreateInstance<T>(reader)
 	# 	reader.Close()
 	# }
@@ -224,22 +225,31 @@ class SqlMapper {
 	# 	reader.Close()
 	# }
 
-	# <#
-	# .SYNOPSIS
-	# 	Gets the table information associated with the specified type.
-	# #>
-	# /// <typeparam name="T">The type to inspect.</typeparam>
-	# /// <returns>The table information associated with the specified type.</returns>
-	# DbTableInfo GetTable<T>() where T: new() => mapping.GetOrAdd(typeof(T), type => new DbTableInfo(type))
+	<#
+	.SYNOPSIS
+		Gets the table information associated with the specified type.
+	.PARAMETER Type
+		The type to inspect.
+	.OUTPUTS
+		The table information associated with the specified type.
+	#>
+	[DbTableInfo] GetTable([Type] $Type) {
+		return [SqlMapper]::Mapping.GetOrAdd($Type, { param ($entityType) [DbTableInfo]::new($entityType) })
+	}
 
-	# <#
-	# .SYNOPSIS
-	# 	Converts the specified object into an equivalent value of the specified type.
-	# #>
-	# /// <param name="value">The object to convert.</param>
-	# /// <param name="column">The column providing the type of object to return.</param>
-	# /// <returns>The value of the given type corresponding to the specified object.</returns>
-	# hidden static object? ChangeType(object? value, DbColumnInfo column) => ChangeType(value, column.Type, column.IsNullable)
+	<#
+	.SYNOPSIS
+		Converts the specified object into an equivalent value of the specified type.
+	.PARAMETER Value
+		The object to convert.
+	.PARAMETER Column
+		The column providing the type of object to return.
+	.OUTPUTS
+		The value of the given type corresponding to the specified object.
+	#>
+	hidden static [object] ChangeType([object] $Value, [DbColumnInfo] $Column) {
+		return [SqlMapper]::ChangeType($Value, $Column.Type, $Column.IsNullable)
+	}
 
 	<#
 	.SYNOPSIS
