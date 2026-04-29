@@ -19,76 +19,72 @@ Describe "SqlMapper" {
 		)
 	}
 
-	<#
-	.SYNOPSIS
-		The test data used by the `ChangeType` method.
-	#>
-	# hidden static IEnumerable<object?[]> ChangeTypeData => [
-	# 	[null, typeof(bool), false, false],
-	# 	[null, typeof(bool?), true, null],
-	# 	[0, typeof(bool), false, false],
-	# 	[0, typeof(bool?), true, false],
-	# 	[1, typeof(bool), false, true],
-	# 	[1, typeof(bool?), true, true],
-	# 	["false", typeof(bool), false, false],
-	# 	["true", typeof(bool), false, true],
+	Context "ChangeType" {
+		It "convert the specified value to an object of the given type" -ForEach @(
+			@{ Value = $null; ConversionType = [bool]; IsNullable = $false; Expected = $false }
+			@{ Value = $null; ConversionType = [Nullable[bool]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [bool]; IsNullable = $false; Expected = $false }
+			@{ Value = 0; ConversionType = [Nullable[bool]]; IsNullable = $true; Expected = $false }
+			@{ Value = 1; ConversionType = [bool]; IsNullable = $false; Expected = $true }
+			@{ Value = 1; ConversionType = [Nullable[bool]]; IsNullable = $true; Expected = $true }
+			@{ Value = "false"; ConversionType = [bool]; IsNullable = $false; Expected = $false }
+			@{ Value = "true"; ConversionType = [bool]; IsNullable = $false; Expected = $true }
 
-	# 	[null, typeof(char), false, char.MinValue],
-	# 	[null, typeof(char?), true, null],
-	# 	[0, typeof(char), false, char.MinValue],
-	# 	[65_535, typeof(char?), true, char.MaxValue],
-	# 	[97, typeof(char), false, 'a'],
-	# 	[98, typeof(char?), true, 'b'],
-	# 	["a", typeof(char), false, 'a'],
-	# 	["b", typeof(char?), true, 'b'],
+			@{ Value = $null; ConversionType = [char]; IsNullable = $false; Expected = [char]::MinValue }
+			@{ Value = $null; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [char]; IsNullable = $false; Expected = [char]::MinValue }
+			@{ Value = 65535; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = [char]::MaxValue }
+			@{ Value = 97; ConversionType = [char]; IsNullable = $false; Expected = 'a' }
+			@{ Value = 98; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = 'b' }
+			@{ Value = "a"; ConversionType = [char]; IsNullable = $false; Expected = 'a' }
+			@{ Value = "b"; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = 'b' }
 
-	# 	[null, typeof(DateTime), false, DateTime.MinValue],
-	# 	[null, typeof(DateTime?), true, null],
-	# 	[DateTime.MaxValue, typeof(DateTime), false, DateTime.MaxValue],
-	# 	[DateTime.UnixEpoch, typeof(DateTime?), true, DateTime.UnixEpoch],
-	# 	[new DateTime(2025, 6, 7, 10, 45, 1), typeof(DateTime), false, new DateTime(2025, 6, 7, 10, 45, 1)],
-	# 	[new DateTime(2026, 1, 31), typeof(DateTime?), true, new DateTime(2026, 1, 31)],
-	# 	["2025-06-07 10:45:01", typeof(DateTime), false, new DateTime(2025, 6, 7, 10, 45, 1)],
-	# 	["2025-06-07T10:45:01", typeof(DateTime?), true, new DateTime(2025, 6, 7, 10, 45, 1)],
+			@{ Value = $null; ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::MinValue }
+			@{ Value = $null; ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = $null }
+			@{ Value = [datetime]::MaxValue; ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::MaxValue }
+			@{ Value = [datetime]::UnixEpoch; ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = [datetime]::UnixEpoch }
+			@{ Value = [datetime]::new(2025, 6, 7, 10, 45, 1); ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::new(2025, 6, 7, 10, 45, 1) }
+			@{ Value = [datetime]::new(2026, 1, 31); ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = [datetime]::new(2026, 1, 31) }
+			@{ Value = "2025-06-07 10:45:01"; ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::new(2025, 6, 7, 10, 45, 1) }
+			@{ Value = "2025-06-07T10:45:01"; ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = [datetime]::new(2025, 6, 7, 10, 45, 1) }
 
-	# 	[null, typeof(DayOfWeek), false, DayOfWeek.Sunday],
-	# 	[null, typeof(DayOfWeek?), true, null],
-	# 	[0, typeof(DayOfWeek), false, DayOfWeek.Sunday],
-	# 	[1, typeof(DayOfWeek?), true, DayOfWeek.Monday],
-	# 	[5, typeof(DayOfWeek), false, DayOfWeek.Friday],
-	# 	[6, typeof(DayOfWeek?), true, DayOfWeek.Saturday],
-	# 	["sunday", typeof(DayOfWeek), false, DayOfWeek.Sunday],
-	# 	["friday", typeof(DayOfWeek?), true, DayOfWeek.Friday],
+			@{ Value = $null; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Sunday }
+			@{ Value = $null; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Sunday }
+			@{ Value = 1; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = [DayOfWeek]::Monday }
+			@{ Value = 5; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Friday }
+			@{ Value = 6; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = [DayOfWeek]::Saturday }
+			@{ Value = "sunday"; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Sunday }
+			@{ Value = "friday"; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = [DayOfWeek]::Friday }
 
-	# 	[null, typeof(double), false, 0.0],
-	# 	[null, typeof(double?), true, null],
-	# 	[0, typeof(double), false, 0.0],
-	# 	[0, typeof(double?), true, 0.0],
-	# 	[123, typeof(double), false, 123.0],
-	# 	[-123.456, typeof(double?), true, -123.456],
-	# 	["123", typeof(double), false, 123.0],
-	# 	["-123.456", typeof(double?), true, -123.456],
+			@{ Value = $null; ConversionType = [double]; IsNullable = $false; Expected = 0.0 }
+			@{ Value = $null; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [double]; IsNullable = $false; Expected = 0.0 }
+			@{ Value = 0; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = 0.0 }
+			@{ Value = 123; ConversionType = [double]; IsNullable = $false; Expected = 123.0 }
+			@{ Value = -123.456; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = -123.456 }
+			@{ Value = "123"; ConversionType = [double]; IsNullable = $false; Expected = 123.0 }
+			@{ Value = "-123.456"; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = -123.456 }
 
-	# 	[null, typeof(int), false, 0],
-	# 	[null, typeof(int?), true, null],
-	# 	[0, typeof(int), false, 0],
-	# 	[0, typeof(int?), true, 0],
-	# 	[123, typeof(int), false, 123],
-	# 	[-123.456, typeof(int?), true, -123],
-	# 	["123", typeof(int), false, 123],
-	# 	["-123", typeof(int?), true, -123]
-	# ]
-
-	# [TestMethod, DynamicData(nameof(ChangeTypeData))]
-	# Context "ChangeType(object? value, Type conversionType, bool isNullable, object? expected) =>
-	# 	AreEqual(expected, [SqlMapper]::ChangeType(value, conversionType, isNullable))
+			@{ Value = $null; ConversionType = [int]; IsNullable = $false; Expected = 0 }
+			@{ Value = $null; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [int]; IsNullable = $false; Expected = 0 }
+			@{ Value = 0; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = 0 }
+			@{ Value = 123; ConversionType = [int]; IsNullable = $false; Expected = 123 }
+			@{ Value = -123.456; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = -123 }
+			@{ Value = "123"; ConversionType = [int]; IsNullable = $false; Expected = 123 }
+			@{ Value = "-123"; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = -123 }
+		) {
+			[SqlMapper]::ChangeType($value, $conversionType, $isNullable) | Should -BeExactly $expected
+		}
+	}
 
 	# Context "CreateInstance" {
 	# 	$properties = new Dictionary<string, object?> {
 	# 		["CLASS"] = "Bard/minstrel",
 	# 		["firstName"] = "Cédric",
 	# 		["gender"] = CharacterGender.Balrog.ToString(),
-	# 		["lastName"] = null
+	# 		["lastName"] = $null
 	# 	}
 
 	# 	dynamic instance = [SqlMapper]::Instance.CreateInstance(properties)
