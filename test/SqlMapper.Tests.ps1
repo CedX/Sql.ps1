@@ -81,7 +81,7 @@ Describe "SqlMapper" {
 
 	Context "CreateInstance" {
 		It "should create a [PSObject] by default" {
-			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = [CharacterGender]::Balrog.ToString(); lastName = $null }
+			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$object = [SqlMapper]::Instance.CreateInstance($properties)
 			$object.GetType().FullName | Should -BeExactly "System.Management.Automation.PSCustomObject"
 			$object.CLASS | Should -BeExactly "Bard/minstrel"
@@ -91,7 +91,7 @@ Describe "SqlMapper" {
 		}
 
 		It "should create an object of the specified type" {
-			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = [CharacterGender]::Balrog.ToString(); lastName = $null }
+			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$object = [SqlMapper]::Instance.CreateInstance([Character], $properties)
 			$object.GetType().Name | Should -BeExactly "Character"
 			$object.FirstName | Should -BeExactly "Cédric"

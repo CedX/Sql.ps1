@@ -1,3 +1,4 @@
+using module ../SqlMapper.psm1
 
 <#
 .SYNOPSIS
@@ -7,8 +8,8 @@
 #>
 function Get-Mapper {
 	[CmdletBinding()]
-	[OutputType([Mapper])]
+	[OutputType([SqlMapper])]
 	param ()
 
-	[Mapper]::Instance
+	[SqlMapper]::Instance
 }
