@@ -16,6 +16,8 @@ jobs:
           Invoke-WebRequest "https://aka.ms/install-powershell.ps1" -OutFile Install-PowerShell.ps1
           ./Install-PowerShell.ps1
           Add-Content $Env:GITHUB_PATH "$Env:LOCALAPPDATA\Microsoft\powershell"
+      - name: Set up SQL Server
+        run: winget install --accept-package-agreements --disable-interactivity --id Microsoft.SQLServer.2025.Express
       - name: Install dependencies
         run: ./Invoke.ps1 Install
       - name: Run tests
