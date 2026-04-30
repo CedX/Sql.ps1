@@ -24,7 +24,7 @@ function Publish-Object {
 		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
 
-		# The transaction to use, if any.
+		# The transaction within which the command executes.
 		[IDbTransaction] $Transaction
 	)
 

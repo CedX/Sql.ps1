@@ -28,6 +28,7 @@ function Get-First {
 
 		# The parameters of the SQL query.
 		[Parameter(Position = 2)]
+		[ValidateNotNull()]
 		[SqlParameterCollection] $Parameters = @(),
 
 		# The type of objects to return.
@@ -40,7 +41,7 @@ function Get-First {
 		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
 
-		# The transaction to use, if any.
+		# The transaction within which the command executes.
 		[IDbTransaction] $Transaction
 	)
 

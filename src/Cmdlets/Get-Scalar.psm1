@@ -27,6 +27,7 @@ function Get-Scalar {
 
 		# The parameters of the SQL query.
 		[Parameter(Position = 2)]
+		[ValidateNotNull()]
 		[SqlParameterCollection] $Parameters = @(),
 
 		# Value indicating how the command is interpreted.
@@ -36,7 +37,7 @@ function Get-Scalar {
 		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
 
-		# The transaction to use, if any.
+		# The transaction within which the command executes.
 		[IDbTransaction] $Transaction
 	)
 
