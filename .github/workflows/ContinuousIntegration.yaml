@@ -11,13 +11,15 @@ jobs:
     steps:
       - name: Fetch sources
         uses: actions/checkout@v6
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10
       - name: Set up PowerShell
         run: |
           Invoke-WebRequest "https://aka.ms/install-powershell.ps1" -OutFile Install-PowerShell.ps1
           ./Install-PowerShell.ps1
           Add-Content $Env:GITHUB_PATH "$Env:LOCALAPPDATA\Microsoft\powershell"
-      - name: Set up SQL Server
-        run: winget install --accept-package-agreements --disable-interactivity --id Microsoft.SQLServer.2025.Developer --override "/ACTION=Install /ENU /FEATURES=SQLEngine /IACCEPTSQLSERVERLICENSETERMS /QUIET /SECURITYMODE=SQL /SUPPRESSPRIVACYSTATEMENTNOTICE /TCPENABLED=1" --source winget
       - name: Install dependencies
         run: ./Invoke.ps1 Install
       - name: Run tests
