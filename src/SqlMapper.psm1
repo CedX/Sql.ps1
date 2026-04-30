@@ -152,13 +152,24 @@ class SqlMapper {
 	# /// <returns>An enumerable of newly created objects.</returns>
 	# IEnumerable[psobject] CreateInstances(IDataReader reader) => CreateInstances[psobject](reader)
 
-	# <#
-	# .SYNOPSIS
-	# 	Creates new objects of the given type from the specified data reader.
-	# #>
-	# /// <typeparam name="T">The object type.</typeparam>
-	# /// <param name="reader">A data reader providing the properties to be set on the created objects.</param>
-	# /// <returns>An enumerable of newly created objects.</returns>
+	<#
+	.SYNOPSIS
+		Creates new objects of the given type from the specified data reader.
+	.PARAMETER Type
+		The object type.
+	.PARAMETER Reader
+		A data reader providing the properties to be set on the created objects.
+	.OUTPUTS
+		An enumerable of newly created objects.
+	#>
+	[object[]] CreateInstances([Type] $Type, [IDataReader] $Reader) {
+		$objects = [List[object]]::new()
+		while ($Reader.Read()) { $objects.Add($this.CreateInstance($Type, $Reader)) }
+		$Reader.Close()
+		return $objects
+	}
+
+	# TODO !!!!
 	# IEnumerable<T> CreateInstances<T>(IDataReader reader) {
 	# 	while (reader.Read()) yield return CreateInstance<T>(reader)
 	# 	reader.Close()

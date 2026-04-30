@@ -4,7 +4,7 @@
 #>
 Describe "New-Parameter" {
 	BeforeAll {
-		. "$PSScriptRoot/BeforeAll.ps1"
+		Import-Module "$PSScriptRoot/../../Sql.psd1"
 	}
 
 	It "should normalize the parameter name" -ForEach @(
@@ -16,7 +16,7 @@ Describe "New-Parameter" {
 		@{ Name = ":baz"; Expected = ":baz" }
 		@{ Name = "`$qux"; Expected = "`$qux" }
 	) {
-		$parameter = New-Parameter $name
+		$parameter = New-SqlParameter $name
 		$parameter.Name | Should -BeExactly $expected
 	}
 
@@ -26,10 +26,10 @@ Describe "New-Parameter" {
 		@{ Value = 123; Expected = 123 }
 		@{ Value = -123.456; Expected = -123.456 }
 		@{ Value = ""; Expected = "" }
-		@{ Value = "foo"; Expected = "foo" }
+		@{ Value = "Foo"; Expected = "Foo" }
 		@{ Value = [datetime]::UnixEpoch; Expected = [datetime]::UnixEpoch }
 	) {
-		$parameter = New-Parameter "name" $value
+		$parameter = New-SqlParameter "Name" $value
 		$parameter.Value | Should -BeExactly $expected
 	}
 }

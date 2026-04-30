@@ -1,5 +1,6 @@
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
+using module ../SqlParameter.psm1
 
 <#
 .SYNOPSIS
@@ -23,19 +24,19 @@ function New-Parameter {
 		[object] $Value,
 
 		# Value indicating whether this parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
-		[ParameterDirection] $Direction,
+		[Nullable[ParameterDirection]] $Direction,
 
 		# The database type of this parameter.
-		[DbType] $DbType,
+		[Nullable[DbType]] $DbType,
 
 		# The maximum size of this parameter, in bytes.
-		[int] $Size,
+		[Nullable[int]] $Size,
 
 		# Indicates the precision of numeric parameters.
-		[byte] $Precision,
+		[Nullable[byte]] $Precision,
 
 		# Indicates the scale of numeric parameters.
-		[byte] $Scale
+		[Nullable[byte]] $Scale
 	)
 
 	$parameter = [SqlParameter]::new($Name, $Value)

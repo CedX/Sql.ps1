@@ -39,11 +39,11 @@ Describe "DbColumnInfo" {
 	}
 
 	Context "IsNullable" {
-		It "should return `$false if the property is not nullable" -ForEach @("Gender", "Id") {
+		It "should return `$false if the property is not nullable" -ForEach @("FirstName", "Gender", "Id") {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeFalse
 		}
 
-		It "should return `$true if the property is nullable" -ForEach @("FirstName", "FullName") {
+		It "should return `$true if the property is nullable" -ForEach @("FullName") {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeTrue
 		}
 	}

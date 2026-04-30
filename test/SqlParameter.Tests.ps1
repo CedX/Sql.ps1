@@ -32,16 +32,16 @@ Describe "Parameter" {
 		}
 	}
 
-	Context "Name" -ForEach @(
-		@{ Name = ""; Expected = "?" }
-		@{ Name = "?"; Expected = "?" }
-		@{ Name = "?1"; Expected = "?1" }
-		@{ Name = "foo"; Expected = "@foo" }
-		@{ Name = "@bar"; Expected = "@bar" }
-		@{ Name = ":baz"; Expected = ":baz" }
-		@{ Name = "`$qux"; Expected = "`$qux" }
-	) {
-		It "should return the normalized name" {
+	Context "Name" {
+		It "should return the normalized name" -ForEach @(
+			@{ Name = ""; Expected = "?" }
+			@{ Name = "?"; Expected = "?" }
+			@{ Name = "?1"; Expected = "?1" }
+			@{ Name = "foo"; Expected = "@foo" }
+			@{ Name = "@bar"; Expected = "@bar" }
+			@{ Name = ":baz"; Expected = ":baz" }
+			@{ Name = "`$qux"; Expected = "`$qux" }
+		) {
 			[SqlParameter]::new($name, $null).Name | Should -BeExactly $expected
 		}
 	}
