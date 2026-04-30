@@ -16,7 +16,7 @@ Describe "New-Parameter" {
 		@{ Name = ":baz"; Expected = ":baz" }
 		@{ Name = "`$qux"; Expected = "`$qux" }
 	) {
-		$parameter = New-SqlParameter $name
+		$parameter = New-SqlParameter $name $null
 		$parameter.Name | Should -BeExactly $expected
 	}
 
