@@ -64,8 +64,17 @@ class SqlCommand {
 		$this.Text = $Text
 	}
 
-	# TODO ??? Implicit cast from string?
-	# static [SqlCommand] op_Implicit([string] $Text)
+	<#
+	.SYNOPSIS
+		Creates a new command from the specified text.
+	.PARAMETER Parameter
+		The text providing the SQL statement.
+	.OUTPUTS
+		The command corresponding to the specified text.
+	#>
+	static [SqlCommand] op_Implicit([string] $Text) {
+		return [SqlCommand]::new($Text)
+	}
 
 	<#
 	.SYNOPSIS
