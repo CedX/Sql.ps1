@@ -14,6 +14,7 @@ function New-ParameterCollection {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The collection whose elements are copied to the parameter collection.
+		[ValidateNotNull()]
 		[SqlParameter[]] $Parameters = @()
 	)
 

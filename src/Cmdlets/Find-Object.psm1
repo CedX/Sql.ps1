@@ -23,6 +23,7 @@ function Find-Object {
 		[object] $Id,
 
 		# The list of columns to select. By default, all columns.
+		[ValidateNotNull()]
 		[string[]] $Columns = @(),
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
