@@ -93,7 +93,7 @@ Describe "SqlMapper" {
 		It "should create an object of the specified type" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$object = [SqlMapper]::Instance.CreateInstance([Character], $properties)
-			$object.GetType().Name | Should -BeExactly "Character"
+			$object.GetType() | Should -Be ([Character])
 			$object.FirstName | Should -BeExactly "Cédric"
 			$object.Gender | Should -Be ([CharacterGender]::Balrog)
 			$object.LastName | Should -Be ""
