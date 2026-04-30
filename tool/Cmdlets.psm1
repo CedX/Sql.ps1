@@ -2,6 +2,21 @@ using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
+	Builds the .NET solution and all of its dependencies.
+#>
+function Build-DotNetSolution {
+	param (
+		# The configuration to use for generating the project.
+		[Parameter(Position = 0)]
+		[string] $Configuration
+	)
+
+	$argumentList = $Configuration ? "--configuration", $Configuration : @()
+	dotnet build @argumentList
+}
+
+<#
+.SYNOPSIS
 	Creates a new Git tag.
 #>
 function New-GitTag {
@@ -33,6 +48,29 @@ function Publish-PSGalleryModule {
 	New-Item $output -ItemType Directory | Out-Null
 	Compress-PSResource $root/var/PSModule $output
 	foreach ($package in Get-Item $output/*.nupkg) { Publish-PSResource -ApiKey $Env:PSGALLERY_API_KEY -NupkgPath $package -Repository PSGallery }
+}
+
+<#
+.SYNOPSIS
+	Installs the specified NuGet package, if any. Otherwise, installs all packages.
+#>
+function Restore-NuGetPackage {
+	param (
+		# The package to install.
+		[Parameter(Position = 0)]
+		[string] $Package
+	)
+
+	if ($Package) { dotnet package add $Package }
+	else { dotnet restore }
+}
+
+<#
+.SYNOPSIS
+	Checks whether an update is available for the NuGet packages.
+#>
+function Test-NuGetPackageUpdate {
+	dotnet package list --outdated
 }
 
 <#
