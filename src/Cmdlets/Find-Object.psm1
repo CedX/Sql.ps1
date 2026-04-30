@@ -26,7 +26,7 @@ function Find-Object {
 		[string[]] $Columns = @(),
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
-		[ValidateRange("Positive")]
+		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
 
 		# The transaction to use, if any.
