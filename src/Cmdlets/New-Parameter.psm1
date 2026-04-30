@@ -4,7 +4,7 @@ using module ../SqlParameter.psm1
 
 <#
 .SYNOPSIS
-	Creates a new command parameter.
+	Creates a new parameter.
 .OUTPUTS
 	The newly created parameter.
 #>
