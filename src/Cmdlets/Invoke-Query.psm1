@@ -60,6 +60,8 @@ function Invoke-Query {
 		[switch] $Stream
 	)
 
+	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+
 	$queryOptions = [QueryOptions]@{ Stream = $Stream; Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }
 	$arguments = switch ($As.Count) {
 		1 { @($Connection, $Command, $Parameters, $queryOptions); break }

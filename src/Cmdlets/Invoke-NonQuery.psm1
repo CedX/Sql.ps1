@@ -33,6 +33,8 @@ function Invoke-NonQuery {
 		[IDbTransaction] $Transaction
 	)
 
+	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+
 	$commandOptions = [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }
 	[ConnectionExtensions]::Execute($Connection, $Command, $Parameters, $commandOptions)
 }

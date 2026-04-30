@@ -43,6 +43,8 @@ function Get-First {
 		[IDbTransaction] $Transaction
 	)
 
+	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+
 	try {
 		$method = [ConnectionExtensions].GetMethod("QueryFirst", 1, $Script:ParameterTypes).MakeGenericMethod($As)
 		$arguments = $Connection, $Command, $Parameters, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }

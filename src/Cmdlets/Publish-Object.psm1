@@ -28,6 +28,10 @@ function Publish-Object {
 		[IDbTransaction] $Transaction
 	)
 
+	begin {
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	}
+
 	process {
 		$instance = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
 		$method = [ConnectionExtensions].GetMethod("Insert").MakeGenericMethod($instance.GetType())

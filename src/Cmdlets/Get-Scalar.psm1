@@ -39,6 +39,8 @@ function Get-Scalar {
 		[IDbTransaction] $Transaction
 	)
 
+	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+
 	$method = [ConnectionExtensions].GetMethod("ExecuteScalar", 1, $Script:ParameterTypes).MakeGenericMethod([object])
 	$arguments = $Connection, $Command, $Parameters, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }
 	$method.Invoke($null, $arguments)

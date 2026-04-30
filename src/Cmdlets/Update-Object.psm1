@@ -34,6 +34,10 @@ function Update-Object {
 		[IDbTransaction] $Transaction
 	)
 
+	begin {
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	}
+
 	process {
 		$instance = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
 		$method = [ConnectionExtensions].GetMethod("Update").MakeGenericMethod($instance.GetType())
