@@ -53,6 +53,24 @@ Describe "SqlParameterCollection" {
 		}
 	}
 
+	Context "ImplicitConversion" {
+		It "should create a collection from the specified array of postional parameters" {
+			[SqlParameterCollection] $collection = "foo", "bar"
+			$collection | Should -HaveCount 2
+			$collection[0].Name | Should -BeExactly "?1"
+			$collection[0].Value | Should -BeExactly "foo"
+			$collection[1].Name | Should -BeExactly "?2"
+			$collection[1].Value | Should -BeExactly "bar"
+		}
+
+		It "should create a collection from the specified hash table of named parameters" {
+			[SqlParameterCollection] $collection = @{ foo = "bar"; baz = "qux" }
+			$collection | Should -HaveCount 2
+			Compare-Object @("@foo", "@baz") $collection.PSForEach{ $_.Name } | Should -BeNullOrEmpty
+			Compare-Object @("bar", "qux") $collection.PSForEach{ $_.Value } | Should -BeNullOrEmpty
+		}
+	}
+
 	Context "Indexer" {
 		It "should return the parameter with the specified name" {
 			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
