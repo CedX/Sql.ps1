@@ -6,6 +6,6 @@ $connection = [SQLiteConnection] "DataSource=:memory:"
 $connection.Open()
 
 $command = $connection.CreateCommand()
-$command.CommandText = Get-Content "res/Schema.sql" -Raw
+$command.CommandText = Get-Content "$PSScriptRoot/../../res/Schema.sql" -Raw
 $command.ExecuteNonQuery()
 $command.Dispose()
