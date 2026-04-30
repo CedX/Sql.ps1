@@ -9,13 +9,6 @@ class SqlCommand {
 
 	<#
 	.SYNOPSIS
-		The parameters of the SQL statement.
-	#>
-	[ValidateNotNull()]
-	[SqlParameterCollection] $Parameters
-
-	<#
-	.SYNOPSIS
 		The text of the SQL statement.
 	#>
 	[ValidateNotNullOrWhiteSpace()]
@@ -47,20 +40,6 @@ class SqlCommand {
 		The text of the SQL statement.
 	#>
 	SqlCommand([string] $Text) {
-		$this.Parameters = [SqlParameterCollection]::new()
-		$this.Text = $Text
-	}
-
-	<#
-	.SYNOPSIS
-		Creates a new command.
-	.PARAMETER Text
-		The text of the SQL statement.
-	.PARAMETER Parameters
-		The parameters of the SQL statement.
-	#>
-	SqlCommand([string] $Text, [SqlParameterCollection] $Parameters) {
-		$this.Parameters = $Parameters
 		$this.Text = $Text
 	}
 
@@ -84,13 +63,27 @@ class SqlCommand {
 	.OUTPUTS
 		The `IDbCommand` object corresponding to this command.
 	#>
-	[IDbCommand] ToDbCommand([IDbConnection] $Connection) {
+	hidden [IDbCommand] ToDbCommand([IDbConnection] $Connection) {
+		return $this.ToDbCommand($Connection, [SqlParameterCollection]::new())
+	}
+
+	<#
+	.SYNOPSIS
+		Converts this command into an `IDbCommand` object.
+	.PARAMETER Connection
+		The connection to associate with the created command.
+	.PARAMETER Parameters
+		The parameters of the SQL statement.
+	.OUTPUTS
+		The `IDbCommand` object corresponding to this command.
+	#>
+	hidden [IDbCommand] ToDbCommand([IDbConnection] $Connection, [SqlParameterCollection] $Parameters) {
 		$command = $Connection.CreateCommand()
 		$command.CommandText = $this.Text
 		$command.CommandTimeout = $this.Timeout
 		$command.CommandType = $this.Type
 		$command.Transaction = $this.Transaction
-		foreach ($parameter in $this.Parameters) { $command.Parameters.Add($parameter.ToDbParameter($command)) }
+		foreach ($parameter in $Parameters) { $command.Parameters.Add($parameter.ToDbParameter($command)) }
 		return $command
 	}
 }

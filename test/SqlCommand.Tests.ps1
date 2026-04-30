@@ -9,8 +9,7 @@ Describe "SqlCommand" {
 	Context "ImplicitConversion" {
 		It "should create a command from the specified string" {
 			$sql = "SELECT * FROM Characters"
-			[SqlCommand] $command = $sql
-			$command.Text | Should -BeExactly $sql
+			([SqlCommand] $sql).Text | Should -BeExactly $sql
 		}
 	}
 }
