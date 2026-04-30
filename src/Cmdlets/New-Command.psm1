@@ -21,7 +21,7 @@ function New-Command {
 		# The parameters of the SQL statement.
 		[Parameter(Position = 1)]
 		[ValidateNotNull()]
-		[SqlParameterCollection] $Parameters = @(),
+		[SqlParameterCollection] $Parameters = [SqlParameterCollection]::new(),
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]

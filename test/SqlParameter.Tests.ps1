@@ -5,7 +5,7 @@ using module ../src/SqlParameter.psm1
 .SYNOPSIS
 	Tests the features of the `SqlParameter` class.
 #>
-Describe "Parameter" {
+Describe "SqlParameter" {
 	Context "ImplicitConversion" {
 		It "should create a parameter from the specified tuple" {
 			[SqlParameter] $parameter = @()

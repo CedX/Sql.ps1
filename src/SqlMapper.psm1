@@ -253,6 +253,20 @@ class SqlMapper {
 		The object to convert.
 	.PARAMETER ConversionType
 		The type of object to return.
+	.OUTPUTS
+		The value of the given type corresponding to the specified object.
+	#>
+	hidden static [object] ChangeType([object] $Value, [Type] $ConversionType) {
+		return [SqlMapper]::ChangeType($Value, $ConversionType, $false)
+	}
+
+	<#
+	.SYNOPSIS
+		Converts the specified object into an equivalent value of the specified type.
+	.PARAMETER Value
+		The object to convert.
+	.PARAMETER ConversionType
+		The type of object to return.
 	.PARAMETER IsNullable
 		Value indicating whether the specified conversion type is nullable.
 	.OUTPUTS
