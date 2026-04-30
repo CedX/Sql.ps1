@@ -1,4 +1,5 @@
 using namespace System.Data
+using module ../SqlParameterCollection.psm1
 
 <#
 .SYNOPSIS

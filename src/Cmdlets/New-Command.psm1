@@ -1,5 +1,7 @@
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
+using module ../SqlCommand.psm1
+using module ../SqlParameterCollection.psm1
 
 <#
 .SYNOPSIS

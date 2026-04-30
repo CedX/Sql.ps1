@@ -1,5 +1,6 @@
 using namespace System.Data
 using namespace System.Dynamic
+using module ../SqlParameterCollection.psm1
 
 <#
 .SYNOPSIS
