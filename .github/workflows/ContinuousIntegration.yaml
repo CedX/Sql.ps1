@@ -17,8 +17,7 @@ jobs:
           ./Install-PowerShell.ps1
           Add-Content $Env:GITHUB_PATH "$Env:LOCALAPPDATA\Microsoft\powershell"
       - name: Set up SQL Server
-        shell: cmd
-        run: winget install --accept-package-agreements --disable-interactivity --id Microsoft.SQLServer.2025.Developer --override "/ACTION=Install /ENU /FEATURES=SQLEngine /IACCEPTSQLSERVERLICENSETERMS /QUIET /SECURITYMODE=SQL /SUPPRESSPRIVACYSTATEMENTNOTICE /TCPENABLED=1"
+        run: winget install --accept-package-agreements --disable-interactivity --id Microsoft.SQLServer.2025.Developer --override "/ACTION=Install /ENU /FEATURES=SQLEngine /IACCEPTSQLSERVERLICENSETERMS /QUIET /SECURITYMODE=SQL /SUPPRESSPRIVACYSTATEMENTNOTICE /TCPENABLED=1" --source winget
       - name: Install dependencies
         run: ./Invoke.ps1 Install
       - name: Run tests
