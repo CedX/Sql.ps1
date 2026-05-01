@@ -305,7 +305,7 @@ class SqlMapper {
 	#>
 	hidden static [hashtable[]] SplitOn([IDataRecord] $Record, [string[]] $Fields) {
 		$properties = [List[KeyValuePair[string, object]]]::new($Record.FieldCount)
-		for ($index = 0; $index -lt $Record.FieldCount; index++) {
+		for ($index = 0; $index -lt $Record.FieldCount; $index++) {
 			$value = $Record[$index]
 			$properties.Add([KeyValuePair[string, object]]::new($Record.GetName($index), $value -is [DBNull] ? $null : $value))
 		}

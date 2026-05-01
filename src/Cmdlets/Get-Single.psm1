@@ -1,12 +1,7 @@
 using namespace System.Data
-using namespace System.Dynamic
+using module ../SqlCommand.psm1
+using module ../SqlMapper.psm1
 using module ../SqlParameterCollection.psm1
-
-<#
-.SYNOPSIS
-	An array of types representing the number, order, and type of the parameters of the underlying method to invoke.
-#>
-$ParameterTypes = [IDbConnection], [string], [SqlParameterCollection], [CommandOptions]
 
 <#
 .SYNOPSIS
@@ -22,37 +17,41 @@ function Get-Single {
 		[Parameter(Mandatory, Position = 0)]
 		[IDbConnection] $Connection,
 
-		# The SQL query to be executed.
+		# The command to be executed.
 		[Parameter(Mandatory, Position = 1)]
-		[string] $Command,
+		[SqlCommand] $Command,
 
-		# The parameters of the SQL query.
+		# The parameters of the SQL statement.
 		[Parameter(Position = 2)]
-		[ValidateNotNull()]
-		[SqlParameterCollection] $Parameters = @(),
+		[SqlParameterCollection] $Parameters,
 
 		# The type of objects to return.
-		[Type] $As = [ExpandoObject],
-
-		# Value indicating how the command is interpreted.
-		[CommandType] $CommandType = [CommandType]::Text,
-
-		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
-		[ValidateRange("NonNegative")]
-		[int] $Timeout = 30,
-
-		# The transaction within which the command executes.
-		[IDbTransaction] $Transaction
+		[ValidateNotNull()]
+		[Type] $As = [psobject]
 	)
 
-	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-
-	try {
-		$method = [ConnectionExtensions].GetMethod("QuerySingle", 1, $Script:ParameterTypes).MakeGenericMethod($As)
-		$arguments = $Connection, $Command, $Parameters, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }
-		$method.Invoke($null, $arguments)
+	begin {
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+		$dbCommand = $null
+		$reader = $null
 	}
-	catch [InvalidOperationException] {
-		Write-Error $_.Exception
+
+	end {
+		$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
+		$reader = $dbCommand.ExecuteReader()
+
+		$rowCount = 0
+		while ($reader.Read()) {
+			if (++$rowCount -gt 1) { break }
+			$record = [SqlMapper]::Instance.CreateInstance($As, $reader)
+		}
+
+		if ($rowCount -eq 1) { $record }
+		else { Write-Error "The result set is empty or contains more than one record." -Category InvalidOperation }
+	}
+
+	clean {
+		${dbCommand}?.Dispose()
+		${reader}?.Close()
 	}
 }
