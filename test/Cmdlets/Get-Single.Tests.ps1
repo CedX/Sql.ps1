@@ -5,7 +5,7 @@
 	Tests the features of the `Get-Single` cmdlet.
 #>
 Describe "Get-Single" {
-	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1", "$PSScriptRoot/../../bin/System.Data.SQLite.dll" }
+	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 

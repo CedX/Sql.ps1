@@ -24,16 +24,17 @@ function Invoke-Query {
 		[SqlParameterCollection] $Parameters,
 
 		# The type of objects to return.
-		[ValidateCount(1, 4)]
+		[ValidateCount(1, 8)]
 		[Type[]] $As = @([psobject]),
 
 		# The fields from which to split and read the next objects.
-		[ValidateNotNullOrWhiteSpace()]
-		[ValidateScript({ (-not $_) -or ($_.Count -eq $As.Count - 1) }, ErrorMessage = "The number of split fields is invalid.")]
+		[ValidateCount(0, 7)]
 		[string[]] $SplitOn = @()
 	)
 
 	begin {
+		# TODO [ValidateScript({ (-not $_) -or ($_.Count -eq $As.Count - 1) }, ErrorMessage = "The number of split fields is invalid.")]
+
 		$dbCommand = $null
 		$reader = $null
 		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }

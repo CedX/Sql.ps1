@@ -5,7 +5,7 @@
 	Tests the features of the `Get-First` cmdlet.
 #>
 Describe "Get-First" {
-	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1", "$PSScriptRoot/../../bin/System.Data.SQLite.dll" }
+	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
