@@ -37,7 +37,7 @@ function Invoke-Query {
 		$dbCommand = $null
 		$reader = $null
 		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-		if ((-not $SplitOn) -and ($As.Count -gt 1)) { $SplitOn = (0..$As.Count - 1).ForEach{ "Id" } }
+		if ((-not $SplitOn) -and ($As.Count -ge 2)) { $SplitOn = (0..$As.Count - 2).ForEach{ "Id" } }
 	}
 
 	end {
