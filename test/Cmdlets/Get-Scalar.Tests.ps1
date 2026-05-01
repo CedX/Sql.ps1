@@ -8,10 +8,10 @@ Describe "Get-Scalar" {
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
 	It "should return the single value produced by the query" {
-		$sql = "SELECT COUNT(*) FROM Characters WHERE Gender = @Gender"
-		Get-SqlScalar $connection -Command $sql -Parameters @{ Gender = "Balrog" } | Should -Be 2
+		$sql = "SELECT COUNT(*) FROM Characters WHERE gender = @Gender"
+		Get-SqlScalar $connection -As ([int]) -Command $sql -Parameters @{ Gender = "Balrog" } | Should -Be 2
 
 		$sql = "SELECT tbl_name FROM sqlite_schema WHERE type = @Type AND name = @Name"
-		Get-SqlScalar $connection -Command $sql -Parameters @{ Name = "Characters"; Type = "table" } | Should -BeExactly Characters
+		Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "Characters"; Type = "table" } | Should -BeExactly Characters
 	}
 }
