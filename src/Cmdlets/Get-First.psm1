@@ -31,9 +31,9 @@ function Get-First {
 	)
 
 	begin {
-		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
 		$dbCommand = $null
 		$reader = $null
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
 	}
 
 	end {

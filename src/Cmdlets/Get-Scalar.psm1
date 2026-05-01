@@ -31,8 +31,8 @@ function Get-Scalar {
 	)
 
 	begin {
-		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
 		$dbCommand = $null
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
 	}
 
 	end {
