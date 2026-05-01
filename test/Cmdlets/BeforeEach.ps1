@@ -1,5 +1,4 @@
 using namespace System.Data.SQLite
-using namespace System.Diagnostics.CodeAnalysis
 
 $connection = [SQLiteConnection] "DataSource=:memory:"
 $connection.Open()
