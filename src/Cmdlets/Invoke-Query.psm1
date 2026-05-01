@@ -1,17 +1,5 @@
 using namespace System.Data
-using namespace System.Dynamic
 using module ../SqlParameterCollection.psm1
-
-<#
-.SYNOPSIS
-	An array of types representing the number, order, and type of the parameters of the underlying method to invoke.
-#>
-$ParameterTypes = @(
-	([IDbConnection], [string], [SqlParameterCollection], [QueryOptions]),
-	([IDbConnection], [string], [SqlParameterCollection], [string], [QueryOptions]),
-	([IDbConnection], [string], [SqlParameterCollection], [Nullable[ValueTuple[[string], [string]]]], [QueryOptions]),
-	([IDbConnection], [string], [SqlParameterCollection], [Nullable[ValueTuple[[string], [string], [string]]]], [QueryOptions])
-)
 
 <#
 .SYNOPSIS
@@ -21,57 +9,45 @@ $ParameterTypes = @(
 #>
 function Invoke-Query {
 	[CmdletBinding()]
-	[OutputType([object], [ValueTuple[[object], [object]]], [ValueTuple[[object], [object], [object]]], [ValueTuple[[object], [object], [object], [object]]])]
+	[OutputType([object])]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]
 		[IDbConnection] $Connection,
 
-		# The SQL query to be executed.
+		# The command to be executed.
 		[Parameter(Mandatory, Position = 1)]
-		[string] $Command,
+		[SqlCommand] $Command,
 
-		# The parameters of the SQL query.
+		# The parameters of the SQL statement.
 		[Parameter(Position = 2)]
-		[ValidateNotNull()]
-		[SqlParameterCollection] $Parameters = @(),
+		[SqlParameterCollection] $Parameters,
 
 		# The type of objects to return.
 		[ValidateCount(1, 4)]
-		[Type[]] $As = @([ExpandoObject]),
+		[Type[]] $As = @([psobject]),
 
-		# The field from which to split and read the next object.
-		[ValidateCount(1, 3)]
+		# The fields from which to split and read the next objects.
 		[ValidateNotNullOrWhiteSpace()]
-		[string[]] $SplitOn = @("Id"),
-
-		# Value indicating how the command is interpreted.
-		[CommandType] $CommandType = [CommandType]::Text,
-
-		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
-		[ValidateRange("NonNegative")]
-		[int] $Timeout = 30,
-
-		# The transaction within which the command executes.
-		[IDbTransaction] $Transaction,
-
-		# Value indicating whether to prevent from enumerating the rows.
-		[switch] $NoEnumerate,
-
-		# Value indicating whether to prevent from buffering the rows in memory.
-		[switch] $Stream
+		[ValidateScript({ (-not $_) -or ($_.Count -eq $As.Count - 1) }, ErrorMessage = "The number of split fields is invalid.")]
+		[string[]] $SplitOn = @()
 	)
 
-	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-
-	$queryOptions = [QueryOptions]@{ Stream = $Stream; Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }
-	$arguments = switch ($As.Count) {
-		1 { @($Connection, $Command, $Parameters, $queryOptions); break }
-		2 { @($Connection, $Command, $Parameters, $SplitOn[0], $queryOptions); break }
-		3 { @($Connection, $Command, $Parameters, [ValueTuple]::Create($SplitOn[0], $SplitOn.Count -le 1 ? "Id" : $SplitOn[1]), $queryOptions); break }
-		default { @($Connection, $Command, $Parameters, [ValueTuple]::Create($SplitOn[0], $SplitOn.Count -le 1 ? "Id" : $SplitOn[1], $SplitOn.Count -le 2 ? "Id" : $SplitOn[2]), $queryOptions) }
+	begin {
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+		if ((-not $SplitOn) -and ($As.Count -gt 1)) { $SplitOn = (0..$As.Count -1).ForEach{ "Id" } }
+		$dbCommand = $null
+		$reader = $null
 	}
 
-	$method = [ConnectionExtensions].GetMethod("Query", $As.Count, $Script:ParameterTypes[$As.Count - 1]).MakeGenericMethod($As)
-	Write-Output $method.Invoke($null, $arguments) -NoEnumerate:$NoEnumerate
+	end {
+		$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
+		$reader = $dbCommand.ExecuteReader()
+		while ($reader.Read()) { [SqlMapper]::Instance.CreateInstance($As, $reader, $SplitOn) }
+	}
+
+	clean {
+		${dbCommand}?.Dispose()
+		${reader}?.Close()
+	}
 }
