@@ -34,9 +34,13 @@ function Find-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	begin {
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	}
 
-	$method = [ConnectionExtensions].GetMethod("Find").MakeGenericMethod($Class)
-	$arguments = $Connection, $Id, $Columns, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
-	$method.Invoke($null, $arguments)
+	end {
+		$method = [ConnectionExtensions].GetMethod("Find").MakeGenericMethod($Class)
+		$arguments = $Connection, $Id, $Columns, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
+		$method.Invoke($null, $arguments)
+	}
 }

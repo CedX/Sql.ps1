@@ -27,6 +27,7 @@ function Invoke-NonQuery {
 
 	begin {
 		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+		$dbCommand = $null
 	}
 
 	end {
@@ -35,6 +36,6 @@ function Invoke-NonQuery {
 	}
 
 	clean {
-		$dbCommand.Dispose()
+		${dbCommand}?.Dispose()
 	}
 }

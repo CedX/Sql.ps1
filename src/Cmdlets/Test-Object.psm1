@@ -30,7 +30,10 @@ function Test-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	begin {
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	}
+
 	$method = [ConnectionExtensions].GetMethod("Exists").MakeGenericMethod($Class)
 	$arguments = $Connection, $Id, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
 	$method.Invoke($null, $arguments)
