@@ -8,7 +8,7 @@ Describe "Invoke-Query" {
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
 	It "should return the records produced by the SQL query" {
-		$sql = "SELECT * FROM Characters WHERE Gender = @Gender ORDER BY FullName"
+		$sql = "SELECT * FROM Characters WHERE gender = @Gender ORDER BY FullName"
 		$records = Invoke-SqlQuery $connection -As ([Character]) -Command $sql -Parameters @{ Gender = "Elf" }
 		$records | Should -HaveCount 3
 

@@ -63,7 +63,7 @@ class SqlCommand {
 	.OUTPUTS
 		The `IDbCommand` object corresponding to this command.
 	#>
-	hidden [IDbCommand] ToDbCommand([IDbConnection] $Connection) {
+	[IDbCommand] ToDbCommand([IDbConnection] $Connection) {
 		return $this.ToDbCommand($Connection, [SqlParameterCollection]::new())
 	}
 
@@ -77,7 +77,7 @@ class SqlCommand {
 	.OUTPUTS
 		The `IDbCommand` object corresponding to this command.
 	#>
-	hidden [IDbCommand] ToDbCommand([IDbConnection] $Connection, [SqlParameterCollection] $Parameters) {
+	[IDbCommand] ToDbCommand([IDbConnection] $Connection, [SqlParameterCollection] $Parameters) {
 		$command = $Connection.CreateCommand()
 		$command.CommandText = $this.Text
 		$command.CommandTimeout = $this.Timeout

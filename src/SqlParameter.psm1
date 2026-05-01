@@ -115,6 +115,26 @@ class SqlParameter {
 
 	<#
 	.SYNOPSIS
+		Converts this parameter into an `IDbDataParameter` object.
+	.PARAMETER Command
+		The command to associate with the created parameter.
+	.OUTPUTS
+		The `IDbDataParameter` object corresponding to this parameter.
+	#>
+	[IDbDataParameter] ToDbParameter([IDbCommand] $Command) {
+		$parameter = $Command.CreateParameter()
+		$parameter.ParameterName = [SqlParameter]::NormalizeName($this.Name)
+		$parameter.Value = [SqlParameter]::NormalizeValue($this.Value)
+		if ($null -ne $this.DbType) { $parameter.DbType = $this.DbType.Value }
+		if ($null -ne $this.Direction) { $parameter.Direction = $this.Direction.Value }
+		if ($null -ne $this.Precision) { $parameter.Precision = $this.Precision.Value }
+		if ($null -ne $this.Scale) { $parameter.Scale = $this.Scale.Value }
+		if ($null -ne $this.Size) { $parameter.Size = $this.Size.Value }
+		return $parameter
+	}
+
+	<#
+	.SYNOPSIS
 		Normalizes the specified parameter name.
 	.PARAMETER Name
 		The parameter name.
@@ -135,25 +155,5 @@ class SqlParameter {
 	#>
 	hidden static [object] NormalizeValue([object] $Value) {
 		return $Value ?? [DBNull]::Value
-	}
-
-	<#
-	.SYNOPSIS
-		Converts this parameter into an `IDbDataParameter` object.
-	.PARAMETER Command
-		The command to associate with the created parameter.
-	.OUTPUTS
-		The `IDbDataParameter` object corresponding to this parameter.
-	#>
-	hidden [IDbDataParameter] ToDbParameter([IDbCommand] $Command) {
-		$parameter = $Command.CreateParameter()
-		$parameter.ParameterName = [SqlParameter]::NormalizeName($this.Name)
-		$parameter.Value = [SqlParameter]::NormalizeValue($this.Value)
-		if ($null -ne $this.DbType) { $parameter.DbType = $this.DbType.Value }
-		if ($null -ne $this.Direction) { $parameter.Direction = $this.Direction.Value }
-		if ($null -ne $this.Precision) { $parameter.Precision = $this.Precision.Value }
-		if ($null -ne $this.Scale) { $parameter.Scale = $this.Scale.Value }
-		if ($null -ne $this.Size) { $parameter.Size = $this.Size.Value }
-		return $parameter
 	}
 }
