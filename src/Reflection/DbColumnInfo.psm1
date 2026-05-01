@@ -5,15 +5,15 @@ using namespace System.Threading
 
 <#
 .SYNOPSIS
-	The nullability context.
-#>
-$NullabilityContext = [ThreadLocal[NullabilityInfoContext]]::new([Func[NullabilityInfoContext]] { [NullabilityInfoContext]::new() })
-
-<#
-.SYNOPSIS
 	Provides information about a database column.
 #>
 class DbColumnInfo {
+
+	<#
+	.SYNOPSIS
+		The nullability context.
+	#>
+	hidden static [ThreadLocal[NullabilityInfoContext]] $NullabilityContext = [ThreadLocal[NullabilityInfoContext]]::new([Func[NullabilityInfoContext]] { [NullabilityInfoContext]::new() })
 
 	<#
 	.SYNOPSIS
@@ -81,7 +81,7 @@ class DbColumnInfo {
 		$this.Type = $Property.PropertyType
 
 		$this.IsNullable = (-not [Attribute]::IsDefined($Property, [ValidateNotNullAttribute])) -and `
-			(($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) -or ($Script:NullabilityContext.Value.Create($Property).WriteState -ne [NullabilityState]::NotNull))
+			(($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) -or ([DbColumnInfo]::NullabilityContext.Value.Create($Property).WriteState -ne [NullabilityState]::NotNull))
 	}
 
 	<#

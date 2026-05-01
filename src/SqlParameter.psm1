@@ -3,15 +3,15 @@ using namespace System.Data
 
 <#
 .SYNOPSIS
-	The prefixes used for parameter placeholders.
-#>
-$Prefixes = "?", "@", ":", "$"
-
-<#
-.SYNOPSIS
 	Represents a parameter of a parameterized SQL statement.
 #>
 class SqlParameter {
+
+	<#
+	.SYNOPSIS
+		The prefixes used for parameter placeholders.
+	#>
+	hidden static [string[]] $Prefixes = "?", "@", ":", "$"
 
 	<#
 	.SYNOPSIS
@@ -122,7 +122,7 @@ class SqlParameter {
 		The normalized parameter name.
 	#>
 	hidden static [string] NormalizeName([string] $Name) {
-		return $Name ? ($Name[0] -in $Script:Prefixes ? $Name : "@$Name") : "?"
+		return $Name ? ($Name[0] -in [SqlParameter]::Prefixes ? $Name : "@$Name") : "?"
 	}
 
 	<#

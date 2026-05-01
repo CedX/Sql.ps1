@@ -7,12 +7,6 @@ using module ./Reflection/DbTableInfo.psm1
 
 <#
 .SYNOPSIS
-	The mapping between the entity types and their associated database tables.
-#>
-$Mapping = [ConcurrentDictionary[Type, DbTableInfo]]::new()
-
-<#
-.SYNOPSIS
 	Maps data records to entity objects.
 #>
 class SqlMapper {
@@ -22,6 +16,12 @@ class SqlMapper {
 		The singleton instance of the data mapper.
 	#>
 	static [SqlMapper] $Instance = [SqlMapper]::new()
+
+	<#
+	.SYNOPSIS
+		The mapping between the entity types and their associated database tables.
+	#>
+	hidden static [ConcurrentDictionary[Type, DbTableInfo]] $Mapping = [ConcurrentDictionary[Type, DbTableInfo]]::new()
 
 	<#
 	.SYNOPSIS
@@ -127,7 +127,7 @@ class SqlMapper {
 		The table information associated with the specified type.
 	#>
 	[DbTableInfo] GetTable([Type] $Type) {
-		return $Script:Mapping.GetOrAdd($Type, { param ($entityType) [DbTableInfo]::new($entityType) })
+		return [SqlMapper]::Mapping.GetOrAdd($Type, { param ($entityType) [DbTableInfo]::new($entityType) })
 	}
 
 	<#
