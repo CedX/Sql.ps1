@@ -1,4 +1,5 @@
 using namespace System.Data
+using module ../SqlCommand.psm1
 using module ../SqlParameterCollection.psm1
 
 <#
@@ -15,28 +16,19 @@ function Invoke-NonQuery {
 		[Parameter(Mandatory, Position = 0)]
 		[IDbConnection] $Connection,
 
-		# The SQL query to be executed.
+		# The command to be executed.
 		[Parameter(Mandatory, Position = 1)]
-		[string] $Command,
+		[SqlCommand] $Command,
 
-		# The parameters of the SQL query.
+		# The parameters of the SQL statement.
 		[Parameter(Position = 2)]
-		[ValidateNotNull()]
-		[SqlParameterCollection] $Parameters = @(),
-
-		# Value indicating how the command is interpreted.
-		[CommandType] $CommandType = [CommandType]::Text,
-
-		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
-		[ValidateRange("NonNegative")]
-		[int] $Timeout = 30,
-
-		# The transaction within which the command executes.
-		[IDbTransaction] $Transaction
+		[SqlParameterCollection] $Parameters
 	)
 
 	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
 
-	$commandOptions = [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }
-	[ConnectionExtensions]::Execute($Connection, $Command, $Parameters, $commandOptions)
+	$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
+	$rowsAffected = $dbCommand.ExecuteNonQuery()
+	$dbCommand.Dispose()
+	$rowsAffected
 }

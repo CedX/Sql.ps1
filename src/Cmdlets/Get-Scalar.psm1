@@ -35,5 +35,5 @@ function Get-Scalar {
 	$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
 	$value = $dbCommand.ExecuteScalar()
 	$dbCommand.Dispose()
-	($null -eq $Value) -or ($value -is [DBNull]) ? $null : [SqlMapper]::ChangeType($value, $As)
+	($null -eq $value) -or ($value -is [DBNull]) ? $null : [SqlMapper]::ChangeType($value, $As)
 }
