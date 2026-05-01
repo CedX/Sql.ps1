@@ -35,7 +35,7 @@ Describe "New-ParameterCollection" {
 
 		$parameter = $collection[$collection.Count - 1]
 		$parameter.Name | Should -BeExactly "@Key"
-		$parameter.Value | Should -BeExactly "Unique"
+		$parameter.Value | Should -BeExactly Unique
 		$parameter.DbType | Should -Be ([DbType]::AnsiString)
 	}
 }

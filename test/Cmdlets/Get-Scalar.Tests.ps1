@@ -7,7 +7,7 @@ Describe "Get-Scalar" {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
-	It "should return the single value produced by the SQL query" {
+	It "should return the single value produced by the query" {
 		$sql = "SELECT COUNT(*) FROM Characters WHERE Gender = @Gender"
 		Get-SqlScalar $connection -Command $sql -Parameters @{ Gender = "Balrog" } | Should -Be 2
 

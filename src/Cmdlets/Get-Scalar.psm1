@@ -1,11 +1,7 @@
 using namespace System.Data
+using module ../SqlCommand.psm1
+using module ../SqlMapper.psm1
 using module ../SqlParameterCollection.psm1
-
-<#
-.SYNOPSIS
-	An array of types representing the number, order, and type of the parameters of the underlying method to invoke.
-#>
-$ParameterTypes = [IDbConnection], [string], [SqlParameterCollection], [CommandOptions]
 
 <#
 .SYNOPSIS
@@ -21,29 +17,23 @@ function Get-Scalar {
 		[Parameter(Mandatory, Position = 0)]
 		[IDbConnection] $Connection,
 
-		# The SQL query to be executed.
+		# The command to be executed.
 		[Parameter(Mandatory, Position = 1)]
-		[string] $Command,
+		[SqlCommand] $Command,
 
-		# The parameters of the SQL query.
+		# The parameters of the SQL statement.
 		[Parameter(Position = 2)]
+		[SqlParameterCollection] $Parameters,
+
+		# The type of object to return.
 		[ValidateNotNull()]
-		[SqlParameterCollection] $Parameters = @(),
-
-		# Value indicating how the command is interpreted.
-		[CommandType] $CommandType = [CommandType]::Text,
-
-		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
-		[ValidateRange("NonNegative")]
-		[int] $Timeout = 30,
-
-		# The transaction within which the command executes.
-		[IDbTransaction] $Transaction
+		[Type] $As = [object]
 	)
 
 	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
 
-	$method = [ConnectionExtensions].GetMethod("ExecuteScalar", 1, $Script:ParameterTypes).MakeGenericMethod([object])
-	$arguments = $Connection, $Command, $Parameters, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction; Type = $CommandType }
-	$method.Invoke($null, $arguments)
+	$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
+	$value = $dbCommand.ExecuteScalar()
+	$dbCommand.Dispose()
+	($null -eq $Value) -or ($value -is [DBNull]) ? $null : [SqlMapper]::ChangeType($value, $As)
 }

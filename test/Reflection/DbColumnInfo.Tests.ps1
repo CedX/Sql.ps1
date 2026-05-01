@@ -73,8 +73,8 @@ Describe "DbColumnInfo" {
 	Context "GetValue" {
 		It "should return the value of the spcified property" {
 			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
-			[DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($character) | Should -BeExactly "Cédric"
-			[DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($character) | Should -BeExactly "Belin"
+			[DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($character) | Should -BeExactly Cédric
+			[DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($character) | Should -BeExactly Belin
 		}
 	}
 
@@ -83,8 +83,8 @@ Describe "DbColumnInfo" {
 			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
 			[DbColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($character, "Jeffrey")
 			[DbColumnInfo]::new([Character].GetProperty("LastName")).SetValue($character, "Snover")
-			$character.FirstName | Should -BeExactly "Jeffrey"
-			$character.LastName | Should -BeExactly "Snover"
+			$character.FirstName | Should -BeExactly Jeffrey
+			$character.LastName | Should -BeExactly Snover
 		}
 	}
 }

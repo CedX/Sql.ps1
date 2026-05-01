@@ -34,7 +34,7 @@ Describe "SqlParameterCollection" {
 
 			$parameter = $collection[$collection.Count - 1]
 			$parameter.Name | Should -BeExactly "@Key"
-			$parameter.Value | Should -BeExactly "Unique"
+			$parameter.Value | Should -BeExactly Unique
 			$parameter.DbType | Should -Be ([DbType]::AnsiString)
 		}
 	}
@@ -58,9 +58,9 @@ Describe "SqlParameterCollection" {
 			[SqlParameterCollection] $collection = "foo", "bar"
 			$collection | Should -HaveCount 2
 			$collection[0].Name | Should -BeExactly "?1"
-			$collection[0].Value | Should -BeExactly "foo"
+			$collection[0].Value | Should -BeExactly foo
 			$collection[1].Name | Should -BeExactly "?2"
-			$collection[1].Value | Should -BeExactly "bar"
+			$collection[1].Value | Should -BeExactly bar
 		}
 
 		It "should create a collection from the specified hash table of named parameters" {
@@ -76,7 +76,7 @@ Describe "SqlParameterCollection" {
 			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
 			$parameter = $collection["Key"]
 			$parameter.Name | Should -BeExactly "@Key"
-			$parameter.Value | Should -BeExactly "Unique"
+			$parameter.Value | Should -BeExactly Unique
 			$collection[1] | Should -Be $parameter
 		}
 

@@ -18,7 +18,7 @@ Describe "SqlParameter" {
 
 			$parameter = "bar", "Baz"
 			$parameter.Name | Should -BeExactly "@bar"
-			$parameter.Value | Should -BeExactly "Baz"
+			$parameter.Value | Should -BeExactly Baz
 		}
 
 		It "should create a parameter from the specified key/value pair" {
@@ -28,7 +28,7 @@ Describe "SqlParameter" {
 
 			$parameter = [KeyValuePair[string, object]]::new(":bar", "Baz")
 			$parameter.Name | Should -BeExactly ":bar"
-			$parameter.Value | Should -BeExactly "Baz"
+			$parameter.Value | Should -BeExactly Baz
 		}
 	}
 

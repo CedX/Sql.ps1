@@ -18,11 +18,6 @@ function New-Command {
 		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
 		[string] $Text,
 
-		# The parameters of the SQL statement.
-		[Parameter(Position = 1)]
-		[ValidateNotNull()]
-		[SqlParameterCollection] $Parameters = [SqlParameterCollection]::new(),
-
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
@@ -35,7 +30,7 @@ function New-Command {
 	)
 
 	process {
-		$command = [SqlCommand]::new($Text, $Parameters)
+		$command = [SqlCommand]::new($Text)
 		$command.Timeout = $Timeout
 		$command.Transaction = $Transaction
 		$command.Text = $Text

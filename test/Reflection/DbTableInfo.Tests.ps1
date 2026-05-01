@@ -22,17 +22,17 @@ Describe "DbTableInfo" {
 
 			$identityColumn = [DbTableInfo]::new([Character]).IdentityColumn
 			$identityColumn | Should -Not -BeNullOrEmpty
-			$identityColumn.Name | Should -BeExactly "ID"
+			$identityColumn.Name | Should -BeExactly ID
 		}
 	}
 
 	Context "Name" {
 		It "should return the class name when there is no [Table] attribute" {
-			[DbTableInfo]::new([DbTableInfo]).Name | Should -BeExactly "DbTableInfo"
+			[DbTableInfo]::new([DbTableInfo]).Name | Should -BeExactly DbTableInfo
 		}
 
 		It "should return the value of the [Table] attribute when it is present" {
-			[DbTableInfo]::new([Character]).Name | Should -BeExactly "Characters"
+			[DbTableInfo]::new([Character]).Name | Should -BeExactly Characters
 		}
 	}
 
@@ -42,7 +42,7 @@ Describe "DbTableInfo" {
 		}
 
 		It "should return the value of the [Table] attribute when it is present" {
-			[DbTableInfo]::new([Character]).Schema | Should -BeExactly "main"
+			[DbTableInfo]::new([Character]).Schema | Should -BeExactly main
 		}
 	}
 }

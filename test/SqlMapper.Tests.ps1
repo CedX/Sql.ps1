@@ -83,9 +83,9 @@ Describe "SqlMapper" {
 		It "should create a [PSObject] by default" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$object = [SqlMapper]::Instance.CreateInstance($properties)
-			$object.GetType().FullName | Should -BeExactly "System.Management.Automation.PSCustomObject"
+			$object.GetType().FullName | Should -BeExactly System.Management.Automation.PSCustomObject
 			$object.CLASS | Should -BeExactly "Bard/minstrel"
-			$object.firstName | Should -BeExactly "Cédric"
+			$object.firstName | Should -BeExactly Cédric
 			$object.gender | Should -BeExactly ([CharacterGender]::Balrog.ToString())
 			$object.lastName | Should -BeNullOrEmpty
 		}
@@ -94,7 +94,7 @@ Describe "SqlMapper" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$object = [SqlMapper]::Instance.CreateInstance([Character], $properties)
 			$object.GetType() | Should -Be ([Character])
-			$object.FirstName | Should -BeExactly "Cédric"
+			$object.FirstName | Should -BeExactly Cédric
 			$object.Gender | Should -Be ([CharacterGender]::Balrog)
 			$object.LastName | Should -Be ""
 		}
@@ -103,8 +103,8 @@ Describe "SqlMapper" {
 	Context "GetTable" {
 		It "should return detailed information about the database table associated with the specified entity class" {
 			$table = [SqlMapper]::Instance.GetTable([Character])
-			$table.Schema | Should -BeExactly "main"
-			$table.Name | Should -BeExactly "Characters"
+			$table.Schema | Should -BeExactly main
+			$table.Name | Should -BeExactly Characters
 			$table.Type | Should -Be ([Character])
 
 			$table.Columns.Keys | Should -HaveCount 5
