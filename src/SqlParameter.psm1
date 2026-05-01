@@ -70,6 +70,17 @@ class SqlParameter {
 		Creates a new parameter.
 	.PARAMETER Name
 		The parameter name.
+	#>
+	SqlParameter([string] $Name) {
+		$this.Name = [SqlParameter]::NormalizeName($Name)
+		$this.Value = [DBNull]::Value
+	}
+
+	<#
+	.SYNOPSIS
+		Creates a new parameter.
+	.PARAMETER Name
+		The parameter name.
 	.PARAMETER Value
 		The parameter value.
 	#>

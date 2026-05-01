@@ -11,7 +11,7 @@ Describe "Find-Object" {
 		$record = Find-SqlObject $connection -Class ([Character]) -Id 2
 		$record | Should -Not -Be $null
 		$record.Id | Should -Be 2
-		$record.FullName | Should -BeExactly "Balin"
+		$record.FullName | Should -BeExactly Balin
 
 		$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
 		$record.FullName | Should -Be ""

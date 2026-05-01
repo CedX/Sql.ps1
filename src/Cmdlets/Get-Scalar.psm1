@@ -30,10 +30,17 @@ function Get-Scalar {
 		[Type] $As = [object]
 	)
 
-	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	begin {
+		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	}
 
-	$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
-	$value = $dbCommand.ExecuteScalar()
-	$dbCommand.Dispose()
-	($null -eq $value) -or ($value -is [DBNull]) ? $null : [SqlMapper]::ChangeType($value, $As)
+	end {
+		$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
+		$value = $dbCommand.ExecuteScalar()
+		($null -eq $value) -or ($value -is [DBNull]) ? $null : [SqlMapper]::ChangeType($value, $As)
+	}
+
+	clean {
+		$dbCommand.Dispose()
+	}
 }
