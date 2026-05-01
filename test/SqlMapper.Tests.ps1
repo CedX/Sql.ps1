@@ -1,4 +1,5 @@
-using namespace System.Collections.Generic
+﻿using namespace System.Collections.Generic
+using namespace System.Diagnostics.CodeAnalysis
 using module ../src/SqlMapper.psm1
 using module ./Fixtures/Character.psm1
 
@@ -8,6 +9,7 @@ using module ./Fixtures/Character.psm1
 #>
 Describe "SqlMapper" {
 	BeforeAll {
+		[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
 		$dataRow = @(
 			[KeyValuePair[string, object]]::new("Id", 123)
 			[KeyValuePair[string, object]]::new("LongLabel", "Hello World!")

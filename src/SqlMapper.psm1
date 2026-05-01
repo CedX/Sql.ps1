@@ -1,6 +1,7 @@
 using namespace System.Collections.Concurrent
 using namespace System.Collections.Generic
 using namespace System.Data
+using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Runtime.CompilerServices
 using module ./Reflection/DbColumnInfo.psm1
 using module ./Reflection/DbTableInfo.psm1
@@ -170,6 +171,7 @@ class SqlMapper {
 	.OUTPUTS
 		The value of the given type corresponding to the specified object.
 	#>
+	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "discard")]
 	hidden static [object] ChangeType([object] $Value, [Type] $ConversionType, [bool] $IsNullable) {
 		$nullableType = [Nullable]::GetUnderlyingType($ConversionType)
 		$targetType = $nullableType ?? $ConversionType

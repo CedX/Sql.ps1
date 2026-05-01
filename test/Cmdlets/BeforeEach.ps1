@@ -1,7 +1,6 @@
 using namespace System.Data.SQLite
 using namespace System.Diagnostics.CodeAnalysis
 
-[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
 $connection = [SQLiteConnection] "DataSource=:memory:"
 $connection.Open()
 

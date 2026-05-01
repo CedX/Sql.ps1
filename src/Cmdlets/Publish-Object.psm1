@@ -33,9 +33,9 @@ function Publish-Object {
 	}
 
 	process {
-		$instance = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
-		$method = [ConnectionExtensions].GetMethod("Insert").MakeGenericMethod($instance.GetType())
-		$arguments = $Connection, $instance, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
+		$object = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
+		$method = [ConnectionExtensions].GetMethod("Insert").MakeGenericMethod($object.GetType())
+		$arguments = $Connection, $object, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
 		$method.Invoke($null, $arguments)
 	}
 }

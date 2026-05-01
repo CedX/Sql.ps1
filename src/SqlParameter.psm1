@@ -17,13 +17,13 @@ class SqlParameter {
 	.SYNOPSIS
 		The database type of this parameter.
 	#>
-	[Nullable[DbType]] $DbType = $null
+	[Nullable[DbType]] $DbType
 
 	<#
 	.SYNOPSIS
 		Value indicating whether this parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.
 	#>
-	[Nullable[ParameterDirection]] $Direction = $null
+	[Nullable[ParameterDirection]] $Direction
 
 	<#
 	.SYNOPSIS
@@ -36,19 +36,19 @@ class SqlParameter {
 	.SYNOPSIS
 		Indicates the precision of numeric parameters.
 	#>
-	[Nullable[byte]] $Precision = $null
+	[Nullable[byte]] $Precision
 
 	<#
 	.SYNOPSIS
 		Indicates the scale of numeric parameters.
 	#>
-	[Nullable[byte]] $Scale = $null
+	[Nullable[byte]] $Scale
 
 	<#
 	.SYNOPSIS
 		The maximum size of this parameter, in bytes.
 	#>
-	[Nullable[int]] $Size = $null
+	[Nullable[int]] $Size
 
 	<#
 	.SYNOPSIS

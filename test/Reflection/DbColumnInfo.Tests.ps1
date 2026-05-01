@@ -1,4 +1,4 @@
-using module ../../src/Reflection/DbColumnInfo.psm1
+﻿using module ../../src/Reflection/DbColumnInfo.psm1
 using module ../Fixtures/Character.psm1
 
 <#

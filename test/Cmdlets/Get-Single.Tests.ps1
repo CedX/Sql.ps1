@@ -1,4 +1,4 @@
-using module ../Fixtures/Character.psm1
+﻿using module ../Fixtures/Character.psm1
 
 <#
 .SYNOPSIS

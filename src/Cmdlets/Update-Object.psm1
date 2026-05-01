@@ -39,9 +39,9 @@ function Update-Object {
 	}
 
 	process {
-		$instance = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
-		$method = [ConnectionExtensions].GetMethod("Update").MakeGenericMethod($instance.GetType())
-		$arguments = $Connection, $instance, $Columns, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
+		$object = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
+		$method = [ConnectionExtensions].GetMethod("Update").MakeGenericMethod($object.GetType())
+		$arguments = $Connection, $object, $Columns, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
 		$method.Invoke($null, $arguments)
 	}
 }
