@@ -1,4 +1,6 @@
 using namespace System.Data
+using module ../SqlCommand.psm1
+using module ../SqlCommandBuilder.psm1
 
 <#
 .SYNOPSIS
@@ -30,13 +32,11 @@ function Test-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-	}
+	$statement = [SqlCommandBuilder]::new($Connection).GetExistsCommand($Class, $Id)
 
-	end {
-		$method = [ConnectionExtensions].GetMethod("Exists").MakeGenericMethod($Class)
-		$arguments = $Connection, $Id, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
-		$method.Invoke($null, $arguments)
-	}
+	$command = [SqlCommand]::new($statement.Item1.Text)
+	$command.Timeout = $Timeout
+	$command.Transaction = $Transaction
+
+	Get-Scalar $Connection -As ([bool]) -Command $command -Parameters $statement.Item2
 }
