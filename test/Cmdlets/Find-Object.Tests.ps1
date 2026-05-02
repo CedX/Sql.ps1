@@ -16,9 +16,20 @@ Describe "Find-Object" {
 		$record.FullName | Should -BeExactly Balin
 
 		$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
-		$record.FullName | Should -Be ""
+		$record.FullName | Should -BeNullOrEmpty
 		$record.Gender | Should -Be ([CharacterGender]::Dwarf)
 
+		$record = Find-SqlObject $connection -Class ([Character]) -Id 14
+		$record | Should -Not -BeNullOrEmpty
+		$record.Id | Should -Be 14
+		$record.FullName | Should -BeExactly "Sam Gamgee"
+
+		$record = Find-SqlObject $connection -Class ([Character]) -Id 14 -Columns gender
+		$record.FullName | Should -BeNullOrEmpty
+		$record.Gender | Should -Be ([CharacterGender]::Hobbit)
+	}
+
+	It "should return `$null if the record is not found" {
 		Find-SqlObject $connection -Class ([Character]) -Id 666 | Should -BeNullOrEmpty
 	}
 }

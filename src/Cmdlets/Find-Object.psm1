@@ -1,4 +1,6 @@
 using namespace System.Data
+using module ../SqlCommand.psm1
+using module ../SqlCommandBuilder.psm1
 
 <#
 .SYNOPSIS
@@ -19,7 +21,7 @@ function Find-Object {
 		[Type] $Class,
 
 		# The primary key value.
-		[Parameter(Mandatory, Position = 2)]
+		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
 		[object] $Id,
 
 		# The list of columns to select. By default, all columns.
@@ -34,13 +36,13 @@ function Find-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-	}
+	process {
+		$statement = [SqlCommandBuilder]::new($Connection).GetFindCommand($Class, $Id, $Columns)
 
-	end {
-		$method = [ConnectionExtensions].GetMethod("Find").MakeGenericMethod($Class)
-		$arguments = $Connection, $Id, $Columns, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
-		$method.Invoke($null, $arguments)
+		$command = [SqlCommand]::new($statement.Item1.Text)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+
+		Get-SqlSingle $Connection -As $Class -Command $command -ErrorAction Ignore -Parameters $statement.Item2
 	}
 }

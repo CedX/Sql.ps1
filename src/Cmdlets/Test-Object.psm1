@@ -21,7 +21,7 @@ function Test-Object {
 		[Type] $Class,
 
 		# The primary key value.
-		[Parameter(Mandatory, Position = 2)]
+		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
 		[object] $Id,
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
@@ -32,11 +32,13 @@ function Test-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	$statement = [SqlCommandBuilder]::new($Connection).GetExistsCommand($Class, $Id)
+	process {
+		$statement = [SqlCommandBuilder]::new($Connection).GetExistsCommand($Class, $Id)
 
-	$command = [SqlCommand]::new($statement.Item1.Text)
-	$command.Timeout = $Timeout
-	$command.Transaction = $Transaction
+		$command = [SqlCommand]::new($statement.Item1.Text)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
 
-	Get-Scalar $Connection -As ([bool]) -Command $command -Parameters $statement.Item2
+		Get-Scalar $Connection -As ([bool]) -Command $command -Parameters $statement.Item2
+	}
 }
