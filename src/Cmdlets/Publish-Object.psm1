@@ -1,4 +1,7 @@
 using namespace System.Data
+using module ../SqlCommand.psm1
+using module ../SqlCommandBuilder.psm1
+using module ../SqlMapper.psm1
 
 <#
 .SYNOPSIS
@@ -28,14 +31,16 @@ function Publish-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-	}
-
 	process {
-		$object = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
-		$method = [ConnectionExtensions].GetMethod("Insert").MakeGenericMethod($object.GetType())
-		$arguments = $Connection, $object, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
-		$method.Invoke($null, $arguments)
+		$statement = [SqlCommandBuilder]::new($Connection).GetInsertCommand($InputObject)
+
+		$command = [SqlCommand]::new($statement.Item1.Text)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+
+		$id = Get-Scalar $Connection -As ([long]) -Command $command -Parameters $statement.Item2
+		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
+		if ($column) { $column.SetValue($InputObject, [SqlMapper]::ChangeType($id, $column)) }
+		$id
 	}
 }
