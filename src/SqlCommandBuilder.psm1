@@ -124,7 +124,7 @@ class SqlCommandBuilder {
 			DELETE FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text, [SqlParameterCollection]::new($parameter))
+		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), [SqlParameterCollection]::new($parameter))
 	}
 
 	<#
@@ -148,7 +148,7 @@ class SqlCommandBuilder {
 			FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text, [SqlParameterCollection]::new($parameter))
+		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), [SqlParameterCollection]::new($parameter))
 	}
 
 	<#
@@ -191,7 +191,7 @@ class SqlCommandBuilder {
 			FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text, [SqlParameterCollection]::new($parameter))
+		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), [SqlParameterCollection]::new($parameter))
 	}
 
 	<#
@@ -219,7 +219,7 @@ class SqlCommandBuilder {
 			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Object)))
 		}
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text, $parameters)
+		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
 	}
 
 	<#
@@ -252,7 +252,7 @@ class SqlCommandBuilder {
 		$fields = ($Columns ? $table.Columns.Values.Where{ $Columns.Contains($_.Name) } : $table.Columns.Values).Where{ $_.CanRead -and (-not $_.IsComputed) }
 		$text = "
 			UPDATE $($this.GetTableName($table))
-			SET $($fields.ForEach{ "$($this.QuotedIdentifier($_.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($_.Name))" } -join ", ")
+			SET $($fields.ForEach{ "$($this.QuoteIdentifier($_.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($_.Name))" } -join ", ")
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($idColumn.Name))"
 
 		$parameters = [SqlParameterCollection]::new()
@@ -261,7 +261,7 @@ class SqlCommandBuilder {
 			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Object)))
 		}
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text, $parameters)
+		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
 	}
 
 	<#
