@@ -1,3 +1,5 @@
+using module ../Fixtures/Character.psm1
+
 <#
 .SYNOPSIS
 	Tests the features of the `Invoke-Query` cmdlet.
@@ -8,7 +10,7 @@ Describe "Invoke-Query" {
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
 	It "should return the records produced by the SQL query" {
-		$sql = "SELECT * FROM Characters WHERE gender = @Gender ORDER BY FullName"
+		$sql = "SELECT * FROM Characters WHERE gender = @Gender ORDER BY fullName"
 		$records = Invoke-SqlQuery $connection -As ([Character]) -Command $sql -Parameters @{ Gender = "Elf" }
 		$records | Should -HaveCount 3
 

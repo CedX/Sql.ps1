@@ -2,6 +2,7 @@ using namespace System.Collections.Concurrent
 using namespace System.Collections.Generic
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
+using namespace System.Linq
 using namespace System.Runtime.CompilerServices
 using module ./DbColumnInfo.psm1
 using module ./DbTableInfo.psm1
@@ -63,26 +64,34 @@ class SqlMapper {
 		The object types.
 	.PARAMETER Record
 		A data record providing the properties to be set on the created objects.
+	.PARAMETER SplitOn
+		The fields from which to split and read the next objects.
 	.OUTPUTS
-		The newly created object.
+		The newly created object tuple.
 	#>
-	# [psobject[]] CreateInstance([Type[]] $Types, [IDataRecord] $Record) {
-	# 	return $this.CreateInstance($Types, [SqlMapper]::SplitOn($Record, @())[0])
-	# }
+	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "discard")]
+	[ITuple] CreateInstance([Type[]] $Types, [IDataRecord] $Record, [string[]] $SplitOn) {
+		if (($Types.Count -lt 2) -or ($Types.Count -gt 8)) { throw [ArgumentException]::new("The number of object types is invalid.", "Types") }
+		if ($SplitOn -and ($SplitOn.Count -ne $Types.Count - 1)) { throw [ArgumentException]::new("The number of split fields is invalid.", "SplitOn") }
+		if (-not $SplitOn) { $SplitOn = (1..$Types.Count - 1).ForEach{ "Id" } }
 
-	<#
-	.SYNOPSIS
-		Creates a new object tuple of the given types from the specified data record.
-	.PARAMETER Types
-		The object types.
-	.PARAMETER Record
-		A data record providing the properties to be set on the created objects.
-	.OUTPUTS
-		The newly created object.
-	#>
-	# [object[]] CreateInstance([Type[]] $Types, [IDataRecord] $Record, [string[]] $SplitOn) {
-	# 	return $this.CreateInstance($Types, [SqlMapper]::SplitOn($Record, @())[0])
-	# }
+		$records = [SqlMapper]::SplitOn($Record, $SplitOn)
+		$objects = [List[object]]::new($records.Count)
+		for ($index = 0; $index -lt $Types.Count; $index++) {
+			$object = ($records.Count -le $index) -or ([SqlMapper]::IsNullObject($records[$index])) ? $null : $this.CreateInstance($Types[$index], $records[$index])
+			$objects.Add($object)
+		}
+
+		return $discard = switch ($objects.Count) {
+			2 { [ValueTuple]::Create($objects[0], $objects[1]) }
+			3 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2]) }
+			4 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3]) }
+			5 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4]) }
+			6 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5]) }
+			7 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5], $objects[6]) }
+			default { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5], $objects[6], $objects[7]) }
+		}
+	}
 
 	<#
 	.SYNOPSIS
@@ -191,6 +200,18 @@ class SqlMapper {
 			{ $targetType -eq [string] } { $IsNullable ? $null : ""; break }
 			default { $IsNullable ? $null : [Activator]::CreateInstance($targetType) }
 		}
+	}
+
+	<#
+	.SYNOPSIS
+		Returns a value indicating whether all values of the specified dictionary are `$null`.
+	.PARAMETER HashTable
+		The dictionary to inspect.
+	.OUTPUTS
+		`$true` if all values of the specified dictionary are `$null`, otherwise `$false`.
+	#>
+	hidden static [bool] IsNullObject([hashtable] $HashTable) {
+		return [Enumerable]::All($HashTable.Values, { param ($value) $null -eq $value })
 	}
 
 	<#

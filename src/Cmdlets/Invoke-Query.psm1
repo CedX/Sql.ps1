@@ -1,4 +1,6 @@
 using namespace System.Data
+using module ../SqlCommand.psm1
+using module ../SqlMapper.psm1
 using module ../SqlParameterCollection.psm1
 
 <#
@@ -33,9 +35,6 @@ function Invoke-Query {
 	)
 
 	begin {
-		if ($SplitOn -and ($SplitOn.Count -ne $As.Count - 1)) { throw [ArgumentException]::new("The number of split fields is invalid.", "SplitOn") }
-		if ((-not $SplitOn) -and ($As.Count -ge 2)) { $SplitOn = (0..$As.Count - 2).ForEach{ "Id" } }
-
 		$dbCommand = $null
 		$reader = $null
 		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
@@ -44,7 +43,9 @@ function Invoke-Query {
 	end {
 		$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
 		$reader = $dbCommand.ExecuteReader()
-		while ($reader.Read()) { [SqlMapper]::Instance.CreateInstance($As, $reader, $SplitOn) }
+		while ($reader.Read()) {
+			$As.Count -gt 1 ? [SqlMapper]::Instance.CreateInstance($As, $reader, $SplitOn) : [SqlMapper]::Instance.CreateInstance($As[0], $reader)
+		}
 	}
 
 	clean {
