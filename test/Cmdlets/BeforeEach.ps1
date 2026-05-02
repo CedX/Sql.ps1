@@ -1,7 +1,6 @@
 using assembly ../../bin/System.Data.SQLite.dll
-using namespace System.Data.SQLite
 
-$connection = [SQLiteConnection] "DataSource=:memory:"
+$connection = [System.Data.SQLite.SQLiteConnection] "DataSource=:memory:"
 $connection.Open()
 
 $command = $connection.CreateCommand()

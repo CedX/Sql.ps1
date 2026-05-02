@@ -109,17 +109,17 @@ class SqlCommandBuilder {
 	<#
 	.SYNOPSIS
 		Gets the generated command to delete an entity.
-	.PARAMETER Object
+	.PARAMETER Entity
 		The entity to delete.
 	.OUTPUTS
 		The generated command to delete an entity.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetDeleteCommand([object] $Object) {
-		$table = [SqlMapper]::Instance.GetTable($Object.GetType())
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetDeleteCommand([object] $Entity) {
+		$table = [SqlMapper]::Instance.GetTable($Entity.GetType())
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
-		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn.Name), $idColumn.GetValue($Object))
+		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn.Name), $idColumn.GetValue($Entity))
 		$text = "
 			DELETE FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
@@ -162,7 +162,7 @@ class SqlCommandBuilder {
 		The generated command to find an entity.
 	#>
 	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindCommand([Type] $Type, [object] $Id) {
-		return $this.Find($Type, $Id, @())
+		return $this.GetFindCommand($Type, $Id, @())
 	}
 
 	<#
@@ -197,13 +197,13 @@ class SqlCommandBuilder {
 	<#
 	.SYNOPSIS
 		Gets the generated command to insert an entity.
-	.PARAMETER Object
+	.PARAMETER Entity
 		The entity to insert.
 	.OUTPUTS
 		The generated command to insert an entity.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetInsertCommand([object] $Object) {
-		$table = [SqlMapper]::Instance.GetTable($Object.GetType())
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetInsertCommand([object] $Entity) {
+		$table = [SqlMapper]::Instance.GetTable($Entity.GetType())
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
@@ -216,7 +216,7 @@ class SqlCommandBuilder {
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
 			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index].Name)
-			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Object)))
+			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Entity)))
 		}
 
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
@@ -225,27 +225,27 @@ class SqlCommandBuilder {
 	<#
 	.SYNOPSIS
 		Gets the generated command to update an entity.
-	.PARAMETER Object
+	.PARAMETER Entity
 		The entity to update.
 	.OUTPUTS
 		The generated command to update an entity.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetUpdateCommand([object] $Object) {
-		return $this.GetUpdateCommand($Object, @())
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetUpdateCommand([object] $Entity) {
+		return $this.GetUpdateCommand($Entity, @())
 	}
 
 	<#
 	.SYNOPSIS
 		Gets the generated command to update an entity.
-	.PARAMETER Object
+	.PARAMETER Entity
 		The entity to update.
 	.PARAMETER Columns
 		The list of columns to update. By default, all columns.
 	.OUTPUTS
 		The generated command to update an entity.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetUpdateCommand([object] $Object, [string[]] $Columns) {
-		$table = [SqlMapper]::Instance.GetTable($Object.GetType())
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetUpdateCommand([object] $Entity, [string[]] $Columns) {
+		$table = [SqlMapper]::Instance.GetTable($Entity.GetType())
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
@@ -258,9 +258,10 @@ class SqlCommandBuilder {
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
 			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index].Name)
-			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Object)))
+			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Entity)))
 		}
 
+		$parameters.Add([SqlParameter]::new($idColumn.Name, $idColumn.GetValue($Entity)))
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
 	}
 
