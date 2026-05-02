@@ -1,5 +1,7 @@
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
+using module ../SqlCommand.psm1
+using module ../SqlCommandBuilder.psm1
 
 <#
 .SYNOPSIS
@@ -34,14 +36,13 @@ function Update-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-	}
-
 	process {
-		$object = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
-		$method = [ConnectionExtensions].GetMethod("Update").MakeGenericMethod($object.GetType())
-		$arguments = $Connection, $object, $Columns, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
-		$method.Invoke($null, $arguments)
+		$statement = [SqlCommandBuilder]::new($Connection).GetUpdateCommand($InputObject, $Columns)
+
+		$command = [SqlCommand]::new($statement.Item1.Text)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+
+		Invoke-NonQuery $Connection -Command $command -Parameters $statement.Item2
 	}
 }
