@@ -1,3 +1,5 @@
+using module ../Fixtures/Character.psm1
+
 <#
 .SYNOPSIS
 	Tests the features of the `Find-Object` cmdlet.
@@ -9,7 +11,7 @@ Describe "Find-Object" {
 
 	It "should find the record with the specified identifier" {
 		$record = Find-SqlObject $connection -Class ([Character]) -Id 2
-		$record | Should -Not -Be $null
+		$record | Should -Not -BeNullOrEmpty
 		$record.Id | Should -Be 2
 		$record.FullName | Should -BeExactly Balin
 
@@ -17,6 +19,6 @@ Describe "Find-Object" {
 		$record.FullName | Should -Be ""
 		$record.Gender | Should -Be ([CharacterGender]::Dwarf)
 
-		Find-SqlObject $connection -Class ([Character]) -Id 666 | Should -Be $null
+		Find-SqlObject $connection -Class ([Character]) -Id 666 | Should -BeNullOrEmpty
 	}
 }

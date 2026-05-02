@@ -1,5 +1,7 @@
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
+using module ../SqlCommand.psm1
+using module ../SqlCommandBuilder.psm1
 
 <#
 .SYNOPSIS
@@ -30,14 +32,13 @@ function Remove-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-	}
-
 	process {
-		$object = $InputObject -is [psobject] ? $InputObject.BaseObject : $InputObject
-		$method = [ConnectionExtensions].GetMethod("Delete").MakeGenericMethod($object.GetType())
-		$arguments = $Connection, $object, [CommandOptions]@{ Timeout = $Timeout; Transaction = $Transaction }
-		$method.Invoke($null, $arguments)
+		$statement = [SqlCommandBuilder]::new($Connection).GetDeleteCommand($InputObject)
+
+		$command = [SqlCommand]::new($statement.Item1.Text)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+
+		(Invoke-NonQuery $Connection -Command $command -Parameters $statement.Item2) -gt 0
 	}
 }

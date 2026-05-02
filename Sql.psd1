@@ -30,7 +30,7 @@
 		"New-ParameterCollection"
 		"New-Transaction"
 		# "Publish-Object"
-		# "Remove-Object"
+		"Remove-Object"
 		# "Test-Object"
 		# "Update-Object"
 	)
@@ -52,7 +52,7 @@
 		"src/Cmdlets/New-ParameterCollection.psm1"
 		"src/Cmdlets/New-Transaction.psm1"
 		# "src/Cmdlets/Publish-Object.psm1"
-		# "src/Cmdlets/Remove-Object.psm1"
+		"src/Cmdlets/Remove-Object.psm1"
 		# "src/Cmdlets/Test-Object.psm1"
 		# "src/Cmdlets/Update-Object.psm1"
 	)

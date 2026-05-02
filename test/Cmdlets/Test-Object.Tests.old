@@ -1,3 +1,5 @@
+using module ../Fixtures/Character.psm1
+
 <#
 .SYNOPSIS
 	Tests the features of the `Test-Object` cmdlet.

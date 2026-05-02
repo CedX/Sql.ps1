@@ -26,11 +26,11 @@ function Invoke-Query {
 		[SqlParameterCollection] $Parameters,
 
 		# The type of objects to return.
-		[ValidateCount(1, 8)]
+		[ValidateCount(1, 7)]
 		[Type[]] $As = @([psobject]),
 
 		# The fields from which to split and read the next objects.
-		[ValidateCount(0, 7)]
+		[ValidateCount(0, 6)]
 		[string[]] $SplitOn = @()
 	)
 

@@ -71,9 +71,9 @@ class SqlMapper {
 	#>
 	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "discard")]
 	[ITuple] CreateInstance([Type[]] $Types, [IDataRecord] $Record, [string[]] $SplitOn) {
-		if (($Types.Count -lt 2) -or ($Types.Count -gt 8)) { throw [ArgumentException]::new("The number of object types is invalid.", "Types") }
+		if (($Types.Count -lt 2) -or ($Types.Count -gt 7)) { throw [ArgumentException]::new("The number of object types is invalid.", "Types") }
 		if ($SplitOn -and ($SplitOn.Count -ne $Types.Count - 1)) { throw [ArgumentException]::new("The number of split fields is invalid.", "SplitOn") }
-		if (-not $SplitOn) { $SplitOn = (1..$Types.Count - 1).ForEach{ "Id" } }
+		if (-not $SplitOn) { $SplitOn = (1..($Types.Count - 1)).ForEach{ "Id" } }
 
 		$records = [SqlMapper]::SplitOn($Record, $SplitOn)
 		$objects = [List[object]]::new($records.Count)
@@ -211,7 +211,7 @@ class SqlMapper {
 		`$true` if all values of the specified dictionary are `$null`, otherwise `$false`.
 	#>
 	hidden static [bool] IsNullObject([hashtable] $HashTable) {
-		return [Enumerable]::All($HashTable.Values, { param ($value) $null -eq $value })
+		return $HashTable.Values.Where{ $null -eq $_ }.Count -eq $HashTable.Count
 	}
 
 	<#

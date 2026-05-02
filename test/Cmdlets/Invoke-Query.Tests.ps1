@@ -22,4 +22,22 @@ Describe "Invoke-Query" {
 		$galadriel.FullName | Should -BeExactly Galadriel
 		$galadriel.Gender | Should -Be ([CharacterGender]::Elf)
 	}
+
+	It "should allow the data rows to be split into distinct objects" {
+		$sql = "SELECT ID, firstName, lastName, ID, fullName, gender FROM Characters WHERE firstName = @FirstName"
+		$records = Invoke-SqlQuery $connection -As ([psobject], [psobject]) -Command $sql -Parameters @{ FirstName = "Frodo" } -SplitOn "id"
+		$records | Should -HaveCount 1
+
+		$left = $records.Item1
+		$left.ID | Should -Be 6
+		$left.firstName | Should -BeExactly Frodo
+		$left.lastName | Should -BeExactly Baggins
+		$left.fullName | Should -BeNullOrEmpty
+
+		$right = $records.Item2
+		$right.ID | Should -Be 6
+		$right.fullName | Should -BeExactly "Frodo Baggins"
+		$right.gender | Should -BeExactly Hobbit
+		$right.firstName | Should -BeNullOrEmpty
+	}
 }
