@@ -33,12 +33,12 @@ function Invoke-Query {
 	)
 
 	begin {
-		# TODO [ValidateScript({ (-not $_) -or ($_.Count -eq $As.Count - 1) }, ErrorMessage = "The number of split fields is invalid.")]
+		if ($SplitOn -and ($SplitOn.Count -ne $As.Count - 1)) { throw [ArgumentException]::new("The number of split fields is invalid.", "SplitOn") }
+		if ((-not $SplitOn) -and ($As.Count -ge 2)) { $SplitOn = (0..$As.Count - 2).ForEach{ "Id" } }
 
 		$dbCommand = $null
 		$reader = $null
 		if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
-		if ((-not $SplitOn) -and ($As.Count -ge 2)) { $SplitOn = (0..$As.Count - 2).ForEach{ "Id" } }
 	}
 
 	end {

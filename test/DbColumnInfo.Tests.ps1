@@ -1,5 +1,5 @@
-﻿using module ../../src/Reflection/DbColumnInfo.psm1
-using module ../Fixtures/Character.psm1
+﻿using module ../src/DbColumnInfo.psm1
+using module ./Fixtures/Character.psm1
 
 <#
 .SYNOPSIS

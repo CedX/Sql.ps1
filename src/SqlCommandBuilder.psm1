@@ -1,7 +1,7 @@
 using namespace System.Data
 using namespace System.Data.Common
 using namespace System.Linq
-using module ./Reflection/DbTableInfo.psm1
+using module ./DbTableInfo.psm1
 using module ./SqlCommand.psm1
 using module ./SqlMapper.psm1
 using module ./SqlParameter.psm1

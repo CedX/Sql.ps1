@@ -3,8 +3,8 @@ using namespace System.Collections.Generic
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Runtime.CompilerServices
-using module ./Reflection/DbColumnInfo.psm1
-using module ./Reflection/DbTableInfo.psm1
+using module ./DbColumnInfo.psm1
+using module ./DbTableInfo.psm1
 
 <#
 .SYNOPSIS
