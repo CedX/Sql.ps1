@@ -209,7 +209,7 @@ class SqlCommandBuilder {
 
 		$fields = $table.Columns.Values.Where{ $_.CanRead -and (-not $_.IsComputed) }
 		$text = "
-			INSERT INTO $($this.GetTableName($table)) ($($fields.ForEach{ $this.QuoteIdentifier($_) } -join ", "))
+			INSERT INTO $($this.GetTableName($table)) ($($fields.ForEach{ $this.QuoteIdentifier($_.Name) } -join ", "))
 			VALUES ($($fields.ForEach{ $this.UsePositionalParameters ? "?" : $this.GetParameterName($_.Name) } -join ", "))
 			$($this.SupportsReturningClause ? "RETURNING $($this.QuoteIdentifier($idColumn.Name))" : "; SELECT $($this.LastInsertIdFunction);")"
 
