@@ -15,14 +15,16 @@ Describe "Find-Object" {
 		$record.Id | Should -Be 2
 		$record.FullName | Should -BeExactly Balin
 
-		$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
-		$record.FullName | Should -BeNullOrEmpty
-		$record.Gender | Should -Be ([CharacterGender]::Dwarf)
-
 		$record = Find-SqlObject $connection -Class ([Character]) -Id 14
 		$record | Should -Not -BeNullOrEmpty
 		$record.Id | Should -Be 14
 		$record.FullName | Should -BeExactly "Sam Gamgee"
+	}
+
+	It "should allow selecting a specific set of columns" {
+		$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
+		$record.FullName | Should -BeNullOrEmpty
+		$record.Gender | Should -Be ([CharacterGender]::Dwarf)
 
 		$record = Find-SqlObject $connection -Class ([Character]) -Id 14 -Columns gender
 		$record.FullName | Should -BeNullOrEmpty
