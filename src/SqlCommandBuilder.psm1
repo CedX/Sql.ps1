@@ -216,8 +216,8 @@ class SqlCommandBuilder {
 
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
-			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
-			$parameters.Add([SqlParameter]::new($name, $this.GetParameterValue($fields[$index], $Entity)))
+			$parameterName = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
+			$parameters.AddWithValue($parameterName, $this.GetParameterValue($fields[$index], $Entity))
 		}
 
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
@@ -258,11 +258,12 @@ class SqlCommandBuilder {
 
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
-			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
-			$parameters.Add([SqlParameter]::new($name, $this.GetParameterValue($fields[$index], $Entity)))
+			$parameterName = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
+			$parameters.AddWithValue($parameterName, $this.GetParameterValue($fields[$index], $Entity))
 		}
 
-		$parameters.Add([SqlParameter]::new($this.GetParameterName($idColumn), $this.GetParameterValue($idColumn, $Entity)))
+		$parameterName = $this.UsePositionalParameters ? "?$($fields.Count + 1)" : $this.GetParameterName($idColumn)
+		$parameters.AddWithValue($parameterName, $this.GetParameterValue($idColumn, $Entity))
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
 	}
 
