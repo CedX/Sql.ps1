@@ -82,6 +82,22 @@ class SqlParameterCollection: List[SqlParameter] {
 
 	<#
 	.SYNOPSIS
+		Adds a new parameter to the end of this collection.
+	.PARAMETER Name
+		The parameter name.
+	.PARAMETER Value
+		The parameter value.
+	.OUTPUTS
+		The newly added parameter.
+	#>
+	[SqlParameter] AddWithValue([string] $Name, [object] $Value) {
+		$parameter = [SqlParameter]::new($Name, $Value)
+		$this.Add($parameter)
+		return $parameter
+	}
+
+	<#
+	.SYNOPSIS
 		Gets a value indicating whether a parameter in this collection has the specified name.
 	.PARAMETER Name
 		The parameter name.

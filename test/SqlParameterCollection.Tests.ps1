@@ -7,6 +7,18 @@ using module ../src/SqlParameterCollection.psm1
 	Tests the features of the `SqlParameterCollection` class.
 #>
 Describe "SqlParameterCollection" {
+	Context "AddWithValue" {
+		It "should add a new parameter to the collection" {
+			$collection = [SqlParameterCollection]::new()
+			$collection | Should -BeNullOrEmpty
+
+			$parameter = $collection.AddWithValue("Name", "Value")
+			$collection | Should -HaveCount 1
+			$parameter.Name | Should -BeExactly "@Name"
+			$parameter.Value | Should -BeExactly "Value"
+		}
+	}
+
 	Context "Constructor" {
 		It "should create an empty collection by default" {
 			$collection = [SqlParameterCollection]::new()
