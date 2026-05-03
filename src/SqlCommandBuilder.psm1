@@ -1,6 +1,7 @@
 using namespace System.Data
 using namespace System.Data.Common
 using namespace System.Linq
+using module ./DbColumnInfo.psm1
 using module ./DbTableInfo.psm1
 using module ./SqlCommand.psm1
 using module ./SqlMapper.psm1
@@ -119,7 +120,7 @@ class SqlCommandBuilder {
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
-		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn.Name), $idColumn.GetValue($Entity))
+		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn), $idColumn.GetValue($Entity))
 		$text = "
 			DELETE FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
@@ -142,7 +143,7 @@ class SqlCommandBuilder {
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
-		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn.Name), $Id)
+		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn), $Id)
 		$text = "
 			SELECT 1
 			FROM $($this.GetTableName($table))
@@ -185,7 +186,7 @@ class SqlCommandBuilder {
 		$fields = ($Columns ? $table.Columns.Values.Where{ $Columns.Contains($_.Name) } : $table.Columns.Values).Where{ $_.CanWrite }.ForEach{ $_.Name }
 		if (-not $fields.Contains($idColumn.Name)) { $fields += $idColumn.Name }
 
-		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn.Name), $id)
+		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn), $id)
 		$text = "
 			SELECT $($fields.ForEach{ $this.QuoteIdentifier($_) } -join ", ")
 			FROM $($this.GetTableName($table))
@@ -210,12 +211,12 @@ class SqlCommandBuilder {
 		$fields = $table.Columns.Values.Where{ $_.CanRead -and (-not $_.IsComputed) }
 		$text = "
 			INSERT INTO $($this.GetTableName($table)) ($($fields.ForEach{ $this.QuoteIdentifier($_.Name) } -join ", "))
-			VALUES ($($fields.ForEach{ $this.UsePositionalParameters ? "?" : $this.GetParameterName($_.Name) } -join ", "))
+			VALUES ($($fields.ForEach{ $this.UsePositionalParameters ? "?" : $this.GetParameterName($_) } -join ", "))
 			$($this.SupportsReturningClause ? "RETURNING $($this.QuoteIdentifier($idColumn.Name))" : "; SELECT $($this.LastInsertIdFunction);")"
 
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
-			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index].Name)
+			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
 			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Entity)))
 		}
 
@@ -252,16 +253,16 @@ class SqlCommandBuilder {
 		$fields = ($Columns ? $table.Columns.Values.Where{ $Columns.Contains($_.Name) } : $table.Columns.Values).Where{ $_.CanRead -and (-not $_.IsComputed) }
 		$text = "
 			UPDATE $($this.GetTableName($table))
-			SET $($fields.ForEach{ "$($this.QuoteIdentifier($_.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($_.Name))" } -join ", ")
-			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($idColumn.Name))"
+			SET $($fields.ForEach{ "$($this.QuoteIdentifier($_.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($_))" } -join ", ")
+			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($idColumn))"
 
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
-			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index].Name)
+			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
 			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Entity)))
 		}
 
-		$parameters.Add([SqlParameter]::new($idColumn.Name, $idColumn.GetValue($Entity)))
+		$parameters.Add([SqlParameter]::new($this.GetParameterName($idColumn), $idColumn.GetValue($Entity)))
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
 	}
 
@@ -293,14 +294,14 @@ class SqlCommandBuilder {
 
 	<#
 	.SYNOPSIS
-		Returns the full parameter name corresponding to the specified partial parameter name.
-	.PARAMETER ParameterName
-		The partial name of the parameter.
+		Returns the parameter name corresponding to the specified column.
+	.PARAMETER Column
+		The column providing a parameter name.
 	.OUTPUTS
-		The full parameter name corresponding to the specified partial parameter name.
+		The parameter name corresponding to the specified column.
 	#>
-	hidden [string] GetParameterName([string] $ParameterName) {
-		return "$($this.ParameterPrefix)$ParameterName"
+	hidden [string] GetParameterName([DbColumnInfo] $Column) {
+		return "$($this.ParameterPrefix)$($Column.Name)"
 	}
 
 	<#
