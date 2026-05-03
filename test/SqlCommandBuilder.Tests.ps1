@@ -80,7 +80,7 @@ Describe "SqlCommandBuilder" {
 			$parameters = [SqlCommandBuilder]::new($connection).GetInsertCommand($character).Item2
 			$parameters | Should -HaveCount 3
 			$parameters["firstName"].Value | Should -BeExactly Cédric
-			$parameters["gender"].Value | Should -Be ([CharacterGender]::DarkLord)
+			$parameters["gender"].Value | Should -BeExactly DarkLord
 			$parameters["lastName"].Value | Should -Be ""
 		}
 	}
@@ -98,7 +98,7 @@ Describe "SqlCommandBuilder" {
 			$parameters | Should -HaveCount 4
 			$parameters["ID"].Value | Should -Be 1000
 			$parameters["firstName"].Value | Should -BeExactly Cédric
-			$parameters["gender"].Value | Should -Be ([CharacterGender]::DarkLord)
+			$parameters["gender"].Value | Should -BeExactly DarkLord
 			$parameters["lastName"].Value | Should -Be ""
 		}
 
