@@ -26,18 +26,18 @@ Describe "Update-Object" {
 	}
 
 	It "should allow updating a specific set of columns" {
-		$sql = "SELECT * FROM Characters WHERE firstName = 'Sauron'"
+		$sql = "SELECT * FROM Characters WHERE firstName = 'Saruman'"
 
-		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
-		$sauron.FullName | Should -BeExactly Sauron
-		$sauron.Gender | Should -Be ([CharacterGender]::DarkLord)
+		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
+		$saruman.FullName | Should -BeExactly Saruman
+		$saruman.Gender | Should -Be ([CharacterGender]::Istari)
 
-		$sauron.LastName = "The big bad guy"
-		$sauron.Gender = [CharacterGender]::Istari
-		Update-SqlObject $connection -InputObject $sauron -Columns gender | Should -Be 1
+		$saruman.LastName = "The traitor"
+		$saruman.Gender = [CharacterGender]::DarkLord
+		Update-SqlObject $connection -InputObject $saruman -Columns gender | Should -Be 1
 
-		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
-		$sauron.FullName | Should -BeExactly Sauron
-		$sauron.Gender | Should -Be ([CharacterGender]::Istari)
+		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
+		$saruman.FullName | Should -BeExactly Saruman
+		$saruman.Gender | Should -Be ([CharacterGender]::DarkLord)
 	}
 }
