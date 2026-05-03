@@ -151,7 +151,7 @@ class SqlMapper {
 		The value of the given type corresponding to the specified object.
 	#>
 	hidden static [object] ChangeType([object] $Value, [DbColumnInfo] $Column) {
-		return [SqlMapper]::ChangeType($Value, $Column.Type, $Column.IsNullable)
+		return [SqlMapper]::ChangeType($Value, $Column.PropertyType, $Column.IsNullable)
 	}
 
 	<#

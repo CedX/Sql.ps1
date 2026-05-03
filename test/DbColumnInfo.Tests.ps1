@@ -59,14 +59,14 @@ Describe "DbColumnInfo" {
 		}
 	}
 
-	Context "Type" {
+	Context "PropertyType" {
 		It "should return the type of the database column" -ForEach @(
 			@{ Name = "FirstName"; Expected = [string] }
 			@{ Name = "FullName"; Expected = [string] }
 			@{ Name = "Gender"; Expected = [CharacterGender] }
 			@{ Name = "Id"; Expected = [int] }
 		) {
-			[DbColumnInfo]::new([Character].GetProperty($name)).Type | Should -Be $expected
+			[DbColumnInfo]::new([Character].GetProperty($name)).PropertyType | Should -Be $expected
 		}
 	}
 

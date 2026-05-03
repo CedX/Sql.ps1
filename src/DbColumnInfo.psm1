@@ -107,7 +107,7 @@ class DbColumnInfo {
 	.SYNOPSIS
 		The type of the column value.
 	#>
-	[Type] $Type
+	[Type] $PropertyType
 
 	<#
 	.SYNOPSIS
@@ -125,7 +125,7 @@ class DbColumnInfo {
 		$this.CanRead = $Property.CanRead
 		$this.CanWrite = $Property.CanWrite
 		$this.Property = $Property
-		$this.Type = $Property.PropertyType
+		$this.PropertyType = $Property.PropertyType
 
 		$column = [Attribute]::GetCustomAttribute($Property, [ColumnAttribute])
 		$this.Name = ${column}?.Name ?? $Property.Name

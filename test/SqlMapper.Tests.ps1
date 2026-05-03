@@ -111,8 +111,8 @@ Describe "SqlMapper" {
 
 			$table.Columns.Keys | Should -HaveCount 5
 			$table.IdentityColumn | Should -Be $table.Columns.ID
-			$table.Columns.gender.Type | Should -Be ([CharacterGender])
-			$table.Columns.lastName.Type | Should -Be ([string])
+			$table.Columns.gender.PropertyType | Should -Be ([CharacterGender])
+			$table.Columns.lastName.PropertyType | Should -Be ([string])
 
 			$table.Columns.firstName.CanWrite | Should -BeTrue
 			$table.Columns.fullName.IsComputed | Should -BeTrue
