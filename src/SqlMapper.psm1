@@ -2,7 +2,6 @@ using namespace System.Collections.Concurrent
 using namespace System.Collections.Generic
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
-using namespace System.Linq
 using namespace System.Runtime.CompilerServices
 using module ./DbColumnInfo.psm1
 using module ./DbTableInfo.psm1

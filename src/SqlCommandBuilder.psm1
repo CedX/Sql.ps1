@@ -1,6 +1,6 @@
 using namespace System.Data
 using namespace System.Data.Common
-using namespace System.Linq
+using namespace System.Diagnostics.CodeAnalysis
 using module ./DbColumnInfo.psm1
 using module ./DbTableInfo.psm1
 using module ./SqlCommand.psm1
@@ -120,7 +120,7 @@ class SqlCommandBuilder {
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
-		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn), $idColumn.GetValue($Entity))
+		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn), $this.GetParameterValue($idColumn, $Entity))
 		$text = "
 			DELETE FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
@@ -217,7 +217,7 @@ class SqlCommandBuilder {
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
 			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
-			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Entity)))
+			$parameters.Add([SqlParameter]::new($name, $this.GetParameterValue($fields[$index], $Entity)))
 		}
 
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
@@ -259,10 +259,10 @@ class SqlCommandBuilder {
 		$parameters = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $fields.Count; $index++) {
 			$name = $this.UsePositionalParameters ? "?$($index + 1)" : $this.GetParameterName($fields[$index])
-			$parameters.Add([SqlParameter]::new($name, $fields[$index].GetValue($Entity)))
+			$parameters.Add([SqlParameter]::new($name, $this.GetParameterValue($fields[$index], $Entity)))
 		}
 
-		$parameters.Add([SqlParameter]::new($this.GetParameterName($idColumn), $idColumn.GetValue($Entity)))
+		$parameters.Add([SqlParameter]::new($this.GetParameterName($idColumn), $this.GetParameterValue($idColumn, $Entity)))
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
 	}
 
@@ -296,12 +296,32 @@ class SqlCommandBuilder {
 	.SYNOPSIS
 		Returns the parameter name corresponding to the specified column.
 	.PARAMETER Column
-		The column providing a parameter name.
+		The column providing the parameter name.
 	.OUTPUTS
 		The parameter name corresponding to the specified column.
 	#>
 	hidden [string] GetParameterName([DbColumnInfo] $Column) {
 		return "$($this.ParameterPrefix)$($Column.Name)"
+	}
+
+	<#
+	.SYNOPSIS
+		Returns the parameter value corresponding to the specified column.
+	.PARAMETER Column
+		The column providing the parameter data type.
+	.PARAMETER Entity
+		The entity providing the parameter value.
+	.OUTPUTS
+		The parameter value corresponding to the specified column.
+	#>
+	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "discard")]
+	hidden [object] GetParameterValue([DbColumnInfo] $Column, [object] $Entity) {
+		$stringTypes = [DbType]::AnsiString, [DbType]::AnsiStringFixedLength, [DbType]::String, [DbType]::StringFixedLength
+		$value = $Column.GetValue($Entity)
+		return $discard = switch ($Column.DbType) {
+			{ $Column.PropertyType.IsEnum -and ($_ -in $stringTypes) } { ${value}?.ToString(); break }
+			default { $value }
+		}
 	}
 
 	<#
