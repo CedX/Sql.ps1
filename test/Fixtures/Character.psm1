@@ -27,7 +27,7 @@ class Character {
 	.SYNOPSIS
 		The character's gender.
 	#>
-	[Column("gender")]
+	[Column("gender", TypeName = "AnsiString")]
 	[CharacterGender] $Gender = [CharacterGender]::Human
 
 	<#

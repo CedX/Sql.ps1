@@ -1,4 +1,5 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
+using namespace System.Data
 using namespace System.Management.Automation
 using namespace System.Reflection
 using namespace System.Threading
@@ -17,6 +18,51 @@ class DbColumnInfo {
 
 	<#
 	.SYNOPSIS
+		The mapping between common .NET types and data types.
+	#>
+	hidden static [hashtable] $TypeMap = @{
+		[bool] = [DbType]::Boolean
+		[byte[]] = [DbType]::Binary
+		[byte] = [DbType]::Byte
+		[char] = [DbType]::StringFixedLength
+		[DateOnly] = [DbType]::Date
+		[datetime] = [DbType]::DateTime
+		[DateTimeOffset] = [DbType]::DateTimeOffset
+		[decimal] = [DbType]::Decimal
+		[double] = [DbType]::Double
+		[float] = [DbType]::Single
+		[guid] = [DbType]::Guid
+		[int] = [DbType]::Int32
+		[long] = [DbType]::Int64
+		[Nullable[bool]] = [DbType]::Boolean
+		[Nullable[byte]] = [DbType]::Byte
+		[Nullable[char]] = [DbType]::StringFixedLength
+		[Nullable[DateOnly]] = [DbType]::Date
+		[Nullable[datetime]] = [DbType]::DateTime
+		[Nullable[DateTimeOffset]] = [DbType]::DateTimeOffset
+		[Nullable[decimal]] = [DbType]::Decimal
+		[Nullable[double]] = [DbType]::Double
+		[Nullable[float]] = [DbType]::Single
+		[Nullable[guid]] = [DbType]::Guid
+		[Nullable[int]] = [DbType]::Int32
+		[Nullable[long]] = [DbType]::Int64
+		[Nullable[sbyte]] = [DbType]::SByte
+		[Nullable[short]] = [DbType]::Int16
+		[Nullable[TimeOnly]] = [DbType]::Time
+		[Nullable[uint]] = [DbType]::UInt32
+		[Nullable[ulong]] = [DbType]::UInt64
+		[Nullable[ushort]] = [DbType]::UInt16
+		[sbyte] = [DbType]::SByte
+		[short] = [DbType]::Int16
+		[string] = [DbType]::String
+		[TimeOnly] = [DbType]::Time
+		[uint] = [DbType]::UInt32
+		[ulong] = [DbType]::UInt64
+		[ushort] = [DbType]::UInt16
+	}
+
+	<#
+	.SYNOPSIS
 		Value indicating whether the column can be read.
 	#>
 	[bool] $CanRead
@@ -26,6 +72,12 @@ class DbColumnInfo {
 		Value indicating whether the column can be written to.
 	#>
 	[bool] $CanWrite
+
+	<#
+	.SYNOPSIS
+		The SQL data type of the column.
+	#>
+	[DbType] $DbType
 
 	<#
 	.SYNOPSIS
@@ -70,16 +122,24 @@ class DbColumnInfo {
 		The property information providing the column metadata.
 	#>
 	DbColumnInfo([PropertyInfo] $Property) {
-		$databaseGeneratedOption = [Attribute]::GetCustomAttribute($Property, [DatabaseGeneratedAttribute])?.DatabaseGeneratedOption ?? [DatabaseGeneratedOption]::None
-
 		$this.CanRead = $Property.CanRead
 		$this.CanWrite = $Property.CanWrite
-		$this.IsComputed = $databaseGeneratedOption -ne [DatabaseGeneratedOption]::None
-		$this.IsIdentity = $databaseGeneratedOption -eq [DatabaseGeneratedOption]::Identity
-		$this.Name = [Attribute]::GetCustomAttribute($Property, [ColumnAttribute])?.Name ?? $Property.Name
 		$this.Property = $Property
 		$this.Type = $Property.PropertyType
 
+		$column = [Attribute]::GetCustomAttribute($Property, [ColumnAttribute])
+		$this.Name = ${column}?.Name ?? $Property.Name
+
+		$dataType = [DbType]::Object
+		$this.DbType = switch ($true) {
+			([string]::IsNullOrWhiteSpace(${column}?.TypeName)) { [DbColumnInfo]::TypeMap[$property.PropertyType] ?? [DbType]::Object; break }
+			([Enum]::TryParse([DbType], $column.TypeName, $true, [ref] $dataType)) { $dataType; break }
+			default { [DbType]::Object }
+		}
+
+		$databaseGeneratedOption = [Attribute]::GetCustomAttribute($Property, [DatabaseGeneratedAttribute])?.DatabaseGeneratedOption ?? [DatabaseGeneratedOption]::None
+		$this.IsComputed = $databaseGeneratedOption -ne [DatabaseGeneratedOption]::None
+		$this.IsIdentity = $databaseGeneratedOption -eq [DatabaseGeneratedOption]::Identity
 		$this.IsNullable = (-not [Attribute]::IsDefined($Property, [ValidateNotNullAttribute])) -and `
 			(($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) -or ([DbColumnInfo]::NullabilityContext.Value.Create($Property).WriteState -ne [NullabilityState]::NotNull))
 	}
