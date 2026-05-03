@@ -1,4 +1,5 @@
-﻿using module ../src/DbColumnInfo.psm1
+﻿using namespace System.Data
+using module ../src/DbColumnInfo.psm1
 using module ./Fixtures/Character.psm1
 
 <#
@@ -15,6 +16,17 @@ Describe "DbColumnInfo" {
 	Context "CanWrite" {
 		It "should return `$true if the property can be written" -ForEach @("FirstName", "FullName", "Gender", "Id") {
 			[DbColumnInfo]::new([Character].GetProperty($_)).CanWrite | Should -BeTrue
+		}
+	}
+
+	Context "DbType" {
+		It "should return the SQL data type of the column" -ForEach @(
+			@{ Name = "FirstName"; Expected = [DbType]::String }
+			@{ Name = "FullName"; Expected = [DbType]::String }
+			@{ Name = "Gender"; Expected = [DbType]::AnsiString }
+			@{ Name = "Id"; Expected = [DbType]::Int32 }
+		) {
+			[DbColumnInfo]::new([Character].GetProperty($name)).DbType | Should -Be $expected
 		}
 	}
 
