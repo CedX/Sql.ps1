@@ -49,7 +49,7 @@ function Invoke-Query {
 	}
 
 	clean {
-		${dbCommand}?.Dispose()
 		${reader}?.Close()
+		${dbCommand}?.Dispose()
 	}
 }

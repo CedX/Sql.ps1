@@ -51,7 +51,7 @@ function Get-Single {
 	}
 
 	clean {
-		${dbCommand}?.Dispose()
 		${reader}?.Close()
+		${dbCommand}?.Dispose()
 	}
 }
