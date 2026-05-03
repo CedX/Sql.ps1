@@ -16,6 +16,12 @@ class SqlCommandBuilder {
 
 	<#
 	.SYNOPSIS
+		The list of data types corresponding to a string.
+	#>
+	hidden static [DbType[]] $StringTypes = [DbType]::AnsiString, [DbType]::AnsiStringFixedLength, [DbType]::String, [DbType]::StringFixedLength
+
+	<#
+	.SYNOPSIS
 		The position of the catalog name in a qualified table name.
 	#>
 	[CatalogLocation] $CatalogLocation = [CatalogLocation]::Start
@@ -317,12 +323,8 @@ class SqlCommandBuilder {
 	#>
 	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "discard")]
 	hidden [object] GetParameterValue([DbColumnInfo] $Column, [object] $Entity) {
-		$stringTypes = [DbType]::AnsiString, [DbType]::AnsiStringFixedLength, [DbType]::String, [DbType]::StringFixedLength
 		$value = $Column.GetValue($Entity)
-		return $discard = switch ($Column.DbType) {
-			{ $Column.PropertyType.IsEnum -and ($_ -in $stringTypes) } { ${value}?.ToString(); break }
-			default { $value }
-		}
+		return $Column.PropertyType.IsEnum -and ($Column.DbType -in [SqlCommandBuilder]::StringTypes) ? ${value}?.ToString() : $value
 	}
 
 	<#
