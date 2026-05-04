@@ -12,10 +12,15 @@ Describe "SqlParameterCollection" {
 			$collection = [SqlParameterCollection]::new()
 			$collection | Should -BeNullOrEmpty
 
-			$parameter = $collection.AddWithValue("Name", "Value")
+			$parameter = $collection.AddWithValue("Name", "Value1")
 			$collection | Should -HaveCount 1
 			$parameter.Name | Should -BeExactly "@Name"
-			$parameter.Value | Should -BeExactly "Value"
+			$parameter.Value | Should -BeExactly "Value1"
+
+			$parameter = $collection.AddWithValue("Value2")
+			$collection | Should -HaveCount 2
+			$parameter.Name | Should -BeExactly "?2"
+			$parameter.Value | Should -BeExactly "Value2"
 		}
 	}
 

@@ -48,7 +48,7 @@ class DbColumnOrderHint {
 	.SYNOPSIS
 		Creates a new order hint from the specified tuple.
 	.PARAMETER Parameter
-		The tuple providing the column name and sort order.
+		The tuple providing the column name and its sort order.
 	.OUTPUTS
 		The order hint corresponding to the specified tuple.
 	#>

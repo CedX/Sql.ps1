@@ -82,7 +82,19 @@ class SqlParameterCollection: List[SqlParameter] {
 
 	<#
 	.SYNOPSIS
-		Adds a new parameter to the end of this collection.
+		Adds a new positional parameter to the end of this collection.
+	.PARAMETER Value
+		The parameter value.
+	.OUTPUTS
+		The newly added parameter.
+	#>
+	[SqlParameter] AddWithValue([object] $Value) {
+		return $this.AddWithValue("?$($this.Count + 1)", $Value)
+	}
+
+	<#
+	.SYNOPSIS
+		Adds a new named parameter to the end of this collection.
 	.PARAMETER Name
 		The parameter name.
 	.PARAMETER Value
