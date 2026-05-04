@@ -2,7 +2,9 @@ using namespace System.Data
 using namespace System.Data.Common
 using namespace System.Diagnostics.CodeAnalysis
 using module ./DbColumnInfo.psm1
+using module ./DbColumnOrderHintCollection.psm1
 using module ./DbTableInfo.psm1
+using module ./SortOrder.psm1
 using module ./SqlCommand.psm1
 using module ./SqlMapper.psm1
 using module ./SqlParameter.psm1
@@ -189,8 +191,8 @@ class SqlCommandBuilder {
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
-		$fields = ($Columns ? $table.Columns.Values.Where{ $Columns.Contains($_.Name) } : $table.Columns.Values).Where{ $_.CanWrite }.ForEach{ $_.Name }
-		if (-not $fields.Contains($idColumn.Name)) { $fields += $idColumn.Name }
+		$fields = ($Columns ? $table.Columns.Values.Where{ $_.Name -in $Columns } : $table.Columns.Values).Where{ $_.CanWrite }.ForEach{ $_.Name }
+		if ($idColumn.Name -notin $fields) { $fields += $idColumn.Name }
 
 		$parameter = [SqlParameter]::new($this.UsePositionalParameters ? "?1" : $this.GetParameterName($idColumn), $id)
 		$text = "
@@ -199,6 +201,60 @@ class SqlCommandBuilder {
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
 		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), [SqlParameterCollection]::new($parameter))
+	}
+
+	<#
+	.SYNOPSIS
+		Gets the generated command to find all entities.
+	.PARAMETER Type
+		The entity type.
+	.OUTPUTS
+		The generated command to find all entities.
+	#>
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type) {
+		return $this.GetFindAllCommand($Type, [DbColumnOrderHintCollection]::new(), @())
+	}
+
+	<#
+	.SYNOPSIS
+		Gets the generated command to find all entities.
+	.PARAMETER Type
+		The entity type.
+	.PARAMETER OrderHints
+		The hints describing the sort order of columns.
+	.OUTPUTS
+		The generated command to find all entities.
+	#>
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [DbColumnOrderHintCollection] $OrderHints) {
+		return $this.GetFindAllCommand($Type, $OrderHints, @())
+	}
+
+	<#
+	.SYNOPSIS
+		Gets the generated command to find all entities.
+	.PARAMETER Type
+		The entity type.
+	.PARAMETER OrderHints
+		The hints describing the sort order of columns.
+	.PARAMETER Columns
+		The list of columns to select. By default, all columns.
+	.OUTPUTS
+		The generated command to find all entities.
+	#>
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [DbColumnOrderHintCollection] $OrderHints, [string[]] $Columns) {
+		$table = [SqlMapper]::Instance.GetTable($Type)
+		$idColumn = $table.IdentityColumn
+		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
+
+		$fields = ($Columns ? $table.Columns.Values.Where{ $_.Name -in $Columns } : $table.Columns.Values).Where{ $_.CanWrite }.ForEach{ $_.Name }
+		if ($idColumn.Name -notin $fields) { $fields += $idColumn.Name }
+
+		$orderBy = $OrderHints `
+			? ($OrderHints.ForEach{ "$($this.QuoteIdentifier($_.Column)) $($_.SortOrder -eq [SortOrder]::Descending ? "DESC" : "ASC")" } -join ", ") `
+			: "$($this.QuoteIdentifier($idColumn.Name)) ASC"
+
+		$text = "SELECT $($fields.ForEach{ $this.QuoteIdentifier($_) } -join ", ") FROM $($this.GetTableName($table)) ORDER BY $orderBy"
+		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text, [SqlParameterCollection]::new())
 	}
 
 	<#
@@ -256,7 +312,7 @@ class SqlCommandBuilder {
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
 
-		$fields = ($Columns ? $table.Columns.Values.Where{ $Columns.Contains($_.Name) } : $table.Columns.Values).Where{ $_.CanRead -and (-not $_.IsComputed) }
+		$fields = ($Columns ? $table.Columns.Values.Where{ $_.Name -in $Columns } : $table.Columns.Values).Where{ $_.CanRead -and (-not $_.IsComputed) }
 		$text = "
 			UPDATE $($this.GetTableName($table))
 			SET $($fields.ForEach{ "$($this.QuoteIdentifier($_.Name)) = $($this.UsePositionalParameters ? "?" : $this.GetParameterName($_))" } -join ", ")
