@@ -38,24 +38,6 @@ class SqlParameterCollection: List[SqlParameter] {
 
 	<#
 	.SYNOPSIS
-		Creates a new parameter collection from the specified hash table of named parameters.
-	.PARAMETER Parameters
-		The hash table whose elements are copied to the parameter collection.
-	.OUTPUTS
-		The parameter collection corresponding to the specified hash table of named parameters.
-	#>
-	static [SqlParameterCollection] op_Implicit([hashtable] $Parameters) {
-		$parameterCollection = [SqlParameterCollection]::new($Parameters.Count)
-		foreach ($key in $Parameters.Keys) {
-			$value = $Parameters.$key
-			$parameterCollection.Add($value -is [SqlParameter] ? $value : [SqlParameter]::new($key, $value))
-		}
-
-		return $parameterCollection
-	}
-
-	<#
-	.SYNOPSIS
 		Creates a new parameter collection from the specified array of positional parameters.
 	.PARAMETER Parameters
 		The array whose elements are copied to the parameter collection.
@@ -63,10 +45,28 @@ class SqlParameterCollection: List[SqlParameter] {
 		The parameter collection corresponding to the specified array of positional parameters.
 	#>
 	static [SqlParameterCollection] op_Implicit([object[]] $Parameters) {
-		$parameterCollection = [SqlParameterCollection]::new($Parameters.Count)
+		$parameterCollection = [SqlParameterCollection]::new()
 		for ($index = 0; $index -lt $Parameters.Count; $index++) {
 			$value = $Parameters[$index]
 			$parameterCollection.Add($value -is [SqlParameter] ? $value : [SqlParameter]::new("?$($index + 1)", $value))
+		}
+
+		return $parameterCollection
+	}
+
+	<#
+	.SYNOPSIS
+		Creates a new parameter collection from the specified hash table of named parameters.
+	.PARAMETER Parameters
+		The hash table whose elements are copied to the parameter collection.
+	.OUTPUTS
+		The parameter collection corresponding to the specified hash table of named parameters.
+	#>
+	static [SqlParameterCollection] op_Implicit([hashtable] $Parameters) {
+		$parameterCollection = [SqlParameterCollection]::new()
+		foreach ($key in $Parameters.Keys) {
+			$value = $Parameters.$key
+			$parameterCollection.Add($value -is [SqlParameter] ? $value : [SqlParameter]::new($key, $value))
 		}
 
 		return $parameterCollection
