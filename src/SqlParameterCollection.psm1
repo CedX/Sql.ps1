@@ -15,14 +15,6 @@ class SqlParameterCollection: List[SqlParameter] {
 
 	<#
 	.SYNOPSIS
-		Creates a new parameter collection that has the specified initial capacity.
-	.PARAMETER Capacity
-		The number of parameters that the collection can initially store.
-	#>
-	SqlParameterCollection([int] $Capacity): base($Capacity) {}
-
-	<#
-	.SYNOPSIS
 		Creates a new parameter collection that contains the elements copied from the specified collection.
 	.PARAMETER Parameters
 		The collection whose elements are copied to the parameter collection.
