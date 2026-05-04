@@ -32,7 +32,7 @@ class SqlParameterCollection: List[SqlParameter] {
 	[SqlParameter] get_Item([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
 		$parameterFound = $this.Find({ param ($parameter) $parameter.Name -eq $normalizedName })
-		if (-not $parameterFound) { throw [ArgumentOutOfRangeException] $Name }
+		if (-not $parameterFound) { throw [KeyNotFoundException] $normalizedName }
 		return $parameterFound
 	}
 
