@@ -1,6 +1,6 @@
 @{
 	DefaultCommandPrefix = "Sql"
-	ModuleVersion = "1.0.1"
+	ModuleVersion = "1.0.2"
 	PowerShellVersion = "7.6"
 
 	Author = "Cédric Belin <cedx@outlook.com>"
