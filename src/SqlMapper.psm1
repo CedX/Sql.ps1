@@ -82,13 +82,12 @@ class SqlMapper {
 		}
 
 		return $discard = switch ($objects.Count) {
-			2 { [ValueTuple]::Create($objects[0], $objects[1]) }
-			3 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2]) }
-			4 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3]) }
-			5 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4]) }
-			6 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5]) }
-			7 { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5], $objects[6]) }
-			default { [ValueTuple]::Create($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5], $objects[6], $objects[7]) }
+			2 { [ValueTuple]::Create[object, object]($objects[0], $objects[1]) }
+			3 { [ValueTuple]::Create[object, object, object]($objects[0], $objects[1], $objects[2]) }
+			4 { [ValueTuple]::Create[object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3]) }
+			5 { [ValueTuple]::Create[object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4]) }
+			6 { [ValueTuple]::Create[object, object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5]) }
+			default { [ValueTuple]::Create[object, object, object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5], $objects[6]) }
 		}
 	}
 
@@ -203,11 +202,11 @@ class SqlMapper {
 
 	<#
 	.SYNOPSIS
-		Returns a value indicating whether all values of the specified dictionary are `$null`.
+		Returns a value indicating whether all values of the specified hash table are `$null`.
 	.PARAMETER HashTable
-		The dictionary to inspect.
+		The hash table to inspect.
 	.OUTPUTS
-		`$true` if all values of the specified dictionary are `$null`, otherwise `$false`.
+		`$true` if all values of the specified hash table are `$null`, otherwise `$false`.
 	#>
 	hidden static [bool] IsNullObject([hashtable] $HashTable) {
 		return $HashTable.Values.Where{ $null -eq $_ }.Count -eq $HashTable.Count
