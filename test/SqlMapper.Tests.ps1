@@ -120,6 +120,17 @@ Describe "SqlMapper" {
 		}
 	}
 
+	Context "IsNullObject" {
+		It "should return `$true if all values of the specified hash table are `$null" {
+			[SqlMapper]::IsNullObject(@{}) | Should -BeTrue
+			[SqlMapper]::IsNullObject(@{ Foo = $null; Bar = $null}) | Should -BeTrue
+		}
+
+		It "should return `$false if at least one value of the specified hash table is not `$null" {
+			[SqlMapper]::IsNullObject(@{ Foo = "Bar"; Baz = $null}) | Should -BeFalse
+		}
+	}
+
 	Context "SplitOn" {
 		It "should return a hash table equivalent to the specified data row" {
 			$records = [SqlMapper]::SplitOn($dataRow, @())
