@@ -1,5 +1,5 @@
-﻿using assembly ../bin/System.Data.SQLite.dll
-using namespace System.Diagnostics.CodeAnalysis
+﻿using namespace System.Diagnostics.CodeAnalysis
+using assembly ../bin/System.Data.SQLite.dll
 using module ../src/SqlCommandBuilder.psm1
 using module ./Fixtures/Character.psm1
 

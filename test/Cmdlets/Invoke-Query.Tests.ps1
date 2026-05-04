@@ -25,7 +25,7 @@ Describe "Invoke-Query" {
 
 	It "should allow the data rows to be split into distinct objects" {
 		$sql = "SELECT ID, firstName, lastName, ID, fullName, gender FROM Characters WHERE firstName = @FirstName"
-		$records = Invoke-SqlQuery $connection -As ([psobject], [psobject]) -Command $sql -Parameters @{ FirstName = "Frodo" } -SplitOn "id"
+		$records = Invoke-SqlQuery $connection -As ([psobject], [psobject]) -Command $sql -Parameters @{ FirstName = "Frodo" } -SplitOn id
 		$records | Should -HaveCount 1
 
 		$left = $records.Item1
