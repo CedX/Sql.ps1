@@ -77,7 +77,7 @@ class SqlMapper {
 		$records = [SqlMapper]::SplitOn($Record, $SplitOn)
 		$objects = [List[object]]::new($records.Count)
 		for ($index = 0; $index -lt $Types.Count; $index++) {
-			$object = ($records.Count -le $index) -or ([SqlMapper]::IsNullObject($records[$index])) ? $null : $this.CreateInstance($Types[$index], $records[$index])
+			$object = ($records.Count -le $index) -or [SqlMapper]::IsNullObject($records[$index]) ? $null : $this.CreateInstance($Types[$index], $records[$index])
 			$objects.Add($object)
 		}
 
