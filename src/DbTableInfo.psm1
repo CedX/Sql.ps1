@@ -46,7 +46,7 @@ class DbTableInfo {
 	#>
 	DbTableInfo([Type] $Type) {
 		$properties = $Type.GetProperties([BindingFlags]::Instance -bor [BindingFlags]::NonPublic -bor [BindingFlags]::Public).Where{
-			(-not [Attribute]::IsDefined($_, [NotMappedAttribute])) -and (($property.CanRead -and $property.CanWrite) -or ([Attribute]::IsDefined($_, [ColumnAttribute])))
+			(-not [Attribute]::IsDefined($_, [NotMappedAttribute])) -and (($_.CanRead -and $_.CanWrite) -or ([Attribute]::IsDefined($_, [ColumnAttribute])))
 		}
 
 		$this.Columns = @{}
