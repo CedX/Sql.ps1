@@ -46,6 +46,18 @@ class DbColumnOrderHint {
 
 	<#
 	.SYNOPSIS
+		Creates a new order hint from the specified tuple.
+	.PARAMETER Parameter
+		The tuple providing the column name and sort order.
+	.OUTPUTS
+		The order hint corresponding to the specified tuple.
+	#>
+	static [DbColumnOrderHint] op_Implicit([object[]] $OrderHint) {
+		return [DbColumnOrderHint]::new($OrderHint[0] ?? "Id", $OrderHint[1] ?? [SortOrder]::Ascending)
+	}
+
+	<#
+	.SYNOPSIS
 		Creates a new order hint from the specified key/value pair.
 	.PARAMETER OrderHint
 		The key/value pair providing the column name and its sort order.
