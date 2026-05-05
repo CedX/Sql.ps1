@@ -45,7 +45,7 @@ class SqlOrderHintCollection: List[SqlOrderHint] {
 	.OUTPUTS
 		The order hint collection corresponding to the specified array of column names.
 	#>
-	static [SqlOrderHintCollection] op_Implicit([string[]] $Columns) {
+	static [SqlOrderHintCollection] op_Implicit([object[]] $Columns) {
 		$orderHintCollection = [SqlOrderHintCollection]::new()
 		for ($index = 0; $index -lt $Columns.Count; $index++) { $orderHintCollection.Add([SqlOrderHint]::new($Columns[$index], [SortOrder]::Ascending)) }
 		return $orderHintCollection
@@ -53,11 +53,11 @@ class SqlOrderHintCollection: List[SqlOrderHint] {
 
 	<#
 	.SYNOPSIS
-		Creates a new order hint collection from the specified dictionary of column names and orders.
+		Creates a new order hint collection from the specified dictionary of column names and sort orders.
 	.PARAMETER OrderHints
 		The dictionary whose elements are copied to the order hint collection.
 	.OUTPUTS
-		The order hint collection corresponding to the specified dictionary of column names and orders.
+		The order hint collection corresponding to the specified dictionary of column names and sort orders.
 	#>
 	static [SqlOrderHintCollection] op_Implicit([OrderedDictionary] $OrderHints) {
 		$orderHintCollection = [SqlOrderHintCollection]::new()
