@@ -133,6 +133,7 @@ class SqlParameterCollection: List[SqlParameter] {
 		The parameter name.
 	#>
 	[void] RemoveAt([string] $Name) {
-		$this.RemoveAt($this.IndexOf($Name))
+		try { $this.RemoveAt($this.IndexOf($Name)) }
+		catch [ArgumentOutOfRangeException] { throw [KeyNotFoundException]::new([SqlParameter]::NormalizeName($Name), $_.Exception) }
 	}
 }
