@@ -1,21 +1,21 @@
 using namespace System.Collections.Generic
-using module ../src/DbColumnOrderHint.psm1
 using module ../src/SortOrder.psm1
+using module ../src/SqlOrderHint.psm1
 
 <#
 .SYNOPSIS
-	Tests the features of the `DbColumnOrderHint` class.
+	Tests the features of the `SqlOrderHint` class.
 #>
-Describe "DbColumnOrderHint" {
+Describe "SqlOrderHint" {
 	Context "ImplicitConversion" {
 		It "should create an order hint from the specified tuple" {
-			[DbColumnOrderHint] $orderHint = "ID", [SortOrder]::Descending
+			[SqlOrderHint] $orderHint = "ID", [SortOrder]::Descending
 			$orderHint.Column | Should -BeExactly "ID"
 			$orderHint.SortOrder | Should -Be ([SortOrder]::Descending)
 		}
 
 		It "should create an order hint from the specified key/value pair" {
-			[DbColumnOrderHint] $orderHint = [KeyValuePair[string, SortOrder]]::new("Name", [SortOrder]::Ascending)
+			[SqlOrderHint] $orderHint = [KeyValuePair[string, SortOrder]]::new("Name", [SortOrder]::Ascending)
 			$orderHint.Column | Should -BeExactly "Name"
 			$orderHint.SortOrder | Should -Be ([SortOrder]::Ascending)
 		}

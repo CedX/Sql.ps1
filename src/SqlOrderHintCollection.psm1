@@ -1,19 +1,19 @@
 using namespace System.Collections.Generic
 using namespace System.Collections.Specialized
-using module ./DbColumnOrderHint.psm1
 using module ./SortOrder.psm1
+using module ./SqlOrderHint.psm1
 
 <#
 .SYNOPSIS
 	A collection of hints describing the sort order of columns.
 #>
-class DbColumnOrderHintCollection: List[DbColumnOrderHint] {
+class SqlOrderHintCollection: List[SqlOrderHint] {
 
 	<#
 	.SYNOPSIS
 		Creates a new order hint collection.
 	#>
-	DbColumnOrderHintCollection(): base() {}
+	SqlOrderHintCollection(): base() {}
 
 	<#
 	.SYNOPSIS
@@ -21,7 +21,7 @@ class DbColumnOrderHintCollection: List[DbColumnOrderHint] {
 	.PARAMETER OrderHints
 		The collection whose elements are copied to the order hint collection.
 	#>
-	DbColumnOrderHintCollection([DbColumnOrderHint[]] $OrderHints): base($OrderHints) {}
+	SqlOrderHintCollection([SqlOrderHint[]] $OrderHints): base($OrderHints) {}
 
 	<#
 	.SYNOPSIS
@@ -31,7 +31,7 @@ class DbColumnOrderHintCollection: List[DbColumnOrderHint] {
 	.OUTPUTS
 		The order hint with the specified column name, or `$null` if not found.
 	#>
-	[DbColumnOrderHint] get_Item([string] $Column) {
+	[SqlOrderHint] get_Item([string] $Column) {
 		$orderHint = $this.Find({ param ($orderHint) $orderHint.Column -eq $Column })
 		if (-not $orderHint) { throw [KeyNotFoundException] $Column }
 		return $orderHint
@@ -45,9 +45,9 @@ class DbColumnOrderHintCollection: List[DbColumnOrderHint] {
 	.OUTPUTS
 		The order hint collection corresponding to the specified array of column names.
 	#>
-	static [DbColumnOrderHintCollection] op_Implicit([string[]] $Columns) {
-		$orderHintCollection = [DbColumnOrderHintCollection]::new()
-		for ($index = 0; $index -lt $Columns.Count; $index++) { $orderHintCollection.Add([DbColumnOrderHint]::new($Columns[$index], [SortOrder]::Ascending)) }
+	static [SqlOrderHintCollection] op_Implicit([string[]] $Columns) {
+		$orderHintCollection = [SqlOrderHintCollection]::new()
+		for ($index = 0; $index -lt $Columns.Count; $index++) { $orderHintCollection.Add([SqlOrderHint]::new($Columns[$index], [SortOrder]::Ascending)) }
 		return $orderHintCollection
 	}
 
@@ -59,9 +59,9 @@ class DbColumnOrderHintCollection: List[DbColumnOrderHint] {
 	.OUTPUTS
 		The order hint collection corresponding to the specified dictionary of column names and orders.
 	#>
-	static [DbColumnOrderHintCollection] op_Implicit([OrderedDictionary] $OrderHints) {
-		$orderHintCollection = [DbColumnOrderHintCollection]::new()
-		foreach ($key in $OrderHints.Keys) { $orderHintCollection.Add([DbColumnOrderHint]::new($key, $OrderHints.$key)) }
+	static [SqlOrderHintCollection] op_Implicit([OrderedDictionary] $OrderHints) {
+		$orderHintCollection = [SqlOrderHintCollection]::new()
+		foreach ($key in $OrderHints.Keys) { $orderHintCollection.Add([SqlOrderHint]::new($key, $OrderHints.$key)) }
 		return $orderHintCollection
 	}
 

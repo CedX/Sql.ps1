@@ -5,7 +5,7 @@ using module ./SortOrder.psm1
 .SYNOPSIS
 	Defines the sort order for a database column.
 #>
-class DbColumnOrderHint {
+class SqlOrderHint {
 
 	<#
 	.SYNOPSIS
@@ -26,7 +26,7 @@ class DbColumnOrderHint {
 	.PARAMETER Column
 		The name of the column for which the hint is being provided.
 	#>
-	DbColumnOrderHint([string] $Column) {
+	SqlOrderHint([string] $Column) {
 		$this.Column = $Column
 		$this.SortOrder = [SortOrder]::Ascending
 	}
@@ -39,7 +39,7 @@ class DbColumnOrderHint {
 	.PARAMETER SortOrder
 		The sort order of the column.
 	#>
-	DbColumnOrderHint([string] $Column, [SortOrder] $SortOrder) {
+	SqlOrderHint([string] $Column, [SortOrder] $SortOrder) {
 		$this.Column = $Column
 		$this.SortOrder = $SortOrder
 	}
@@ -52,8 +52,8 @@ class DbColumnOrderHint {
 	.OUTPUTS
 		The order hint corresponding to the specified tuple.
 	#>
-	static [DbColumnOrderHint] op_Implicit([object[]] $OrderHint) {
-		return [DbColumnOrderHint]::new($OrderHint[0] ?? "Id", $OrderHint[1] ?? [SortOrder]::Ascending)
+	static [SqlOrderHint] op_Implicit([object[]] $OrderHint) {
+		return [SqlOrderHint]::new($OrderHint[0] ?? "Id", $OrderHint[1] ?? [SortOrder]::Ascending)
 	}
 
 	<#
@@ -64,7 +64,7 @@ class DbColumnOrderHint {
 	.OUTPUTS
 		The order hint corresponding to the specified key/value pair.
 	#>
-	static [DbColumnOrderHint] op_Implicit([KeyValuePair[string, SortOrder]] $OrderHint) {
-		return [DbColumnOrderHint]::new($OrderHint.Key, $OrderHint.Value)
+	static [SqlOrderHint] op_Implicit([KeyValuePair[string, SortOrder]] $OrderHint) {
+		return [SqlOrderHint]::new($OrderHint.Key, $OrderHint.Value)
 	}
 }

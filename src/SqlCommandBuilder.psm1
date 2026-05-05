@@ -2,11 +2,11 @@ using namespace System.Data
 using namespace System.Data.Common
 using namespace System.Diagnostics.CodeAnalysis
 using module ./DbColumnInfo.psm1
-using module ./DbColumnOrderHintCollection.psm1
 using module ./DbTableInfo.psm1
 using module ./SortOrder.psm1
 using module ./SqlCommand.psm1
 using module ./SqlMapper.psm1
+using module ./SqlOrderHintCollection.psm1
 using module ./SqlParameter.psm1
 using module ./SqlParameterCollection.psm1
 
@@ -212,7 +212,7 @@ class SqlCommandBuilder {
 		The generated command to find all entities.
 	#>
 	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type) {
-		return $this.GetFindAllCommand($Type, [DbColumnOrderHintCollection]::new(), @())
+		return $this.GetFindAllCommand($Type, [SqlOrderHintCollection]::new(), @())
 	}
 
 	<#
@@ -225,7 +225,7 @@ class SqlCommandBuilder {
 	.OUTPUTS
 		The generated command to find all entities.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [DbColumnOrderHintCollection] $OrderHints) {
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [SqlOrderHintCollection] $OrderHints) {
 		return $this.GetFindAllCommand($Type, $OrderHints, @())
 	}
 
@@ -241,7 +241,7 @@ class SqlCommandBuilder {
 	.OUTPUTS
 		The generated command to find all entities.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [DbColumnOrderHintCollection] $OrderHints, [string[]] $Columns) {
+	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [SqlOrderHintCollection] $OrderHints, [string[]] $Columns) {
 		$table = [SqlMapper]::Instance.GetTable($Type)
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
