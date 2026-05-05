@@ -1,5 +1,4 @@
 using namespace System.Data
-using module ../SqlCommand.psm1
 using module ../SqlCommandBuilder.psm1
 
 <#
@@ -34,11 +33,8 @@ function Test-Object {
 
 	process {
 		$statement = [SqlCommandBuilder]::new($Connection).GetExistsCommand($Class, $Id)
-
-		$command = [SqlCommand]::new($statement.Item1.Text)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-
-		Get-Scalar $Connection -As ([bool]) -Command $command -Parameters $statement.Item2
+		$statement[0].Timeout = $Timeout
+		$statement[0].Transaction = $Transaction
+		Get-Scalar $Connection -As ([bool]) -Command $statement[0] -Parameters $statement[1]
 	}
 }

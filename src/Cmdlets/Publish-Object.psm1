@@ -1,5 +1,4 @@
 using namespace System.Data
-using module ../SqlCommand.psm1
 using module ../SqlCommandBuilder.psm1
 using module ../SqlMapper.psm1
 
@@ -33,12 +32,10 @@ function Publish-Object {
 
 	process {
 		$statement = [SqlCommandBuilder]::new($Connection).GetInsertCommand($InputObject)
+		$statement[0].Timeout = $Timeout
+		$statement[0].Transaction = $Transaction
 
-		$command = [SqlCommand]::new($statement.Item1.Text)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-
-		$id = Get-Scalar $Connection -As ([long]) -Command $command -Parameters $statement.Item2
+		$id = Get-Scalar $Connection -As ([long]) -Command $statement[0] -Parameters $statement[1]
 		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
 		if ($column) { $column.SetValue($InputObject, [SqlMapper]::ChangeType($id, $column)) }
 		$id

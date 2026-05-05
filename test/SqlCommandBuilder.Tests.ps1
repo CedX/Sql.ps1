@@ -13,7 +13,7 @@ using module ./Fixtures/Character.psm1
 Describe "SqlCommandBuilder" {
 	BeforeAll {
 		[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
-		$character = [Character]@{ Id = 1000; FirstName = "Cédric"; Gender = [CharacterGender]::DarkLord }
+		$record = [Character]@{ Id = 1000; FirstName = "Cédric"; Gender = [CharacterGender]::DarkLord }
 
 		[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
 		$connection = [System.Data.SQLite.SQLiteConnection] "DataSource=:memory:"
@@ -21,13 +21,13 @@ Describe "SqlCommandBuilder" {
 
 	Context "GetDeleteCommand" {
 		It "should return the SQL command to delete an entity" {
-			$command = [SqlCommandBuilder]::new($connection).GetDeleteCommand($character).Item1
+			$command = [SqlCommandBuilder]::new($connection).GetDeleteCommand($record).Item1
 			$command.Text | Should -BeLikeExactly 'DELETE FROM "main"."Characters"*'
 			$command.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
 		}
 
 		It "should also return the parameters used by the SQL command" {
-			$parameter = [SqlCommandBuilder]::new($connection).GetDeleteCommand($character).Item2[0]
+			$parameter = [SqlCommandBuilder]::new($connection).GetDeleteCommand($record).Item2[0]
 			$parameter.Name | Should -BeExactly "@ID"
 			$parameter.Value | Should -Be 1000
 		}
@@ -35,14 +35,14 @@ Describe "SqlCommandBuilder" {
 
 	Context "GetExistsCommand" {
 		It "should return the SQL command to check the existence of an entity" {
-			$command = [SqlCommandBuilder]::new($connection).GetExistsCommand([Character], $character.Id).Item1
+			$command = [SqlCommandBuilder]::new($connection).GetExistsCommand([Character], $record.Id).Item1
 			$command.Text | Should -BeLikeExactly "SELECT 1*"
 			$command.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
 			$command.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
 		}
 
 		It "should also return the parameters used by the SQL command" {
-			$parameter = [SqlCommandBuilder]::new($connection).GetExistsCommand([Character], $character.Id).Item2[0]
+			$parameter = [SqlCommandBuilder]::new($connection).GetExistsCommand([Character], $record.Id).Item2[0]
 			$parameter.Name | Should -BeExactly "@ID"
 			$parameter.Value | Should -Be 1000
 		}
@@ -50,7 +50,7 @@ Describe "SqlCommandBuilder" {
 
 	Context "GetFindCommand" {
 		It "should return the SQL command to find an entity" {
-			$command = [SqlCommandBuilder]::new($connection).GetFindCommand([Character], $character.Id).Item1
+			$command = [SqlCommandBuilder]::new($connection).GetFindCommand([Character], $record.Id).Item1
 			$command.Text | Should -BeLikeExactly 'SELECT "*'
 			$command.Text | Should -Not -BeLike '*`**'
 			$command.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
@@ -58,13 +58,13 @@ Describe "SqlCommandBuilder" {
 		}
 
 		It "should also return the parameters used by the SQL command" {
-			$parameter = [SqlCommandBuilder]::new($connection).GetFindCommand([Character], $character.Id).Item2[0]
+			$parameter = [SqlCommandBuilder]::new($connection).GetFindCommand([Character], $record.Id).Item2[0]
 			$parameter.Name | Should -BeExactly "@ID"
 			$parameter.Value | Should -Be 1000
 		}
 
 		It "should allow selecting a specific set of columns" {
-			$command = [SqlCommandBuilder]::new($connection).GetFindCommand([Character], $character.Id, "firstName").Item1
+			$command = [SqlCommandBuilder]::new($connection).GetFindCommand([Character], $record.Id, "firstName").Item1
 			$command.Text | Should -BeLikeExactly 'SELECT "firstName"*'
 			$command.Text | Should -Not -BeLike "*gender*"
 			$command.Text | Should -Not -BeLike "*lastName*"
@@ -106,13 +106,13 @@ Describe "SqlCommandBuilder" {
 
 	Context "GetInsertCommand" {
 		It "should return the SQL command to insert an entity" {
-			$command = [SqlCommandBuilder]::new($connection).GetInsertCommand($character).Item1
+			$command = [SqlCommandBuilder]::new($connection).GetInsertCommand($record).Item1
 			$command.Text | Should -BeLikeExactly 'INSERT INTO "main"."Characters" (*'
 			$command.Text | Should -BeLikeExactly "*VALUES (*"
 		}
 
 		It "should also return the parameters used by the SQL command" {
-			$parameters = [SqlCommandBuilder]::new($connection).GetInsertCommand($character).Item2
+			$parameters = [SqlCommandBuilder]::new($connection).GetInsertCommand($record).Item2
 			$parameters | Should -HaveCount 3
 			$parameters["firstName"].Value | Should -BeExactly Cédric
 			$parameters["gender"].Value | Should -BeExactly DarkLord
@@ -122,14 +122,14 @@ Describe "SqlCommandBuilder" {
 
 	Context "GetUpdateCommand" {
 		It "should return the SQL command to update an entity" {
-			$command = [SqlCommandBuilder]::new($connection).GetUpdateCommand($character).Item1
+			$command = [SqlCommandBuilder]::new($connection).GetUpdateCommand($record).Item1
 			$command.Text | Should -BeLikeExactly 'UPDATE "main"."Characters"*'
 			$command.Text | Should -BeLikeExactly '*SET "*'
 			$command.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
 		}
 
 		It "should also return the parameters used by the SQL command" {
-			$parameters = [SqlCommandBuilder]::new($connection).GetUpdateCommand($character).Item2
+			$parameters = [SqlCommandBuilder]::new($connection).GetUpdateCommand($record).Item2
 			$parameters | Should -HaveCount 4
 			$parameters["ID"].Value | Should -Be 1000
 			$parameters["firstName"].Value | Should -BeExactly Cédric
@@ -138,7 +138,7 @@ Describe "SqlCommandBuilder" {
 		}
 
 		It "should allow updating a specific set of columns" {
-			$parameters = [SqlCommandBuilder]::new($connection).GetUpdateCommand($character, "firstName").Item2
+			$parameters = [SqlCommandBuilder]::new($connection).GetUpdateCommand($record, "firstName").Item2
 			$parameters | Should -HaveCount 2
 			$parameters["ID"].Value | Should -Be 1000
 			$parameters["firstName"].Value | Should -BeExactly Cédric

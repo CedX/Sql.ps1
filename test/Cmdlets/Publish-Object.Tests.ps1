@@ -13,13 +13,13 @@ Describe "Publish-Object" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Cédric'"
 		Invoke-SqlQuery $connection -As ([Character]) -Command $sql | Should -BeNullOrEmpty
 
-		$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin"; Gender = "Istari" }
-		$character.Id | Should -Be 0
-		$character.FullName | Should -BeNullOrEmpty
+		$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin"; Gender = "Istari" }
+		$record.Id | Should -Be 0
+		$record.FullName | Should -BeNullOrEmpty
 
-		$id = Publish-SqlObject $connection -InputObject $character
+		$id = Publish-SqlObject $connection -InputObject $record
 		$id | Should -BeGreaterThan 16
-		$character.Id | Should -Be $id
+		$record.Id | Should -Be $id
 
 		$records = Invoke-SqlQuery $connection -As ([Character]) -Command $sql
 		$records | Should -HaveCount 1
@@ -27,6 +27,6 @@ Describe "Publish-Object" {
 		$cedric = $records[0]
 		$cedric.Id | Should -Be $id
 		$cedric.FullName | Should -BeExactly "Cédric Belin"
-		$cedric.Gender | Should -Be $character.Gender
+		$cedric.Gender | Should -Be $record.Gender
 	}
 }

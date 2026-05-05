@@ -1,6 +1,5 @@
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
-using module ../SqlCommand.psm1
 using module ../SqlCommandBuilder.psm1
 
 <#
@@ -34,11 +33,8 @@ function Remove-Object {
 
 	process {
 		$statement = [SqlCommandBuilder]::new($Connection).GetDeleteCommand($InputObject)
-
-		$command = [SqlCommand]::new($statement.Item1.Text)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-
-		(Invoke-NonQuery $Connection -Command $command -Parameters $statement.Item2) -gt 0
+		$statement[0].Timeout = $Timeout
+		$statement[0].Transaction = $Transaction
+		(Invoke-NonQuery $Connection -Command $statement[0] -Parameters $statement[1]) -gt 0
 	}
 }

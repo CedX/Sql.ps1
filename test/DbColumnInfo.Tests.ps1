@@ -84,19 +84,19 @@ Describe "DbColumnInfo" {
 
 	Context "GetValue" {
 		It "should return the value of the spcified property" {
-			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
-			[DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($character) | Should -BeExactly Cédric
-			[DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($character) | Should -BeExactly Belin
+			$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
+			[DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($record) | Should -BeExactly Cédric
+			[DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($record) | Should -BeExactly Belin
 		}
 	}
 
 	Context "SetValue" {
 		It "should set the value of the spcified property" {
-			$character = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
-			[DbColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($character, "Jeffrey")
-			[DbColumnInfo]::new([Character].GetProperty("LastName")).SetValue($character, "Snover")
-			$character.FirstName | Should -BeExactly Jeffrey
-			$character.LastName | Should -BeExactly Snover
+			$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
+			[DbColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($record, "Jeffrey")
+			[DbColumnInfo]::new([Character].GetProperty("LastName")).SetValue($record, "Snover")
+			$record.FirstName | Should -BeExactly Jeffrey
+			$record.LastName | Should -BeExactly Snover
 		}
 	}
 }

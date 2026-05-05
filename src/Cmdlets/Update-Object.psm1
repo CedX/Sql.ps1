@@ -1,6 +1,5 @@
 using namespace System.Data
 using namespace System.Diagnostics.CodeAnalysis
-using module ../SqlCommand.psm1
 using module ../SqlCommandBuilder.psm1
 
 <#
@@ -38,11 +37,8 @@ function Update-Object {
 
 	process {
 		$statement = [SqlCommandBuilder]::new($Connection).GetUpdateCommand($InputObject, $Columns)
-
-		$command = [SqlCommand]::new($statement.Item1.Text)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-
-		Invoke-NonQuery $Connection -Command $command -Parameters $statement.Item2
+		$statement[0].Timeout = $Timeout
+		$statement[0].Transaction = $Transaction
+		Invoke-NonQuery $Connection -Command $statement[0] -Parameters $statement[1]
 	}
 }
