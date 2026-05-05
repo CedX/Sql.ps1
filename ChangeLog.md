@@ -1,5 +1,7 @@
 # Changelog
 
+## Version [1.1.0](https://github.com/cedx/sql.ps1/compare/v1.0.2...v1.1.0)
+
 ## Version [1.0.2](https://github.com/cedx/sql.ps1/compare/v1.0.1...v1.0.2)
 - Fixed the enumeration of columns in the `[DbTableInfo]` constructor.
 

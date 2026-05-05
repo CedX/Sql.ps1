@@ -1,15 +1,15 @@
 using namespace System.Data
-using module ../SqlCommand.psm1
 using module ../SqlCommandBuilder.psm1
+using module ../SqlOrderHintCollection.psm1
 
 <#
 .SYNOPSIS
-	Finds an entity with the specified primary key.
+	Finds either an entity with the specified primary key, or all entities.
 .OUTPUTS
-	The entity with the specified primary key, or `$null` if not found.
+	Either the entity with the specified primary key, or all entities.
 #>
 function Find-Object {
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = "Id")]
 	[OutputType([object])]
 	param (
 		# The connection to the data source.
@@ -20,13 +20,21 @@ function Find-Object {
 		[Parameter(Mandatory, Position = 1)]
 		[Type] $Class,
 
+		# Value indicating whether to find all entities.
+		[Parameter(ParameterSetName = "All")]
+		[switch] $All,
+
 		# The primary key value.
-		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
+		[Parameter(Mandatory, ParameterSetName = "Id", Position = 2, ValueFromPipeline)]
 		[object] $Id,
 
 		# The list of columns to select. By default, all columns.
 		[ValidateNotNull()]
 		[string[]] $Columns = @(),
+
+		# The hints describing the sort order of columns.
+		[Parameter(ParameterSetName = "All")]
+		[SqlOrderHintCollection] $OrderBy,
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]
@@ -37,12 +45,19 @@ function Find-Object {
 	)
 
 	process {
-		$statement = [SqlCommandBuilder]::new($Connection).GetFindCommand($Class, $Id, $Columns)
+		$builder = [SqlCommandBuilder]::new($Connection)
 
-		$command = [SqlCommand]::new($statement.Item1.Text)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-
-		Get-SqlSingle $Connection -As $Class -Command $command -ErrorAction Ignore -Parameters $statement.Item2
+		if ($PSCmdlet.ParameterSetName -eq "All") {
+			$statement = $builder.GetFindAllCommand($Class, $OrderBy, $Columns)
+			$statement[0].Timeout = $Timeout
+			$statement[0].Transaction = $Transaction
+			Invoke-Query $Connection -As $Class -Command $statement[0]
+		}
+		else {
+			$statement = $builder.GetFindCommand($Class, $Id, $Columns)
+			$statement[0].Timeout = $Timeout
+			$statement[0].Transaction = $Transaction
+			Get-Single $Connection -As $Class -Command $statement[0] -ErrorAction Ignore -Parameters $statement[1]
+		}
 	}
 }
