@@ -250,7 +250,7 @@ class SqlCommandBuilder {
 		if ($idColumn.Name -notin $fields) { $fields += $idColumn.Name }
 
 		$orderBy = $OrderHints `
-			? ($OrderHints.ForEach{ "$($this.QuoteIdentifier($_.Column)) $($_.SortOrder -eq [SortOrder]::Descending ? "DESC" : "ASC")" } -join ", ") `
+			? $OrderHints.PSForEach{ "$($this.QuoteIdentifier($_.Column)) $($_.SortOrder -eq [SortOrder]::Descending ? "DESC" : "ASC")" } -join ", " `
 			: "$($this.QuoteIdentifier($idColumn.Name)) ASC"
 
 		$text = "SELECT $($fields.ForEach{ $this.QuoteIdentifier($_) } -join ", ") FROM $($this.GetTableName($table)) ORDER BY $orderBy"

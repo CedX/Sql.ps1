@@ -1,6 +1,9 @@
 ﻿using namespace System.Diagnostics.CodeAnalysis
 using assembly ../bin/System.Data.SQLite.dll
+using module ../src/SortOrder.psm1
 using module ../src/SqlCommandBuilder.psm1
+using module ../src/SqlOrderHint.psm1
+using module ../src/SqlOrderHintCollection.psm1
 using module ./Fixtures/Character.psm1
 
 <#
@@ -66,6 +69,38 @@ Describe "SqlCommandBuilder" {
 			$command.Text | Should -Not -BeLike "*gender*"
 			$command.Text | Should -Not -BeLike "*lastName*"
 			$command.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
+		}
+	}
+
+	Context "GetFindAllCommand" {
+		It "should return the SQL command to find all entities" {
+			$command = [SqlCommandBuilder]::new($connection).GetFindAllCommand([Character]).Item1
+			$command.Text | Should -BeLikeExactly 'SELECT "*'
+			$command.Text | Should -Not -BeLike '*`**'
+			$command.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
+			$command.Text | Should -BeLikeExactly '*ORDER BY "ID" ASC'
+		}
+
+		It "should also return an empty parameter collection" {
+			$parameters = [SqlCommandBuilder]::new($connection).GetFindAllCommand([Character]).Item2
+			$parameters | Should -BeNullOrEmpty
+		}
+
+		It "should allow sorting the results by a specific set of columns" {
+			$orderHints = [ordered]@{ gender = [SortOrder]::Ascending; fullName = [SortOrder]::Descending }
+			$command = [SqlCommandBuilder]::new($connection).GetFindAllCommand([Character], $orderHints).Item1
+			$command.Text | Should -BeLikeExactly 'SELECT "*'
+			$command.Text | Should -Not -BeLike '*`**'
+			$command.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
+			$command.Text | Should -BeLikeExactly '*ORDER BY "gender" ASC, "fullName" DESC'
+		}
+
+		It "should allow selecting a specific set of columns" {
+			$command = [SqlCommandBuilder]::new($connection).GetFindAllCommand([Character], $null, "firstName").Item1
+			$command.Text | Should -BeLikeExactly 'SELECT "firstName"*'
+			$command.Text | Should -Not -BeLike "*gender*"
+			$command.Text | Should -Not -BeLike "*lastName*"
+			$command.Text | Should -BeLikeExactly '*ORDER BY "ID" ASC'
 		}
 	}
 
