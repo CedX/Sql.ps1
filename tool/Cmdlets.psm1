@@ -36,7 +36,7 @@ function New-GitTag {
 	Publishes the project package to the PowerShell Gallery registry.
 #>
 function Publish-PSGalleryModule {
-	$root = Join-Path $PSScriptRoot ..
+	$root = Join-Path $PSScriptRoot .. -Resolve
 
 	$output = "$root/var/PSModule"
 	New-Item $output -ItemType Directory | Out-Null
