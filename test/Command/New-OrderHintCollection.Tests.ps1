@@ -24,7 +24,7 @@ Describe "New-OrderHintCollection" {
 	}
 
 	It "should create a collection from an array of order hints" {
-		$orderHints = (New-SqlOrderHint ID Descending), (New-SqlOrderHint "Name" Ascending)
+		$orderHints = (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name Ascending)
 		$collection = New-SqlOrderHintCollection $orderHints
 		$collection | Should -HaveCount 2
 

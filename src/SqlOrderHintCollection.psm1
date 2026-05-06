@@ -61,7 +61,7 @@ class SqlOrderHintCollection: List[SqlOrderHint] {
 	#>
 	static [SqlOrderHintCollection] op_Implicit([OrderedDictionary] $OrderHints) {
 		$orderHintCollection = [SqlOrderHintCollection]::new()
-		foreach ($key in $OrderHints.Keys) { $orderHintCollection.Add([SqlOrderHint]::new($key, $OrderHints.$key)) }
+		foreach ($key in $OrderHints.Keys) { $orderHintCollection.Add([SqlOrderHint]::new($key, $OrderHints[$key])) }
 		return $orderHintCollection
 	}
 
