@@ -19,7 +19,7 @@ Describe "SqlOrderHintCollection" {
 			$collection | Should -HaveCount 1
 
 			$orderHint = $collection[0]
-			$orderHint.Column | Should -BeExactly "ID"
+			$orderHint.Column | Should -BeExactly ID
 			$orderHint.SortOrder | Should -Be ([SortOrder]::Descending)
 		}
 
@@ -29,7 +29,7 @@ Describe "SqlOrderHintCollection" {
 			$collection | Should -HaveCount 2
 
 			$orderHint = $collection[$collection.Count - 1]
-			$orderHint.Column | Should -BeExactly "Name"
+			$orderHint.Column | Should -BeExactly Name
 			$orderHint.SortOrder | Should -Be ([SortOrder]::Ascending)
 		}
 	}

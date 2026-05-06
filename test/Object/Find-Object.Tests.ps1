@@ -14,22 +14,22 @@ Describe "Find-Object" {
 			$records = Find-SqlObject $connection -All -Class ([Character])
 			$records | Should -HaveCount 16
 			$records[0].Id | Should -Be 1
-			$records[0].FullName | Should -BeExactly "Aragorn"
+			$records[0].FullName | Should -BeExactly Aragorn
 			$records[15].Id | Should -Be 16
-			$records[15].FullName | Should -BeExactly "Sauron"
+			$records[15].FullName | Should -BeExactly Sauron
 		}
 
 		It "should allow sorting the results by a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -OrderBy ([ordered]@{ gender = "Ascending"; fullName = "Descending" })
 			$records | Should -HaveCount 16
 			$records[0].Id | Should -Be 11
-			$records[0].FullName | Should -BeExactly "Gothmog"
+			$records[0].FullName | Should -BeExactly Gothmog
 			$records[15].Id | Should -Be 8
-			$records[15].FullName | Should -BeExactly "Gandalf"
+			$records[15].FullName | Should -BeExactly Gandalf
 		}
 
 		It "should allow selecting a specific set of columns" {
-			$records = Find-SqlObject $connection -All -Class ([Character]) -Columns "gender"
+			$records = Find-SqlObject $connection -All -Class ([Character]) -Columns gender
 			$records[0].Id | Should -Be 1
 			$records[0].Gender | Should -Be ([CharacterGender]::Human)
 			$records[0].FullName | Should -BeNullOrEmpty
