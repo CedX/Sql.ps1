@@ -26,6 +26,7 @@
 		"Invoke-SqlQuery"
 		"New-SqlCommand"
 		"New-SqlConnection"
+		"New-SqlOrderHint"
 		"New-SqlParameter"
 		"New-SqlParameterCollection"
 		"New-SqlTransaction"

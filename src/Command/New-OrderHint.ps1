@@ -1,4 +1,5 @@
 using namespace System.Diagnostics.CodeAnalysis
+using module ../SortOrder.psm1
 using module ../SqlOrderHint.psm1
 
 <#
@@ -12,17 +13,16 @@ function New-SqlOrderHint {
 	[OutputType([SqlOrderHint])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
-		# The order hint name.
+		# The name of the column for which the hint is being provided.
 		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
-		[AllowEmptyString()]
-		[string] $Name,
+		[string] $Column,
 
-		# The order hint value.
+		# The sort order of the column.
 		[Parameter(Position = 1)]
-		[object] $Value
+		[SortOrder] $SortOrder = [SortOrder]::Ascending
 	)
 
 	process {
-		[SqlOrderHint]::new($Name, $Value)
+		[SqlOrderHint]::new($Column, $SortOrder)
 	}
 }
