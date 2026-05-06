@@ -42,7 +42,7 @@ Describe "SqlParameter" {
 			@{ Name = ":baz"; Expected = ":baz" }
 			@{ Name = "`$qux"; Expected = "`$qux" }
 		) {
-			[SqlParameter]::new($name, $null).Name | Should -BeExactly $expected
+			[SqlParameter]::new($name).Name | Should -BeExactly $expected
 		}
 	}
 

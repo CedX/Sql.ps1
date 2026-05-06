@@ -41,11 +41,7 @@ Describe "SqlParameterCollection" {
 		}
 
 		It "should create a collection from an array of parameters" {
-			$parameters = @(
-				[SqlParameter]::new("?1", 123)
-				[SqlParameter]@{ Name = "@Key"; Value = "Unique"; DbType = [DbType]::AnsiString }
-			)
-
+			$parameters = [SqlParameter]::new("?1", 123), [SqlParameter]@{ Name = "@Key"; Value = "Unique"; DbType = [DbType]::AnsiString }
 			$collection = [SqlParameterCollection]::new($parameters)
 			$collection | Should -HaveCount 2
 
