@@ -27,6 +27,7 @@
 		"New-SqlCommand"
 		"New-SqlConnection"
 		"New-SqlOrderHint"
+		"New-SqlOrderHintCollection"
 		"New-SqlParameter"
 		"New-SqlParameterCollection"
 		"New-SqlTransaction"

@@ -25,7 +25,7 @@ Describe "New-ParameterCollection" {
 	}
 
 	It "should create a collection from an array of parameters" {
-		$parameters = (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" "Unique" -DbType AnsiString)
+		$parameters = (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 		$collection = New-SqlParameterCollection $parameters
 		$collection | Should -HaveCount 2
 

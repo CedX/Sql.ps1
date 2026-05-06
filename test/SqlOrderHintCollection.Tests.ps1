@@ -24,11 +24,7 @@ Describe "SqlOrderHintCollection" {
 		}
 
 		It "should create a collection from an array of order hints" {
-			$orderHints = @(
-				[SqlOrderHint]::new("ID", [SortOrder]::Descending)
-				[SqlOrderHint]::new("Name", [SortOrder]::Ascending)
-			)
-
+			$orderHints = [SqlOrderHint]::new("ID", [SortOrder]::Descending), [SqlOrderHint]::new("Name", [SortOrder]::Ascending)
 			$collection = [SqlOrderHintCollection]::new($orderHints)
 			$collection | Should -HaveCount 2
 
