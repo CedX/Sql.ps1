@@ -33,7 +33,6 @@ function New-Command {
 		$command = [SqlCommand]::new($Text)
 		$command.Timeout = $Timeout
 		$command.Transaction = $Transaction
-		$command.Text = $Text
 		$command.Type = $Type
 		$command
 	}
