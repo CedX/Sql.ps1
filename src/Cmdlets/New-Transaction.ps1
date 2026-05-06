@@ -7,7 +7,7 @@ using namespace System.Diagnostics.CodeAnalysis
 .OUTPUTS
 	The newly created transaction.
 #>
-function New-Transaction {
+function New-SqlTransaction {
 	[CmdletBinding()]
 	[OutputType([System.Data.IDbTransaction])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

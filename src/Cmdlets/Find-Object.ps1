@@ -8,7 +8,7 @@ using module ../SqlOrderHintCollection.psm1
 .OUTPUTS
 	Either the entity with the specified primary key, or all entities.
 #>
-function Find-Object {
+function Find-SqlObject {
 	[CmdletBinding(DefaultParameterSetName = "Id")]
 	[OutputType([object])]
 	param (

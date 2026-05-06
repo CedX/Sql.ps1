@@ -6,7 +6,7 @@ using namespace System.Data
 .INPUTS
 	The transaction to commit.
 #>
-function Approve-Transaction {
+function Approve-SqlTransaction {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (

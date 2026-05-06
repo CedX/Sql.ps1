@@ -8,7 +8,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The number of rows affected.
 #>
-function Invoke-NonQuery {
+function Invoke-SqlNonQuery {
 	[CmdletBinding()]
 	[OutputType([int])]
 	param (

@@ -10,7 +10,7 @@ using module ../SqlMapper.psm1
 .OUTPUTS
 	The generated primary key value.
 #>
-function Publish-Object {
+function Publish-SqlObject {
 	[CmdletBinding()]
 	[OutputType([long])]
 	param (

@@ -9,7 +9,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The single row.
 #>
-function Get-Single {
+function Get-SqlSingle {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (

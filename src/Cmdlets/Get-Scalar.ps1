@@ -9,7 +9,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The first column of the first row.
 #>
-function Get-Scalar {
+function Get-SqlScalar {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (

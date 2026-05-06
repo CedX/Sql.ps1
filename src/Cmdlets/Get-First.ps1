@@ -9,7 +9,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The first row.
 #>
-function Get-First {
+function Get-SqlFirst {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (

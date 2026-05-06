@@ -8,7 +8,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The newly created parameter collection.
 #>
-function New-ParameterCollection {
+function New-SqlParameterCollection {
 	[CmdletBinding()]
 	[OutputType([SqlParameterCollection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

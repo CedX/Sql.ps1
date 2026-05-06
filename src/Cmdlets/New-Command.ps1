@@ -9,7 +9,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The newly created command.
 #>
-function New-Command {
+function New-SqlCommand {
 	[CmdletBinding()]
 	[OutputType([SqlCommand])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

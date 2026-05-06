@@ -6,7 +6,7 @@ using namespace System.Data
 .INPUTS
 	The connection to the data source.
 #>
-function Close-Connection {
+function Close-SqlConnection {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (

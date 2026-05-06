@@ -10,7 +10,7 @@ using module ../SqlCommandBuilder.psm1
 .OUTPUTS
 	`$true` if the specified entity has been deleted, otherwise `$false`.
 #>
-function Remove-Object {
+function Remove-SqlObject {
 	[CmdletBinding()]
 	[OutputType([bool])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

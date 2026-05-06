@@ -7,7 +7,7 @@ using module ../SqlCommandBuilder.psm1
 .OUTPUTS
 	`$true` if an entity with the specified primary key exists, otherwise `$false`.
 #>
-function Test-Object {
+function Test-SqlObject {
 	[CmdletBinding()]
 	[OutputType([bool])]
 	param (

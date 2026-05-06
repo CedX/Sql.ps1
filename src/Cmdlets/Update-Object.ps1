@@ -10,7 +10,7 @@ using module ../SqlCommandBuilder.psm1
 .OUTPUTS
 	The number of rows affected.
 #>
-function Update-Object {
+function Update-SqlObject {
 	[CmdletBinding()]
 	[OutputType([int])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

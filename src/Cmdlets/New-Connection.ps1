@@ -9,7 +9,7 @@ using namespace System.Diagnostics.CodeAnalysis
 .OUTPUTS
 	The newly created database connection.
 #>
-function New-Connection {
+function New-SqlConnection {
 	[CmdletBinding()]
 	[OutputType([System.Data.IDbConnection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

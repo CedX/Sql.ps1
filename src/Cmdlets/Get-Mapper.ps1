@@ -6,7 +6,7 @@ using module ../SqlMapper.psm1
 .OUTPUTS
 	The singleton instance of the data mapper.
 #>
-function Get-Mapper {
+function Get-SqlMapper {
 	[CmdletBinding()]
 	[OutputType([SqlMapper])]
 	param ()

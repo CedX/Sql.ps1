@@ -9,7 +9,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The sequence of object tuples whose properties correspond to the columns.
 #>
-function Invoke-Query {
+function Invoke-SqlQuery {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (

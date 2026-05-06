@@ -6,7 +6,7 @@ using namespace System.Data
 .INPUTS
 	The transaction to roll back.
 #>
-function Deny-Transaction {
+function Deny-SqlTransaction {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (

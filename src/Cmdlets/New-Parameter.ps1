@@ -8,7 +8,7 @@ using module ../SqlParameter.psm1
 .OUTPUTS
 	The newly created parameter.
 #>
-function New-Parameter {
+function New-SqlParameter {
 	[CmdletBinding()]
 	[OutputType([SqlParameter])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
