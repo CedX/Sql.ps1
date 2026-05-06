@@ -4,8 +4,8 @@
 #>
 Describe "Invoke-NonQuery" {
 	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
-	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
-	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
+	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
+	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
 	It "should return the number of rows affected by the SQL query" {
 		$parameters = @{ Gender = "Balrog" }

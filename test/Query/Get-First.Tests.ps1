@@ -6,8 +6,8 @@
 #>
 Describe "Get-First" {
 	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
-	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
-	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
+	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
+	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
 	It "should return the first record produced by the SQL query" {
 		$sql = "SELECT * FROM Characters WHERE fullName = @FullName"

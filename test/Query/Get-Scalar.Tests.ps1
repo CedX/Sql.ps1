@@ -4,8 +4,8 @@
 #>
 Describe "Get-Scalar" {
 	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
-	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
-	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
+	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
+	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
 	It "should return the single value produced by the query" {
 		$sql = "SELECT COUNT(*) FROM Characters WHERE gender = @Gender"

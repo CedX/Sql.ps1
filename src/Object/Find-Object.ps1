@@ -47,7 +47,7 @@ function Find-SqlObject {
 	process {
 		$builder = [SqlCommandBuilder]::new($Connection)
 
-		if ($PSCmdlet.ParameterSetName -eq "All") {
+		if ($All) {
 			$statement = $builder.GetFindAllCommand($Class, $OrderBy, $Columns)
 			$statement[0].Timeout = $Timeout
 			$statement[0].Transaction = $Transaction

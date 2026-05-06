@@ -1,3 +1,3 @@
-foreach ($cmdlet in Get-ChildItem "$PSScriptRoot/Cmdlets/*.ps1") {
+foreach ($cmdlet in Get-ChildItem "$PSScriptRoot/*/*.ps1") {
 	. $cmdlet.FullName
 }

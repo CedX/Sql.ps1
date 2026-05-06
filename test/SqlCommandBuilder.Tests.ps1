@@ -1,9 +1,6 @@
 ﻿using namespace System.Diagnostics.CodeAnalysis
 using assembly ../bin/System.Data.SQLite.dll
-using module ../src/SortOrder.psm1
 using module ../src/SqlCommandBuilder.psm1
-using module ../src/SqlOrderHint.psm1
-using module ../src/SqlOrderHintCollection.psm1
 using module ./Fixtures/Character.psm1
 
 <#
@@ -87,7 +84,7 @@ Describe "SqlCommandBuilder" {
 		}
 
 		It "should allow sorting the results by a specific set of columns" {
-			$orderHints = [ordered]@{ gender = [SortOrder]::Ascending; fullName = [SortOrder]::Descending }
+			$orderHints = [ordered]@{ gender = "Ascending"; fullName = "Descending" }
 			$command = [SqlCommandBuilder]::new($connection).GetFindAllCommand([Character], $orderHints).Item1
 			$command.Text | Should -BeLikeExactly 'SELECT "*'
 			$command.Text | Should -Not -BeLike '*`**'

@@ -6,8 +6,8 @@
 #>
 Describe "Publish-Object" {
 	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
-	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
-	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
+	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
+	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
 	It "should insert the specified record" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Cédric'"

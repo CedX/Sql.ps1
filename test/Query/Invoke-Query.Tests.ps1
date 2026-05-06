@@ -6,8 +6,8 @@ using module ../Fixtures/Character.psm1
 #>
 Describe "Invoke-Query" {
 	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
-	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
-	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
+	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
+	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
 	It "should return the records produced by the SQL query" {
 		$sql = "SELECT * FROM Characters WHERE gender = @Gender ORDER BY fullName"
