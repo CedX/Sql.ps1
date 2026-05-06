@@ -35,6 +35,6 @@ function Test-Object {
 		$statement = [SqlCommandBuilder]::new($Connection).GetExistsCommand($Class, $Id)
 		$statement[0].Timeout = $Timeout
 		$statement[0].Transaction = $Transaction
-		Get-Scalar $Connection -As ([bool]) -Command $statement[0] -Parameters $statement[1]
+		Get-SqlScalar $Connection -As ([bool]) -Command $statement[0] -Parameters $statement[1]
 	}
 }

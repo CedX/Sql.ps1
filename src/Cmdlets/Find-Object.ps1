@@ -51,13 +51,13 @@ function Find-Object {
 			$statement = $builder.GetFindAllCommand($Class, $OrderBy, $Columns)
 			$statement[0].Timeout = $Timeout
 			$statement[0].Transaction = $Transaction
-			Invoke-Query $Connection -As $Class -Command $statement[0]
+			Invoke-SqlQuery $Connection -As $Class -Command $statement[0]
 		}
 		else {
 			$statement = $builder.GetFindCommand($Class, $Id, $Columns)
 			$statement[0].Timeout = $Timeout
 			$statement[0].Transaction = $Transaction
-			Get-Single $Connection -As $Class -Command $statement[0] -ErrorAction Ignore -Parameters $statement[1]
+			Get-SqlSingle $Connection -As $Class -Command $statement[0] -ErrorAction Ignore -Parameters $statement[1]
 		}
 	}
 }

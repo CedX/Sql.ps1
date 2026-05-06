@@ -35,7 +35,7 @@ function Publish-Object {
 		$statement[0].Timeout = $Timeout
 		$statement[0].Transaction = $Transaction
 
-		$id = Get-Scalar $Connection -As ([long]) -Command $statement[0] -Parameters $statement[1]
+		$id = Get-SqlScalar $Connection -As ([long]) -Command $statement[0] -Parameters $statement[1]
 		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
 		if ($column) { $column.SetValue($InputObject, [SqlMapper]::ChangeType($id, $column)) }
 		$id

@@ -4,28 +4,24 @@ using module ../SqlCommandBuilder.psm1
 
 <#
 .SYNOPSIS
-	Updates the specified entity.
+	Deletes the specified entity.
 .INPUTS
-	The entity to update.
+	The entity to delete.
 .OUTPUTS
-	The number of rows affected.
+	`$true` if the specified entity has been deleted, otherwise `$false`.
 #>
-function Update-Object {
+function Remove-Object {
 	[CmdletBinding()]
-	[OutputType([int])]
+	[OutputType([bool])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]
 		[IDbConnection] $Connection,
 
-		# The entity to update.
+		# The entity to delete.
 		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[object] $InputObject,
-
-		# The list of columns to select. By default, all columns.
-		[ValidateNotNull()]
-		[string[]] $Columns = @(),
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]
@@ -36,9 +32,9 @@ function Update-Object {
 	)
 
 	process {
-		$statement = [SqlCommandBuilder]::new($Connection).GetUpdateCommand($InputObject, $Columns)
+		$statement = [SqlCommandBuilder]::new($Connection).GetDeleteCommand($InputObject)
 		$statement[0].Timeout = $Timeout
 		$statement[0].Transaction = $Transaction
-		Invoke-NonQuery $Connection -Command $statement[0] -Parameters $statement[1]
+		(Invoke-SqlNonQuery $Connection -Command $statement[0] -Parameters $statement[1]) -gt 0
 	}
 }
