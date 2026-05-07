@@ -1,3 +1,4 @@
+using module ../../Sql.psd1
 using module ../../src/SortOrder.psm1
 
 <#
@@ -5,10 +6,6 @@ using module ../../src/SortOrder.psm1
 	Tests the features of the `New-OrderHintCollection` cmdlet.
 #>
 Describe "New-OrderHintCollection" {
-	BeforeAll {
-		Import-Module "$PSScriptRoot/../../Sql.psd1"
-	}
-
 	It "should create an empty collection by default" {
 		$collection = New-SqlOrderHintCollection
 		$collection | Should -BeNullOrEmpty

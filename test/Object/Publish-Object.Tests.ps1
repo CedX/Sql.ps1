@@ -1,11 +1,11 @@
-﻿using module ../Fixtures/Character.psm1
+﻿using module ../../Sql.psd1
+using module ../Fixtures/Character.psm1
 
 <#
 .SYNOPSIS
 	Tests the features of the `Publish-Object` cmdlet.
 #>
 Describe "Publish-Object" {
-	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 

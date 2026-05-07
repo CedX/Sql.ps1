@@ -1,12 +1,10 @@
+using module ../../Sql.psd1
+
 <#
 .SYNOPSIS
 	Tests the features of the `New-Parameter` cmdlet.
 #>
 Describe "New-Parameter" {
-	BeforeAll {
-		Import-Module "$PSScriptRoot/../../Sql.psd1"
-	}
-
 	It "should normalize the parameter name" -ForEach @(
 		@{ Name = ""; Expected = "?" }
 		@{ Name = "?"; Expected = "?" }

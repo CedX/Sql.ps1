@@ -1,3 +1,4 @@
+using module ../../Sql.psd1
 using module ../Fixtures/Character.psm1
 
 <#
@@ -5,7 +6,6 @@ using module ../Fixtures/Character.psm1
 	Tests the features of the `Invoke-Query` cmdlet.
 #>
 Describe "Invoke-Query" {
-	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 

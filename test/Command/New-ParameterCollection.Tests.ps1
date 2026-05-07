@@ -1,14 +1,11 @@
 using namespace System.Data
+using module ../../Sql.psd1
 
 <#
 .SYNOPSIS
 	Tests the features of the `New-ParameterCollection` cmdlet.
 #>
 Describe "New-ParameterCollection" {
-	BeforeAll {
-		Import-Module "$PSScriptRoot/../../Sql.psd1"
-	}
-
 	It "should create an empty collection by default" {
 		$collection = New-SqlParameterCollection
 		$collection | Should -BeNullOrEmpty

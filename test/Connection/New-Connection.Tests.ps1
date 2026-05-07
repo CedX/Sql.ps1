@@ -1,15 +1,12 @@
 using namespace System.Data
 using assembly ../../bin/System.Data.SQLite.dll
+using module ../../Sql.psd1
 
 <#
 .SYNOPSIS
 	Tests the features of the `New-Connection` cmdlet.
 #>
 Describe "New-Connection" {
-	BeforeAll {
-		Import-Module "$PSScriptRoot/../../Sql.psd1"
-	}
-
 	It "should create a connection of the specified type" {
 		$connection = New-SqlConnection ([System.Data.SQLite.SQLiteConnection]) "DataSource=:memory:"
 		$connection | Should -BeOfType ([System.Data.SQLite.SQLiteConnection])

@@ -1,9 +1,10 @@
+using module ../../Sql.psd1
+
 <#
 .SYNOPSIS
 	Tests the features of the `Invoke-NonQuery` cmdlet.
 #>
 Describe "Invoke-NonQuery" {
-	BeforeAll { Import-Module "$PSScriptRoot/../../Sql.psd1" }
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
