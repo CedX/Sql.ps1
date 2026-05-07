@@ -5,6 +5,7 @@ using module ./SqlParameter.psm1
 .SYNOPSIS
 	Collects all parameters relevant to a parameterized SQL statement.
 #>
+[NoRunspaceAffinity()]
 class SqlParameterCollection: List[SqlParameter] {
 
 	<#

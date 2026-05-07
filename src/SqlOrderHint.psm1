@@ -5,6 +5,7 @@ using module ./SortOrder.psm1
 .SYNOPSIS
 	Defines the sort order for a database column.
 #>
+[NoRunspaceAffinity()]
 class SqlOrderHint {
 
 	<#

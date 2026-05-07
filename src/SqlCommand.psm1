@@ -5,6 +5,7 @@ using module ./SqlParameterCollection.psm1
 .SYNOPSIS
 	Represents an SQL statement that is executed while connected to a data source.
 #>
+[NoRunspaceAffinity()]
 class SqlCommand {
 
 	<#

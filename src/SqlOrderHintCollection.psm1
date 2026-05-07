@@ -7,6 +7,7 @@ using module ./SqlOrderHint.psm1
 .SYNOPSIS
 	A collection of hints describing the sort order of columns.
 #>
+[NoRunspaceAffinity()]
 class SqlOrderHintCollection: List[SqlOrderHint] {
 
 	<#

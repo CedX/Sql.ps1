@@ -5,6 +5,7 @@ using namespace System.Data
 .SYNOPSIS
 	Represents a parameter of a parameterized SQL statement.
 #>
+[NoRunspaceAffinity()]
 class SqlParameter {
 
 	<#
