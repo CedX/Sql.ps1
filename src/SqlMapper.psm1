@@ -82,12 +82,12 @@ class SqlMapper {
 		}
 
 		return $discard = switch ($objects.Count) {
-			2 { [ValueTuple]::Create[object, object]($objects[0], $objects[1]) }
-			3 { [ValueTuple]::Create[object, object, object]($objects[0], $objects[1], $objects[2]) }
-			4 { [ValueTuple]::Create[object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3]) }
-			5 { [ValueTuple]::Create[object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4]) }
-			6 { [ValueTuple]::Create[object, object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5]) }
-			default { [ValueTuple]::Create[object, object, object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5], $objects[6]) }
+			2 { [ValueTuple]::Create[object, object]($objects[0], $objects[1]); break }
+			3 { [ValueTuple]::Create[object, object, object]($objects[0], $objects[1], $objects[2]); break }
+			4 { [ValueTuple]::Create[object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3]); break }
+			5 { [ValueTuple]::Create[object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4]); break }
+			6 { [ValueTuple]::Create[object, object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5]); break }
+			default { [ValueTuple]::Create[object, object, object, object, object, object, object]($objects[0], $objects[1], $objects[2], $objects[3], $objects[4], $objects[5], $objects[6]); break }
 		}
 	}
 
