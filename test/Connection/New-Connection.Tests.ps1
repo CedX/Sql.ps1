@@ -7,9 +7,12 @@ using module ../../Sql.psd1
 	Tests the features of the `New-Connection` cmdlet.
 #>
 Describe "New-Connection" {
-	It "should create a connection of the specified type" {
-		$connection = New-SqlConnection ([System.Data.SQLite.SQLiteConnection]) "DataSource=:memory:"
-		$connection | Should -BeOfType ([System.Data.SQLite.SQLiteConnection])
+	It "should create a connection of the specified type" -ForEach @(
+		@{ Provider = [System.Data.SQLite.SQLiteConnection]; ConnectionString = "DataSource=:memory:"; Expected = [System.Data.SQLite.SQLiteConnection] }
+		@{ Provider = "SqlClient"; ConnectionString = "Server=localhost; Database=TestDb; Uid=user; Pwd=password"; Expected = [System.Data.SqlClient.SqlConnection] }
+	) {
+		$connection = New-SqlConnection $provider $connectionString
+		$connection | Should -BeOfType $expected
 		$connection.State | Should -Be ([ConnectionState]::Closed)
 		$connection.Dispose()
 	}

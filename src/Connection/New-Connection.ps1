@@ -10,13 +10,18 @@ using namespace System.Diagnostics.CodeAnalysis
 	The newly created database connection.
 #>
 function New-SqlConnection {
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = "Type")]
 	[OutputType([System.Data.IDbConnection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The type of connection class to instantiate.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, ParameterSetName = "Type", Position = 0)]
 		[Type] $Type,
+
+		# The name of an ADO.NET provider.
+		[Parameter(Mandatory, ParameterSetName = "Provider", Position = 0)]
+		[ValidateSet("Odbc", "OleDb", "SqlClient")]
+		[string] $Provider,
 
 		# The connection string used to open the database.
 		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
@@ -27,7 +32,14 @@ function New-SqlConnection {
 	)
 
 	process {
-		$connection = [IDbConnection] [Activator]::CreateInstance($Type, $ConnectionString)
+		$class = switch ($Provider) {
+			"Odbc" { [Odbc.OdbcConnection]; break }
+			"OleDb" { [OleDb.OleDbConnection]; break }
+			"SqlClient" { [SqlClient.SqlConnection]; break }
+			default { $Type }
+		}
+
+		$connection = [IDbConnection] [Activator]::CreateInstance($class, $ConnectionString)
 		if ($Open) { $connection.Open() }
 		$connection
 	}
