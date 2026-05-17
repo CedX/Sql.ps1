@@ -32,14 +32,14 @@ function New-SqlConnection {
 	)
 
 	process {
-		$class = switch ($Provider) {
+		$connectionType = switch ($Provider) {
 			"Odbc" { [Odbc.OdbcConnection]; break }
 			"OleDb" { [OleDb.OleDbConnection]; break }
 			"SqlClient" { [SqlClient.SqlConnection]; break }
 			default { $Type }
 		}
 
-		$connection = [IDbConnection] [Activator]::CreateInstance($class, $ConnectionString)
+		$connection = [IDbConnection] [Activator]::CreateInstance($connectionType, $ConnectionString)
 		if ($Open) { $connection.Open() }
 		$connection
 	}
