@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [1.2.0](https://github.com/CedX/Sql.ps1/compare/v1.1.0...v1.2.0)
+- Added the `-Provider` parameter to the `New-SqlConnection` cmdlet.
+
 ## Version [1.1.0](https://github.com/CedX/Sql.ps1/compare/v1.0.2...v1.1.0)
 - Added the `New-SqlOrderHint` and `New-SqlOrderHintCollection` cmdlets.
 - Added the `-All` and `-OrderBy` parameters to the `Find-SqlObject` cmdlet.
