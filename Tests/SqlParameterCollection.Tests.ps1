@@ -1,6 +1,6 @@
 using namespace System.Data
-using module ../src/SqlParameter.psm1
-using module ../src/SqlParameterCollection.psm1
+using module ../Sources/SqlParameter.psm1
+using module ../Sources/SqlParameterCollection.psm1
 
 <#
 .SYNOPSIS

@@ -1,7 +1,7 @@
 using namespace System.Data
-using module ../src/SortOrder.psm1
-using module ../src/SqlOrderHint.psm1
-using module ../src/SqlOrderHintCollection.psm1
+using module ../Sources/SortOrder.psm1
+using module ../Sources/SqlOrderHint.psm1
+using module ../Sources/SqlOrderHintCollection.psm1
 
 <#
 .SYNOPSIS

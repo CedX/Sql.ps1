@@ -1,5 +1,5 @@
 using module ../../Sql.psd1
-using module ../../src/SqlMapper.psm1
+using module ../../Sources/SqlMapper.psm1
 
 <#
 .SYNOPSIS

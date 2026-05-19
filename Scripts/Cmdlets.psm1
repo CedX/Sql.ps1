@@ -38,15 +38,15 @@ function New-GitTag {
 function Publish-PSGalleryModule {
 	$root = Join-Path $PSScriptRoot .. -Resolve
 
-	$output = "$root/var/PSModule"
+	$output = "$root/Temp/PSModule"
 	New-Item $output -ItemType Directory | Out-Null
 	Copy-Item $root/Sql.psd1 $output/Belin.Sql.psd1
 	Copy-Item $root/*.md $output
-	Copy-Item $root/src $output -Recurse
+	Copy-Item $root/Sources $output -Recurse
 
-	$output = "$root/var/PSGallery"
+	$output = "$root/Temp/PSGallery"
 	New-Item $output -ItemType Directory | Out-Null
-	Compress-PSResource $root/var/PSModule $output
+	Compress-PSResource $root/Temp/PSModule $output
 	foreach ($package in Get-Item $output/*.nupkg) { Publish-PSResource -ApiKey $Env:PSGALLERY_API_KEY -NupkgPath $package -Repository PSGallery }
 }
 

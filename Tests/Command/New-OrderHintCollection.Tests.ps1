@@ -1,5 +1,5 @@
 using module ../../Sql.psd1
-using module ../../src/SortOrder.psm1
+using module ../../Sources/SortOrder.psm1
 
 <#
 .SYNOPSIS

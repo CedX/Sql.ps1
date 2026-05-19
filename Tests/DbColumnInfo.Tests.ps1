@@ -1,5 +1,5 @@
 ﻿using namespace System.Data
-using module ../src/DbColumnInfo.psm1
+using module ../Sources/DbColumnInfo.psm1
 using module ./Fixtures/Character.psm1
 
 <#

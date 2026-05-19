@@ -1,6 +1,6 @@
 using namespace System.Collections.Generic
-using module ../src/SortOrder.psm1
-using module ../src/SqlOrderHint.psm1
+using module ../Sources/SortOrder.psm1
+using module ../Sources/SqlOrderHint.psm1
 
 <#
 .SYNOPSIS

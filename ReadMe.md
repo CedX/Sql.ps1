@@ -6,8 +6,8 @@ If you like [SQL](https://en.wikipedia.org/wiki/SQL) but dislike the boilerplate
 > Think of [Dapper](https://www.learndapper.com) and its alternatives, but specifically designed for [PowerShell](https://learn.microsoft.com/en-us/powershell).
 
 ## Documentation
-- [User guide](https://github.com/CedX/Sql.ps1/tree/main/docs)
-- [Examples](https://github.com/CedX/Sql.ps1/tree/main/example)
+- [User guide](https://github.com/CedX/Sql.ps1/tree/main/Documentation)
+- [Examples](https://github.com/CedX/Sql.ps1/tree/main/Examples)
 
 ## Development
 - [Git repository](https://github.com/CedX/Sql.ps1)

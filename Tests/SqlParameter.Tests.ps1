@@ -1,5 +1,5 @@
 using namespace System.Collections.Generic
-using module ../src/SqlParameter.psm1
+using module ../Sources/SqlParameter.psm1
 
 <#
 .SYNOPSIS

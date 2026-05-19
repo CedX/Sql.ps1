@@ -1,5 +1,5 @@
 <Solution>
-	<Project Path="test/Sql.Tests.csproj">
+	<Project Path="Tests/Sql.Tests.csproj">
 		<Build Solution="Release|*" Project="false" />
 	</Project>
 </Solution>

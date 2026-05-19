@@ -1,4 +1,4 @@
-using module ../src/DbTableInfo.psm1
+using module ../Sources/DbTableInfo.psm1
 using module ./Fixtures/Character.psm1
 
 <#

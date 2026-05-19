@@ -1,5 +1,5 @@
 using namespace System.Collections.Generic
-using module ../src/SqlCommand.psm1
+using module ../Sources/SqlCommand.psm1
 
 <#
 .SYNOPSIS
