@@ -3,6 +3,26 @@ using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
+	Closes the specified database connection.
+.INPUTS
+	The connection to the data source.
+#>
+function Close-SqlConnection {
+	[CmdletBinding()]
+	[OutputType([void])]
+	param (
+		# The connection to the data source.
+		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+		[IDbConnection] $InputObject
+	)
+
+	process {
+		$InputObject.Close()
+	}
+}
+
+<#
+.SYNOPSIS
 	Creates a new database connection.
 .INPUTS
 	The connection string used to open the database.
