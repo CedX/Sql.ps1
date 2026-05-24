@@ -32,7 +32,7 @@ class SqlParameterCollection: List[SqlParameter] {
 	#>
 	[SqlParameter] get_Item([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
-		$parameterFound = $this.Find({ param ($parameter) $parameter.Name -ceq $normalizedName })
+		$parameterFound = $this.Find({ param ([SqlParameter] $parameter) $parameter.Name -ceq $normalizedName })
 		if (-not $parameterFound) { throw [KeyNotFoundException] $normalizedName }
 		return $parameterFound
 	}
@@ -111,7 +111,7 @@ class SqlParameterCollection: List[SqlParameter] {
 	#>
 	[bool] Contains([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
-		return $this.Exists({ param ($parameter) $parameter.Name -ceq $normalizedName })
+		return $this.Exists({ param ([SqlParameter] $parameter) $parameter.Name -ceq $normalizedName })
 	}
 
 	<#
@@ -124,7 +124,7 @@ class SqlParameterCollection: List[SqlParameter] {
 	#>
 	[int] IndexOf([string] $Name) {
 		$normalizedName = [SqlParameter]::NormalizeName($Name)
-		return $this.FindIndex({ param ($parameter) $parameter.Name -ceq $normalizedName })
+		return $this.FindIndex({ param ([SqlParameter] $parameter) $parameter.Name -ceq $normalizedName })
 	}
 
 	<#

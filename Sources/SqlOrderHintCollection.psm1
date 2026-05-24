@@ -33,7 +33,7 @@ class SqlOrderHintCollection: List[SqlOrderHint] {
 		The order hint with the specified column name, or `$null` if not found.
 	#>
 	[SqlOrderHint] get_Item([string] $Column) {
-		$orderHint = $this.Find({ param ($orderHint) $orderHint.Column -eq $Column })
+		$orderHint = $this.Find({ param ([SqlOrderHint] $orderHint) $orderHint.Column -eq $Column })
 		if (-not $orderHint) { throw [KeyNotFoundException] $Column }
 		return $orderHint
 	}
@@ -75,7 +75,7 @@ class SqlOrderHintCollection: List[SqlOrderHint] {
 		`$true` if this collection contains an order hint with the specified column name, otherwise `$false`.
 	#>
 	[bool] Contains([string] $Column) {
-		return $this.Exists({ param ($orderHint) $orderHint.Column -eq $Column })
+		return $this.Exists({ param ([SqlOrderHint] $orderHint) $orderHint.Column -eq $Column })
 	}
 
 	<#
@@ -87,7 +87,7 @@ class SqlOrderHintCollection: List[SqlOrderHint] {
 		The index of the order hint with the specified column name, or `-1` if not found.
 	#>
 	[int] IndexOf([string] $Column) {
-		return $this.FindIndex({ param ($orderHint) $orderHint.Column -eq $Column })
+		return $this.FindIndex({ param ([SqlOrderHint] $orderHint) $orderHint.Column -eq $Column })
 	}
 
 	<#

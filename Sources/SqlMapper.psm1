@@ -135,7 +135,7 @@ class SqlMapper {
 		The table information associated with the specified type.
 	#>
 	[DbTableInfo] GetTable([Type] $Type) {
-		return [SqlMapper]::Mapping.GetOrAdd($Type, { param ($entityType) [DbTableInfo]::new($entityType) })
+		return [SqlMapper]::Mapping.GetOrAdd($Type, { param ([Type] $entityType) [DbTableInfo]::new($entityType) })
 	}
 
 	<#
