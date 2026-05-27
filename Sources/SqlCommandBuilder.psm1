@@ -14,7 +14,6 @@ using module ./SqlParameterCollection.psm1
 .SYNOPSIS
 	Automatically generates single-table commands.
 #>
-[NoRunspaceAffinity()]
 class SqlCommandBuilder {
 
 	<#
