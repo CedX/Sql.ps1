@@ -99,6 +99,7 @@ function New-SqlCommandBuilder {
 
 	process {
 		$builder = [SqlCommandBuilder]::new($Connection)
+		$builder.CatalogLocation = $CatalogLocation
 		$builder.CatalogSeparator = $CatalogSeparator
 		$builder.LastInsertIdFunction = $LastInsertIdFunction
 		$builder.ParameterPrefix = $ParameterPrefix
