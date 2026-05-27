@@ -25,6 +25,7 @@
 		"Invoke-SqlNonQuery"
 		"Invoke-SqlQuery"
 		"New-SqlCommand"
+		"New-SqlCommandBuilder"
 		"New-SqlConnection"
 		"New-SqlOrderHint"
 		"New-SqlOrderHintCollection"

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Version [1.3.0](https://github.com/CedX/Sql.ps1/compare/v1.2.0...v1.3.0)
+- Added the `New-SqlCommandBuilder` cmdlet.
 - Added the `-Builder` parameter to the `Find-SqlObject`, `Publish-SqlObject`, `Remove-SqlObject`, `Test-SqlObject` and `Update-SqlObject` cmdlets.
 - Disabled the runspace affinity of most classes.
 

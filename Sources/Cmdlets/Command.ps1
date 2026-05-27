@@ -1,7 +1,9 @@
 using namespace System.Data
+using namespace System.Data.Common
 using namespace System.Diagnostics.CodeAnalysis
 using module ../SortOrder.psm1
 using module ../SqlCommand.psm1
+using module ../SqlCommandBuilder.psm1
 using module ../SqlOrderHint.psm1
 using module ../SqlOrderHintCollection.psm1
 using module ../SqlParameter.psm1
@@ -10,6 +12,8 @@ using module ../SqlParameterCollection.psm1
 <#
 .SYNOPSIS
 	Creates a new command.
+.INPUTS
+	The text of the SQL statement.
 .OUTPUTS
 	The newly created command.
 #>
@@ -44,7 +48,74 @@ function New-SqlCommand {
 
 <#
 .SYNOPSIS
+	Creates a new command builder.
+.OUTPUTS
+	The newly created command builder.
+#>
+function New-SqlCommandBuilder {
+	[CmdletBinding(DefaultParameterSetName = "LastInsertIdFunction")]
+	[OutputType([SqlCommand])]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	param (
+		# The connection to the data source.
+		[Parameter(Mandatory, Position = 0)]
+		[IDbConnection] $Connection,
+
+		#	The position of the catalog name in a qualified table name.
+		[CatalogLocation] $CatalogLocation = [CatalogLocation]::Start,
+
+		# The string used as the catalog separator.
+		[ValidateNotNullOrEmpty()]
+		[string] $CatalogSeparator = ".",
+
+		# The SQL function to use when the `RETURNING` clause is not supported.
+		[Parameter(ParameterSetName = "LastInsertIdFunction")]
+		[ValidateNotNullOrEmpty()]
+		[string] $LastInsertIdFunction = "SCOPE_IDENTITY()",
+
+		# The beginning string to use for naming parameters.
+		[ValidateNotNullOrEmpty()]
+		[string] $ParameterPrefix = "@",
+
+		# The beginning string to use when specifying database objects.
+		[ValidateNotNullOrEmpty()]
+		[string] $QuotePrefix = "[",
+
+		# The ending string to use when specifying database objects.
+		[ValidateNotNullOrEmpty()]
+		[string] $QuoteSuffix = "]",
+
+		# The string used as the schema separator.
+		[ValidateNotNullOrEmpty()]
+		[string] $SchemaSeparator = ".",
+
+		# Value indicating whether the ADO.NET provider supports the `RETURNING` clause.
+		[Parameter(ParameterSetName = "SupportsReturningClause")]
+		[switch] $SupportsReturningClause,
+
+		# Value indicating whether the ADO.NET provider uses positional parameters.
+		[switch] $UsePositionalParameters
+	)
+
+	process {
+		$builder = [SqlCommandBuilder]::new($Connection)
+		$builder.CatalogSeparator = $CatalogSeparator
+		$builder.LastInsertIdFunction = $LastInsertIdFunction
+		$builder.ParameterPrefix = $ParameterPrefix
+		$builder.QuotePrefix = $QuotePrefix
+		$builder.QuoteSuffix = $QuoteSuffix
+		$builder.SchemaSeparator = $SchemaSeparator
+		$builder.SupportsReturningClause = $SupportsReturningClause
+		$builder.UsePositionalParameters = $UsePositionalParameters
+		$builder
+	}
+}
+
+<#
+.SYNOPSIS
 	Creates a new order hint.
+.INPUTS
+	The name of the column for which the hint is being provided.
 .OUTPUTS
 	The newly created order hint.
 #>
@@ -70,6 +141,8 @@ function New-SqlOrderHint {
 <#
 .SYNOPSIS
 	Creates a new order hint collection.
+.INPUTS
+	The collection whose elements are copied to the order hint collection.
 .OUTPUTS
 	The newly created order hint collection.
 #>
@@ -92,6 +165,8 @@ function New-SqlOrderHintCollection {
 <#
 .SYNOPSIS
 	Creates a new parameter.
+.INPUTS
+	The parameter name.
 .OUTPUTS
 	The newly created parameter.
 #>
@@ -139,6 +214,8 @@ function New-SqlParameter {
 <#
 .SYNOPSIS
 	Creates a new parameter collection.
+.INPUTS
+	The collection whose elements are copied to the parameter collection.
 .OUTPUTS
 	The newly created parameter collection.
 #>

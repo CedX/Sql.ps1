@@ -7,6 +7,8 @@ using module ../SqlOrderHintCollection.psm1
 <#
 .SYNOPSIS
 	Finds either an entity with the specified primary key, or all entities.
+.INPUTS
+	The primary key value.
 .OUTPUTS
 	Either the entity with the specified primary key, or all entities.
 #>
@@ -163,6 +165,8 @@ function Remove-SqlObject {
 <#
 .SYNOPSIS
 	Checks whether an entity with the specified primary key exists.
+.INPUTS
+	The primary key value.
 .OUTPUTS
 	`$true` if an entity with the specified primary key exists, otherwise `$false`.
 #>
