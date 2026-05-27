@@ -6,6 +6,7 @@ using module ./DbColumnInfo.psm1
 .SYNOPSIS
 	Provides information about a database table.
 #>
+[NoRunspaceAffinity()]
 class DbTableInfo {
 
 	<#

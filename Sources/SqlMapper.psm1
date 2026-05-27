@@ -10,6 +10,7 @@ using module ./DbTableInfo.psm1
 .SYNOPSIS
 	Maps data records to entity objects.
 #>
+[NoRunspaceAffinity()]
 class SqlMapper {
 
 	<#

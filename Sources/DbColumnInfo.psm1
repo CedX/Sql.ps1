@@ -8,6 +8,7 @@ using namespace System.Threading
 .SYNOPSIS
 	Provides information about a database column.
 #>
+[NoRunspaceAffinity()]
 class DbColumnInfo {
 
 	<#
