@@ -26,6 +26,9 @@ function Find-SqlObject {
 		[Parameter(ParameterSetName = "All")]
 		[switch] $All,
 
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
 		# The primary key value.
 		[Parameter(Mandatory, ParameterSetName = "Id", Position = 2, ValueFromPipeline)]
 		[object] $Id,
@@ -46,17 +49,19 @@ function Find-SqlObject {
 		[IDbTransaction] $Transaction
 	)
 
-	process {
-		$builder = [SqlCommandBuilder]::new($Connection)
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
 
+	process {
 		if ($All) {
-			$statement = $builder.GetFindAllCommand($Class, $OrderBy, $Columns)
+			$statement = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
 			$statement[0].Timeout = $Timeout
 			$statement[0].Transaction = $Transaction
 			Invoke-SqlQuery $Connection -As $Class -Command $statement[0]
 		}
 		else {
-			$statement = $builder.GetFindCommand($Class, $Id, $Columns)
+			$statement = $Builder.GetFindCommand($Class, $Id, $Columns)
 			$statement[0].Timeout = $Timeout
 			$statement[0].Transaction = $Transaction
 			Get-SqlSingle $Connection -As $Class -Command $statement[0] -ErrorAction Ignore -Parameters $statement[1]
@@ -84,6 +89,9 @@ function Publish-SqlObject {
 		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[object] $InputObject,
 
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
@@ -92,8 +100,12 @@ function Publish-SqlObject {
 		[IDbTransaction] $Transaction
 	)
 
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
 	process {
-		$statement = [SqlCommandBuilder]::new($Connection).GetInsertCommand($InputObject)
+		$statement = $Builder.GetInsertCommand($InputObject)
 		$statement[0].Timeout = $Timeout
 		$statement[0].Transaction = $Transaction
 
@@ -125,6 +137,9 @@ function Remove-SqlObject {
 		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[object] $InputObject,
 
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
@@ -133,8 +148,12 @@ function Remove-SqlObject {
 		[IDbTransaction] $Transaction
 	)
 
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
 	process {
-		$statement = [SqlCommandBuilder]::new($Connection).GetDeleteCommand($InputObject)
+		$statement = $Builder.GetDeleteCommand($InputObject)
 		$statement[0].Timeout = $Timeout
 		$statement[0].Transaction = $Transaction
 		(Invoke-SqlNonQuery $Connection -Command $statement[0] -Parameters $statement[1]) -gt 0
@@ -163,6 +182,9 @@ function Test-SqlObject {
 		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
 		[object] $Id,
 
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]
 		[int] $Timeout = 30,
@@ -171,8 +193,12 @@ function Test-SqlObject {
 		[IDbTransaction] $Transaction
 	)
 
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
 	process {
-		$statement = [SqlCommandBuilder]::new($Connection).GetExistsCommand($Class, $Id)
+		$statement = $Builder.GetExistsCommand($Class, $Id)
 		$statement[0].Timeout = $Timeout
 		$statement[0].Transaction = $Transaction
 		Get-SqlScalar $Connection -As ([bool]) -Command $statement[0] -Parameters $statement[1]
@@ -200,6 +226,9 @@ function Update-SqlObject {
 		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[object] $InputObject,
 
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
 		# The list of columns to select. By default, all columns.
 		[ValidateNotNull()]
 		[string[]] $Columns = @(),
@@ -212,8 +241,12 @@ function Update-SqlObject {
 		[IDbTransaction] $Transaction
 	)
 
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
 	process {
-		$statement = [SqlCommandBuilder]::new($Connection).GetUpdateCommand($InputObject, $Columns)
+		$statement = $Builder.GetUpdateCommand($InputObject, $Columns)
 		$statement[0].Timeout = $Timeout
 		$statement[0].Transaction = $Transaction
 		Invoke-SqlNonQuery $Connection -Command $statement[0] -Parameters $statement[1]
