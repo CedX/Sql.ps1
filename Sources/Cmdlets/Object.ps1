@@ -57,16 +57,16 @@ function Find-SqlObject {
 
 	process {
 		if ($All) {
-			$statement = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
-			$statement[0].Timeout = $Timeout
-			$statement[0].Transaction = $Transaction
-			Invoke-SqlQuery $Connection -As $Class -Command $statement[0]
+			$command, $parameters = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			Invoke-SqlQuery $Connection -As $Class -Command $command
 		}
 		else {
-			$statement = $Builder.GetFindCommand($Class, $Id, $Columns)
-			$statement[0].Timeout = $Timeout
-			$statement[0].Transaction = $Transaction
-			Get-SqlSingle $Connection -As $Class -Command $statement[0] -ErrorAction Ignore -Parameters $statement[1]
+			$command, $parameters = $Builder.GetFindCommand($Class, $Id, $Columns)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			Get-SqlSingle $Connection -As $Class -Command $command -ErrorAction Ignore -Parameters $parameters
 		}
 	}
 }
@@ -107,11 +107,11 @@ function Publish-SqlObject {
 	}
 
 	process {
-		$statement = $Builder.GetInsertCommand($InputObject)
-		$statement[0].Timeout = $Timeout
-		$statement[0].Transaction = $Transaction
+		$command, $parameters = $Builder.GetInsertCommand($InputObject)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
 
-		$id = Get-SqlScalar $Connection -As ([long]) -Command $statement[0] -Parameters $statement[1]
+		$id = Get-SqlScalar $Connection -As ([long]) -Command $command -Parameters $parameters
 		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
 		if ($column) { $column.SetValue($InputObject, [SqlMapper]::ChangeType($id, $column)) }
 		$id
@@ -155,10 +155,10 @@ function Remove-SqlObject {
 	}
 
 	process {
-		$statement = $Builder.GetDeleteCommand($InputObject)
-		$statement[0].Timeout = $Timeout
-		$statement[0].Transaction = $Transaction
-		(Invoke-SqlNonQuery $Connection -Command $statement[0] -Parameters $statement[1]) -gt 0
+		$command, $parameters = $Builder.GetDeleteCommand($InputObject)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+		(Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters) -gt 0
 	}
 }
 
@@ -202,10 +202,10 @@ function Test-SqlObject {
 	}
 
 	process {
-		$statement = $Builder.GetExistsCommand($Class, $Id)
-		$statement[0].Timeout = $Timeout
-		$statement[0].Transaction = $Transaction
-		Get-SqlScalar $Connection -As ([bool]) -Command $statement[0] -Parameters $statement[1]
+		$command, $parameters = $Builder.GetExistsCommand($Class, $Id)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+		Get-SqlScalar $Connection -As ([bool]) -Command $command -Parameters $parameters
 	}
 }
 
@@ -250,9 +250,9 @@ function Update-SqlObject {
 	}
 
 	process {
-		$statement = $Builder.GetUpdateCommand($InputObject, $Columns)
-		$statement[0].Timeout = $Timeout
-		$statement[0].Transaction = $Transaction
-		Invoke-SqlNonQuery $Connection -Command $statement[0] -Parameters $statement[1]
+		$command, $parameters = $Builder.GetUpdateCommand($InputObject, $Columns)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+		Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters
 	}
 }

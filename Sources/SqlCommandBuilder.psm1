@@ -14,6 +14,7 @@ using module ./SqlParameterCollection.psm1
 .SYNOPSIS
 	Automatically generates single-table commands.
 #>
+[NoRunspaceAffinity()]
 class SqlCommandBuilder {
 
 	<#
@@ -121,9 +122,9 @@ class SqlCommandBuilder {
 	.PARAMETER Entity
 		The entity to delete.
 	.OUTPUTS
-		The generated command to delete an entity.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetDeleteCommand([object] $Entity) {
+	[object[]] GetDeleteCommand([object] $Entity) {
 		$table = [SqlMapper]::Instance.GetTable($Entity.GetType())
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
@@ -133,7 +134,7 @@ class SqlCommandBuilder {
 			DELETE FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), [SqlParameterCollection]::new($parameter))
+		return [SqlCommand]::new($text.Trim()), [SqlParameterCollection]::new($parameter)
 	}
 
 	<#
@@ -144,9 +145,9 @@ class SqlCommandBuilder {
 	.PARAMETER Id
 		The value of the entity's primary key.
 	.OUTPUTS
-		The generated command to check the existence of an entity.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetExistsCommand([Type] $Type, [object] $Id) {
+	[object[]] GetExistsCommand([Type] $Type, [object] $Id) {
 		$table = [SqlMapper]::Instance.GetTable($Type)
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
@@ -157,7 +158,7 @@ class SqlCommandBuilder {
 			FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), [SqlParameterCollection]::new($parameter))
+		return [SqlCommand]::new($text.Trim()), [SqlParameterCollection]::new($parameter)
 	}
 
 	<#
@@ -168,9 +169,9 @@ class SqlCommandBuilder {
 	.PARAMETER Id
 		The value of the entity's primary key.
 	.OUTPUTS
-		The generated command to find an entity.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindCommand([Type] $Type, [object] $Id) {
+	[object[]] GetFindCommand([Type] $Type, [object] $Id) {
 		return $this.GetFindCommand($Type, $Id, @())
 	}
 
@@ -184,9 +185,9 @@ class SqlCommandBuilder {
 	.PARAMETER Columns
 		The list of columns to select. By default, all columns.
 	.OUTPUTS
-		The generated command to find an entity.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindCommand([Type] $Type, [object] $Id, [string[]] $Columns) {
+	[object[]] GetFindCommand([Type] $Type, [object] $Id, [string[]] $Columns) {
 		$table = [SqlMapper]::Instance.GetTable($Type)
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
@@ -200,7 +201,7 @@ class SqlCommandBuilder {
 			FROM $($this.GetTableName($table))
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), [SqlParameterCollection]::new($parameter))
+		return [SqlCommand]::new($text.Trim()), [SqlParameterCollection]::new($parameter)
 	}
 
 	<#
@@ -209,9 +210,9 @@ class SqlCommandBuilder {
 	.PARAMETER Type
 		The entity type.
 	.OUTPUTS
-		The generated command to find all entities.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type) {
+	[object[]] GetFindAllCommand([Type] $Type) {
 		return $this.GetFindAllCommand($Type, [SqlOrderHintCollection]::new(), @())
 	}
 
@@ -223,9 +224,9 @@ class SqlCommandBuilder {
 	.PARAMETER OrderHints
 		The hints describing the sort order of columns.
 	.OUTPUTS
-		The generated command to find all entities.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [SqlOrderHintCollection] $OrderHints) {
+	[object[]] GetFindAllCommand([Type] $Type, [SqlOrderHintCollection] $OrderHints) {
 		return $this.GetFindAllCommand($Type, $OrderHints, @())
 	}
 
@@ -239,9 +240,9 @@ class SqlCommandBuilder {
 	.PARAMETER Columns
 		The list of columns to select. By default, all columns.
 	.OUTPUTS
-		The generated command to find all entities.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetFindAllCommand([Type] $Type, [SqlOrderHintCollection] $OrderHints, [string[]] $Columns) {
+	[object[]] GetFindAllCommand([Type] $Type, [SqlOrderHintCollection] $OrderHints, [string[]] $Columns) {
 		$table = [SqlMapper]::Instance.GetTable($Type)
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
@@ -254,7 +255,7 @@ class SqlCommandBuilder {
 			: "$($this.QuoteIdentifier($idColumn.Name)) ASC"
 
 		$text = "SELECT $($fields.ForEach{ $this.QuoteIdentifier($_) } -join ", ") FROM $($this.GetTableName($table)) ORDER BY $orderBy"
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text, [SqlParameterCollection]::new())
+		return [SqlCommand]::new($text), [SqlParameterCollection]::new()
 	}
 
 	<#
@@ -263,9 +264,9 @@ class SqlCommandBuilder {
 	.PARAMETER Entity
 		The entity to insert.
 	.OUTPUTS
-		The generated command to insert an entity.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetInsertCommand([object] $Entity) {
+	[object[]] GetInsertCommand([object] $Entity) {
 		$table = [SqlMapper]::Instance.GetTable($Entity.GetType())
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
@@ -282,7 +283,7 @@ class SqlCommandBuilder {
 			$parameters.AddWithValue($parameterName, $this.GetParameterValue($fields[$index], $Entity))
 		}
 
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
+		return [SqlCommand]::new($text.Trim()), $parameters
 	}
 
 	<#
@@ -291,9 +292,9 @@ class SqlCommandBuilder {
 	.PARAMETER Entity
 		The entity to update.
 	.OUTPUTS
-		The generated command to update an entity.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetUpdateCommand([object] $Entity) {
+	[object[]] GetUpdateCommand([object] $Entity) {
 		return $this.GetUpdateCommand($Entity, @())
 	}
 
@@ -305,9 +306,9 @@ class SqlCommandBuilder {
 	.PARAMETER Columns
 		The list of columns to update. By default, all columns.
 	.OUTPUTS
-		The generated command to update an entity.
+		A tuple providing the generated command and its parameters.
 	#>
-	[ValueTuple[SqlCommand, SqlParameterCollection]] GetUpdateCommand([object] $Entity, [string[]] $Columns) {
+	[object[]] GetUpdateCommand([object] $Entity, [string[]] $Columns) {
 		$table = [SqlMapper]::Instance.GetTable($Entity.GetType())
 		$idColumn = $table.IdentityColumn
 		if (-not $idColumn) { throw [InvalidOperationException] "The identity column could not be found." }
@@ -326,7 +327,7 @@ class SqlCommandBuilder {
 
 		$parameterName = $this.UsePositionalParameters ? "?$($fields.Count + 1)" : $this.GetParameterName($idColumn)
 		$parameters.AddWithValue($parameterName, $this.GetParameterValue($idColumn, $Entity))
-		return [ValueTuple]::Create[SqlCommand, SqlParameterCollection]($text.Trim(), $parameters)
+		return [SqlCommand]::new($text.Trim()), $parameters
 	}
 
 	<#
