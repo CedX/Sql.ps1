@@ -23,7 +23,7 @@ class SqlMapper {
 	.SYNOPSIS
 		The mapping between the entity types and their associated database tables.
 	#>
-	hidden static [ConcurrentDictionary[Type, DbTableInfo]] $Mapping = [ConcurrentDictionary[Type, DbTableInfo]]::new()
+	hidden static [hashtable] $Mapping = @{}
 
 	<#
 	.SYNOPSIS
@@ -136,7 +136,8 @@ class SqlMapper {
 		The table information associated with the specified type.
 	#>
 	[DbTableInfo] GetTable([Type] $Type) {
-		return [SqlMapper]::Mapping.GetOrAdd($Type, { param ([Type] $entityType) [DbTableInfo]::new($entityType) })
+		if (-not [SqlMapper]::Mapping.ContainsKey($Type)) { [SqlMapper]::Mapping[$Type] = [DbTableInfo]::new($Type) }
+		return [SqlMapper]::Mapping[$Type]
 	}
 
 	<#

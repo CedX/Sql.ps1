@@ -15,7 +15,7 @@ class DbColumnInfo {
 	.SYNOPSIS
 		The nullability context.
 	#>
-	hidden static [ThreadLocal[NullabilityInfoContext]] $NullabilityContext = [ThreadLocal[NullabilityInfoContext]]::new([Func[NullabilityInfoContext]] { [NullabilityInfoContext]::new() })
+	hidden static [NullabilityInfoContext] $NullabilityContext = [NullabilityInfoContext]::new()
 
 	<#
 	.SYNOPSIS
@@ -142,7 +142,7 @@ class DbColumnInfo {
 		$this.IsComputed = $databaseGeneratedOption -ne [DatabaseGeneratedOption]::None
 		$this.IsIdentity = $databaseGeneratedOption -eq [DatabaseGeneratedOption]::Identity
 		$this.IsNullable = (-not [Attribute]::IsDefined($Property, [ValidateNotNullAttribute])) -and `
-			(($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) -or ([DbColumnInfo]::NullabilityContext.Value.Create($Property).WriteState -ne [NullabilityState]::NotNull))
+			(($null -ne [Nullable]::GetUnderlyingType($Property.PropertyType)) -or ([DbColumnInfo]::NullabilityContext.Create($Property).WriteState -ne [NullabilityState]::NotNull))
 	}
 
 	<#
