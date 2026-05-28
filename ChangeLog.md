@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [1.4.0](https://github.com/CedX/Sql.ps1/compare/v1.3.0...v1.4.0)
+- Added the `-Dispose` parameter to the `Close-SqlConnection` cmdlet.
+- Fixed the `DbColumnInfo` and `SqlMapper` classes when used in multiple runspaces.
+
 ## Version [1.3.0](https://github.com/CedX/Sql.ps1/compare/v1.2.0...v1.3.0)
 - Added the `New-SqlCommandBuilder` cmdlet.
 - Added the `-Builder` parameter to the `Find-SqlObject`, `Publish-SqlObject`, `Remove-SqlObject`, `Test-SqlObject` and `Update-SqlObject` cmdlets.
