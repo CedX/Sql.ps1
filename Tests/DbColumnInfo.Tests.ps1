@@ -8,13 +8,13 @@ using module ./Fixtures/Character.psm1
 #>
 Describe "DbColumnInfo" {
 	Context "CanRead" {
-		It "should return `$true if the property can be read" -ForEach @("FirstName", "FullName", "Gender", "Id") {
+		It "should return `$true if the property can be read" -ForEach "FirstName", "FullName", "Gender", "Id" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).CanRead | Should -BeTrue
 		}
 	}
 
 	Context "CanWrite" {
-		It "should return `$true if the property can be written" -ForEach @("FirstName", "FullName", "Gender", "Id") {
+		It "should return `$true if the property can be written" -ForEach "FirstName", "FullName", "Gender", "Id" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).CanWrite | Should -BeTrue
 		}
 	}
@@ -31,31 +31,31 @@ Describe "DbColumnInfo" {
 	}
 
 	Context "IsComputed" {
-		It "should return `$false if the property is not computed" -ForEach @("FirstName", "Gender") {
+		It "should return `$false if the property is not computed" -ForEach "FirstName", "Gender" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeFalse
 		}
 
-		It "should return `$true if the property is computed" -ForEach @("FullName", "Id") {
+		It "should return `$true if the property is computed" -ForEach "FullName", "Id" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeTrue
 		}
 	}
 
 	Context "IsIdentity" {
-		It "should return `$false if the property is not an identity" -ForEach @("FirstName", "FullName", "Gender") {
+		It "should return `$false if the property is not an identity" -ForEach "FirstName", "FullName", "Gender" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeFalse
 		}
 
-		It "should return `$true if the property is an identity" -ForEach @("Id") {
+		It "should return `$true if the property is an identity" -ForEach "Id" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeTrue
 		}
 	}
 
 	Context "IsNullable" {
-		It "should return `$false if the property is not nullable" -ForEach @("FirstName", "Gender", "Id") {
+		It "should return `$false if the property is not nullable" -ForEach "FirstName", "Gender", "Id" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeFalse
 		}
 
-		It "should return `$true if the property is nullable" -ForEach @("FullName") {
+		It "should return `$true if the property is nullable" -ForEach "FullName" {
 			[DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeTrue
 		}
 	}
