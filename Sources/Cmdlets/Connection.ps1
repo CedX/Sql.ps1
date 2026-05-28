@@ -13,11 +13,15 @@ function Close-SqlConnection {
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
-		[IDbConnection] $InputObject
+		[IDbConnection] $InputObject,
+
+		# Value indicating whether the connection should also be disposed.
+		[switch] $Dispose
 	)
 
 	process {
-		$InputObject.Close()
+		try { $InputObject.Close() }
+		finally { if ($Dispose) { $InputObject.Dispose() } }
 	}
 }
 
