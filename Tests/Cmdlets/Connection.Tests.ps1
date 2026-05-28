@@ -4,9 +4,9 @@ using module ../../Sql.psd1
 
 <#
 .SYNOPSIS
-	Tests the features of the `Close-Connection` cmdlet.
+	Tests the features of the `Close-SqlConnection` cmdlet.
 #>
-Describe "Close-Connection" {
+Describe "Close-SqlConnection" {
 	It "should close the specified connection" {
 		$connection = [System.Data.SQLite.SQLiteConnection] "DataSource=:memory:"
 		$connection.Open()
@@ -18,9 +18,9 @@ Describe "Close-Connection" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `New-Connection` cmdlet.
+	Tests the features of the `New-SqlConnection` cmdlet.
 #>
-Describe "New-Connection" {
+Describe "New-SqlConnection" {
 	It "should create a connection of the specified type" -ForEach @(
 		@{ Provider = [System.Data.SQLite.SQLiteConnection]; ConnectionString = "DataSource=:memory:"; Expected = [System.Data.SQLite.SQLiteConnection] }
 		@{ Provider = "SqlClient"; ConnectionString = "Server=localhost; Database=TestDb; Uid=user; Pwd=password"; Expected = [System.Data.SqlClient.SqlConnection] }

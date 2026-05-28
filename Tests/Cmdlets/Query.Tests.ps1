@@ -3,9 +3,9 @@ using module ../Fixtures/Character.psm1
 
 <#
 .SYNOPSIS
-	Tests the features of the `Get-First` cmdlet.
+	Tests the features of the `Get-SqlFirst` cmdlet.
 #>
-Describe "Get-First" {
+Describe "Get-SqlFirst" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -24,9 +24,9 @@ Describe "Get-First" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Get-Scalar` cmdlet.
+	Tests the features of the `Get-SqlScalar` cmdlet.
 #>
-Describe "Get-Scalar" {
+Describe "Get-SqlScalar" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -41,9 +41,9 @@ Describe "Get-Scalar" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Get-Single` cmdlet.
+	Tests the features of the `Get-SqlSingle` cmdlet.
 #>
-Describe "Get-Single" {
+Describe "Get-SqlSingle" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -67,9 +67,9 @@ Describe "Get-Single" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Invoke-NonQuery` cmdlet.
+	Tests the features of the `Invoke-SqlNonQuery` cmdlet.
 #>
-Describe "Invoke-NonQuery" {
+Describe "Invoke-SqlNonQuery" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -87,9 +87,9 @@ Describe "Invoke-NonQuery" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Invoke-Query` cmdlet.
+	Tests the features of the `Invoke-SqlQuery` cmdlet.
 #>
-Describe "Invoke-Query" {
+Describe "Invoke-SqlQuery" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
