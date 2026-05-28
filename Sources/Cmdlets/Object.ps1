@@ -233,7 +233,7 @@ function Update-SqlObject {
 		# An optional command builder used to build the SQL query to be executed.
 		[SqlCommandBuilder] $Builder,
 
-		# The list of columns to select. By default, all columns.
+		# The list of columns to update. By default, all columns.
 		[ValidateNotNull()]
 		[string[]] $Columns = @(),
 
