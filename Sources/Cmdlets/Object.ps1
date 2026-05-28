@@ -24,16 +24,16 @@ function Find-SqlObject {
 		[Parameter(Mandatory, Position = 1)]
 		[Type] $Class,
 
+		# The primary key value.
+		[Parameter(Mandatory, ParameterSetName = "Id", Position = 2, ValueFromPipeline)]
+		[object] $Id,
+
 		# Value indicating whether to find all entities.
 		[Parameter(ParameterSetName = "All")]
 		[switch] $All,
 
 		# An optional command builder used to build the SQL query to be executed.
 		[SqlCommandBuilder] $Builder,
-
-		# The primary key value.
-		[Parameter(Mandatory, ParameterSetName = "Id", Position = 2, ValueFromPipeline)]
-		[object] $Id,
 
 		# The list of columns to select. By default, all columns.
 		[ValidateNotNull()]
