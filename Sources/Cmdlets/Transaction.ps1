@@ -61,5 +61,6 @@ function New-SqlTransaction {
 		[IsolationLevel] $IsolationLevel = [IsolationLevel]::Unspecified
 	)
 
+	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
 	$Connection.BeginTransaction($IsolationLevel)
 }
