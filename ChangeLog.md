@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [1.4.1](https://github.com/CedX/Sql.ps1/compare/v1.4.0...v1.4.1)
+- Fixed the `New-SqlTransaction` cmdlet, which did not automatically open the connection.
+
 ## Version [1.4.0](https://github.com/CedX/Sql.ps1/compare/v1.3.0...v1.4.0)
 - Added the `-Dispose` parameter to the `Close-SqlConnection` cmdlet.
 - Fixed the `DbColumnInfo` and `SqlMapper` classes when used in multiple runspaces.
