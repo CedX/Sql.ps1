@@ -21,6 +21,7 @@ function Close-SqlConnection {
 
 	process {
 		try { $InputObject.Close() }
+		catch { Write-Error $_ }
 		finally { if ($Dispose) { $InputObject.Dispose() } }
 	}
 }
