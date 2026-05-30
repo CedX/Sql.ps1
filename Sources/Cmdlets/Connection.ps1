@@ -41,7 +41,7 @@ function New-SqlConnection {
 	param (
 		# The type of connection class to instantiate.
 		[Parameter(Mandatory, ParameterSetName = "Type", Position = 0)]
-		[Type] $Type,
+		[Type] $Class,
 
 		# The name of an ADO.NET provider.
 		[Parameter(Mandatory, ParameterSetName = "Provider", Position = 0)]
@@ -61,7 +61,7 @@ function New-SqlConnection {
 			"Odbc" { [Odbc.OdbcConnection]; break }
 			"OleDb" { [OleDb.OleDbConnection]; break }
 			"SqlClient" { [SqlClient.SqlConnection]; break }
-			default { $Type }
+			default { $Class }
 		}
 
 		$connection = [IDbConnection] [Activator]::CreateInstance($connectionType, $ConnectionString)
