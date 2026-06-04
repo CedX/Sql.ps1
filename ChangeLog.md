@@ -1,5 +1,10 @@
 # Changelog
 
+## Version [2.0.0](https://github.com/CedX/Sql.ps1/compare/v1.4.1...v2.0.0)
+- Breaking change: renamed the `-Type` parameter of the `New-SqlConnection` cmdlet to `-Class`.
+- Added the `-All` and `-Truncate` parameters to the `Remove-SqlObject` cmdlet.
+- Added the `SqlCommandBuilder.GetDeleteAllCommand()` method.
+
 ## Version [1.4.1](https://github.com/CedX/Sql.ps1/compare/v1.4.0...v1.4.1)
 - Fixed the `New-SqlTransaction` cmdlet, which did not automatically open the connection.
 
@@ -21,7 +26,7 @@
 - Removed the module's `DefaultCommandPrefix` in favor of a hard-coded command prefix.
 
 ## Version [1.0.2](https://github.com/CedX/Sql.ps1/compare/v1.0.1...v1.0.2)
-- Fixed the enumeration of columns in the `[DbTableInfo]` constructor.
+- Fixed the enumeration of columns in the `DbTableInfo` constructor.
 
 ## Version [1.0.1](https://github.com/CedX/Sql.ps1/compare/v1.0.0...v1.0.1)
 - Fixed the handling of `$null` values in the `[SqlMapper]::CreateInstance()` method.
