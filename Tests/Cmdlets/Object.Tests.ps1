@@ -40,7 +40,7 @@ Describe "Find-SqlObject" {
 	}
 
 	Context "Id" {
-		It "should find the record with the specified identifier" {
+		It "should find the entity with the specified identifier" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2
 			$record | Should -Not -BeNullOrEmpty
 			$record.Id | Should -Be 2
@@ -62,7 +62,7 @@ Describe "Find-SqlObject" {
 			$record.Gender | Should -Be ([CharacterGender]::Hobbit)
 		}
 
-		It "should return `$null if the record is not found" {
+		It "should return `$null if the entity is not found" {
 			Find-SqlObject $connection -Class ([Character]) -Id 666 | Should -BeNullOrEmpty
 		}
 	}
@@ -76,7 +76,7 @@ Describe "Publish-SqlObject" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
-	It "should insert the specified record" {
+	It "should insert the specified entity" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Cédric'"
 		Invoke-SqlQuery $connection -As ([Character]) -Command $sql | Should -BeNullOrEmpty
 
@@ -106,12 +106,23 @@ Describe "Remove-SqlObject" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
-	It "should delete the record with the specified identifier" {
-		$sql = "SELECT * FROM Characters WHERE ID = @Id"
-		$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 }
-		Remove-SqlObject $connection -InputObject $record | Should -BeTrue
-		Remove-SqlObject $connection -InputObject $record | Should -BeFalse
-		Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore | Should -BeNullOrEmpty
+	Context "All" {
+		It "should remove all entities from the underlying table" {
+			$sql = "SELECT COUNT(*) FROM Characters"
+			Get-SqlScalar $connection -As ([int]) -Command $sql | Should -BeGreaterThan 0
+			Remove-SqlObject $connection -Class ([Character]) -All -Truncate
+			Get-SqlScalar $connection -As ([int]) -Command $sql | Should -Be 0
+		}
+	}
+
+	Context "InputObject" {
+		It "should delete the entity with the specified identifier" {
+			$sql = "SELECT * FROM Characters WHERE ID = @Id"
+			$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 }
+			Remove-SqlObject $connection -InputObject $record | Should -BeTrue
+			Remove-SqlObject $connection -InputObject $record | Should -BeFalse
+			Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore | Should -BeNullOrEmpty
+		}
 	}
 }
 
@@ -123,8 +134,11 @@ Describe "Test-SqlObject" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
-	It "should delete the record with the specified identifier" {
+	It "should `$true if the specified identifier exists" {
 		Test-SqlObject $connection -Class ([Character]) -Id 1 | Should -BeTrue
+	}
+
+	It "should `$false if the specified identifier does not exist" {
 		Test-SqlObject $connection -Class ([Character]) -Id 666 | Should -BeFalse
 	}
 }
@@ -137,7 +151,7 @@ Describe "Update-SqlObject" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
-	It "should update the specified record" {
+	It "should update the specified entity" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Sauron'"
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql

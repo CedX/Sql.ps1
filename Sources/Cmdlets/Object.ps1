@@ -32,16 +32,16 @@ function Find-SqlObject {
 		[Parameter(ParameterSetName = "All")]
 		[switch] $All,
 
+		# The hints describing the sort order of columns.
+		[Parameter(ParameterSetName = "All")]
+		[SqlOrderHintCollection] $OrderBy,
+
 		# An optional command builder used to build the SQL query to be executed.
 		[SqlCommandBuilder] $Builder,
 
 		# The list of columns to select. By default, all columns.
 		[ValidateNotNull()]
 		[string[]] $Columns = @(),
-
-		# The hints describing the sort order of columns.
-		[Parameter(ParameterSetName = "All")]
-		[SqlOrderHintCollection] $OrderBy,
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
 		[ValidateRange("NonNegative")]
@@ -120,15 +120,18 @@ function Publish-SqlObject {
 
 <#
 .SYNOPSIS
-	Deletes the specified entity.
+	Deletes either the specified entity, or all entities.
 .INPUTS
 	The entity to delete.
 .OUTPUTS
-	`$true` if the specified entity has been deleted, otherwise `$false`.
+	[bool] `$true` if the specified entity has been deleted, otherwise `$false`.
+.OUTPUTS
+	[void] None when the command has been invoked with the `-All` parameter.
 #>
 function Remove-SqlObject {
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = "InputObject")]
 	[OutputType([bool])]
+	[OutputType([void])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
@@ -136,8 +139,20 @@ function Remove-SqlObject {
 		[IDbConnection] $Connection,
 
 		# The entity to delete.
-		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
+		[Parameter(Mandatory, ParameterSetName = "InputObject", Position = 1, ValueFromPipeline)]
 		[object] $InputObject,
+
+		# The type of object to delete.
+		[Parameter(Mandatory, ParameterSetName = "All", Position = 1)]
+		[Type] $Class,
+
+		# Value indicating whether to delete all entities.
+		[Parameter(ParameterSetName = "All")]
+		[switch] $All,
+
+		# Value indicating whether to truncate the underlying table.
+		[Parameter(ParameterSetName = "All")]
+		[switch] $Truncate,
 
 		# An optional command builder used to build the SQL query to be executed.
 		[SqlCommandBuilder] $Builder,
@@ -155,10 +170,18 @@ function Remove-SqlObject {
 	}
 
 	process {
-		$command, $parameters = $Builder.GetDeleteCommand($InputObject)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-		(Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters) -gt 0
+		if ($All) {
+			$command, $parameters = $Builder.GetDeleteAllCommand($Class, $Truncate)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters | Out-Null
+		}
+		else {
+			$command, $parameters = $Builder.GetDeleteCommand($InputObject)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			(Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters) -gt 0
+		}
 	}
 }
 
