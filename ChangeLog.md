@@ -2,7 +2,7 @@
 
 ## Version [2.0.0](https://github.com/CedX/Sql.ps1/compare/v1.4.1...v2.0.0)
 - Breaking change: renamed the `-Type` parameter of the `New-SqlConnection` cmdlet to `-Class`.
-- Added the `-All` and `-Truncate` parameters to the `Remove-SqlObject` cmdlet.
+- Added the `-All`, `-Class` and `-Truncate` parameters to the `Remove-SqlObject` cmdlet.
 - Added the `SqlCommandBuilder.GetDeleteAllCommand()` method.
 
 ## Version [1.4.1](https://github.com/CedX/Sql.ps1/compare/v1.4.0...v1.4.1)
