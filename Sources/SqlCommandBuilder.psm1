@@ -79,6 +79,12 @@ class SqlCommandBuilder {
 
 	<#
 	.SYNOPSIS
+		Value indicating whether the ADO.NET provider supports the <c>TRUNCATE TABLE</c> statement.
+	#>
+	[bool] $SupportsTruncateTable
+
+	<#
+	.SYNOPSIS
 		Value indicating whether the ADO.NET provider uses positional parameters.
 	#>
 	[bool] $UsePositionalParameters
@@ -90,7 +96,7 @@ class SqlCommandBuilder {
 		The connection to the data source.
 	#>
 	SqlCommandBuilder([IDbConnection] $Connection) {
-		switch ($Connection.GetType().FullName) {
+		switch ($typeName = $Connection.GetType().FullName) {
 			{ $_ -in "MySql.Data.MySqlClient.MySqlConnection", "MySqlConnector.MySqlConnection" } {
 				$this.QuotePrefix = $this.QuoteSuffix = '`'
 				$this.LastInsertIdFunction = "LAST_INSERT_ID()"
@@ -99,6 +105,7 @@ class SqlCommandBuilder {
 			{ $_ -in "FirebirdSql.Data.FirebirdClient.FbConnection", "Microsoft.Data.Sqlite.SqliteConnection", "Npgsql.NpgsqlConnection", "System.Data.SQLite.SQLiteConnection" } {
 				$this.QuotePrefix = $this.QuoteSuffix = '"'
 				$this.SupportsReturningClause = $true
+				$this.SupportsTruncateTable = $typeName -notlike "*.sqlite.*"
 				break
 			}
 			"Oracle.ManagedDataAccess.Client.OracleConnection" {
@@ -135,6 +142,34 @@ class SqlCommandBuilder {
 			WHERE $($this.QuoteIdentifier($idColumn.Name)) = $($this.UsePositionalParameters ? "?" : $parameter.Name)"
 
 		return [SqlCommand]::new($text.Trim()), [SqlParameterCollection]::new($parameter)
+	}
+
+	<#
+	.SYNOPSIS
+		Gets the generated command to delete all entities.
+	.PARAMETER Type
+		The entity type.
+	.OUTPUTS
+		A tuple providing the generated command and its parameters.
+	#>
+	[object[]] GetDeleteAllCommand([Type] $Type) {
+		return $this.GetDeleteAllCommand($Type, $false)
+	}
+
+	<#
+	.SYNOPSIS
+		Gets the generated command to delete all entities.
+	.PARAMETER Type
+		The entity type.
+	.PARAMETER Truncate
+		Value indicating whether to truncate the underlying table.
+	.OUTPUTS
+		A tuple providing the generated command and its parameters.
+	#>
+	[object[]] GetDeleteAllCommand([Type] $Type, [bool] $Truncate) {
+		$tableName = $this.GetTableName([SqlMapper]::Instance.GetTable($Type))
+		$text = $Truncate -and $this.SupportsTruncateTable ? "TRUNCATE TABLE $tableName" : "DELETE FROM $tableName"
+		return [SqlCommand]::new($text), [SqlParameterCollection]::new()
 	}
 
 	<#

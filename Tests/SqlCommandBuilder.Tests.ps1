@@ -30,6 +30,18 @@ Describe "SqlCommandBuilder" {
 		}
 	}
 
+	Context "GetDeleteAllCommand" {
+		It "should return the SQL command to delete an entity" {
+			$command, $parameters = [SqlCommandBuilder]::new($connection).GetDeleteAllCommand([Character])
+			$command.Text | Should -BeExactly 'DELETE FROM "main"."Characters"'
+		}
+
+		It "should also return an empty parameter collection" {
+			$command, $parameters = [SqlCommandBuilder]::new($connection).GetDeleteAllCommand([Character])
+			$parameters | Should -BeNullOrEmpty
+		}
+	}
+
 	Context "GetExistsCommand" {
 		It "should return the SQL command to check the existence of an entity" {
 			$command, $parameters = [SqlCommandBuilder]::new($connection).GetExistsCommand([Character], $record.Id)
