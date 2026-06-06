@@ -81,7 +81,7 @@ class SqlCommandBuilder {
 	.SYNOPSIS
 		Value indicating whether the ADO.NET provider supports the <c>TRUNCATE TABLE</c> statement.
 	#>
-	[bool] $SupportsTruncateTable
+	[bool] $SupportsTruncateTable = $true
 
 	<#
 	.SYNOPSIS
@@ -96,16 +96,27 @@ class SqlCommandBuilder {
 		The connection to the data source.
 	#>
 	SqlCommandBuilder([IDbConnection] $Connection) {
-		switch ($typeName = $Connection.GetType().FullName) {
-			{ $_ -in "MySql.Data.MySqlClient.MySqlConnection", "MySqlConnector.MySqlConnection" } {
-				$this.QuotePrefix = $this.QuoteSuffix = '`'
-				$this.LastInsertIdFunction = "LAST_INSERT_ID()"
-				break
-			}
-			{ $_ -in "FirebirdSql.Data.FirebirdClient.FbConnection", "Microsoft.Data.Sqlite.SqliteConnection", "Npgsql.NpgsqlConnection", "System.Data.SQLite.SQLiteConnection" } {
+		switch ($Connection.GetType().FullName) {
+			"FirebirdSql.Data.FirebirdClient.FbConnection" {
 				$this.QuotePrefix = $this.QuoteSuffix = '"'
 				$this.SupportsReturningClause = $true
-				$this.SupportsTruncateTable = $typeName -notlike "*.sqlite.*"
+				$this.SupportsTruncateTable = $false
+				break
+			}
+			{ $_ -in "Microsoft.Data.Sqlite.SqliteConnection", "System.Data.SQLite.SQLiteConnection" } {
+				$this.QuotePrefix = $this.QuoteSuffix = '"'
+				$this.SupportsReturningClause = $true
+				$this.SupportsTruncateTable = $false
+				break
+			}
+			{ $_ -in "MySql.Data.MySqlClient.MySqlConnection", "MySqlConnector.MySqlConnection" } {
+				$this.LastInsertIdFunction = "LAST_INSERT_ID()"
+				$this.QuotePrefix = $this.QuoteSuffix = '`'
+				break
+			}
+			"Npgsql.NpgsqlConnection" {
+				$this.QuotePrefix = $this.QuoteSuffix = '"'
+				$this.SupportsReturningClause = $true
 				break
 			}
 			"Oracle.ManagedDataAccess.Client.OracleConnection" {
