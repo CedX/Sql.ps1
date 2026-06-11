@@ -37,12 +37,14 @@ function New-GitTag {
 #>
 function Publish-PSGalleryModule {
 	$root = Join-Path $PSScriptRoot .. -Resolve
+	$module = Import-PowerShellDataFile $root/Sql.psd1
 
 	$output = "$root/Temp/PSModule"
-	New-Item $output -ItemType Directory | Out-Null
+	New-Item $output/Binaries, $output/Sources -ItemType Directory | Out-Null
 	Copy-Item $root/Sql.psd1 $output/Belin.Sql.psd1
 	Copy-Item $root/*.md $output
 	Copy-Item $root/Sources $output -Recurse
+	$module.RequiredAssemblies.ForEach{ "$root/$_" } | Copy-Item -Destination $output/Binaries
 
 	$output = "$root/Temp/PSGallery"
 	New-Item $output -ItemType Directory | Out-Null
