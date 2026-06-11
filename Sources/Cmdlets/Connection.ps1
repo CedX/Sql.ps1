@@ -7,7 +7,7 @@ using namespace System.Diagnostics.CodeAnalysis
 .INPUTS
 	The connection to the data source.
 #>
-function Close-SqlConnection {
+function Close-Connection {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
@@ -34,7 +34,7 @@ function Close-SqlConnection {
 .OUTPUTS
 	The newly created database connection.
 #>
-function New-SqlConnection {
+function New-Connection {
 	[CmdletBinding(DefaultParameterSetName = "Type")]
 	[OutputType([System.Data.IDbConnection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

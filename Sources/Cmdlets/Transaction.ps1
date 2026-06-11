@@ -7,7 +7,7 @@ using namespace System.Diagnostics.CodeAnalysis
 .INPUTS
 	The transaction to commit.
 #>
-function Approve-SqlTransaction {
+function Approve-Transaction {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
@@ -27,7 +27,7 @@ function Approve-SqlTransaction {
 .INPUTS
 	The transaction to roll back.
 #>
-function Deny-SqlTransaction {
+function Deny-Transaction {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
@@ -47,7 +47,7 @@ function Deny-SqlTransaction {
 .OUTPUTS
 	The newly created transaction.
 #>
-function New-SqlTransaction {
+function New-Transaction {
 	[CmdletBinding()]
 	[OutputType([System.Data.IDbTransaction])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

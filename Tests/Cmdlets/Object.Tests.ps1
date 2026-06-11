@@ -3,9 +3,9 @@ using module ../Fixtures/Character.psm1
 
 <#
 .SYNOPSIS
-	Tests the features of the `Find-SqlObject` cmdlet.
+	Tests the features of the `Find-Object` cmdlet.
 #>
-Describe "Find-SqlObject" {
+Describe "Find-Object" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -70,9 +70,9 @@ Describe "Find-SqlObject" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Publish-SqlObject` cmdlet.
+	Tests the features of the `Publish-Object` cmdlet.
 #>
-Describe "Publish-SqlObject" {
+Describe "Publish-Object" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -100,9 +100,9 @@ Describe "Publish-SqlObject" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Remove-SqlObject` cmdlet.
+	Tests the features of the `Remove-Object` cmdlet.
 #>
-Describe "Remove-SqlObject" {
+Describe "Remove-Object" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -128,9 +128,9 @@ Describe "Remove-SqlObject" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Test-SqlObject` cmdlet.
+	Tests the features of the `Test-Object` cmdlet.
 #>
-Describe "Test-SqlObject" {
+Describe "Test-Object" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
@@ -145,9 +145,9 @@ Describe "Test-SqlObject" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `Update-SqlObject` cmdlet.
+	Tests the features of the `Update-Object` cmdlet.
 #>
-Describe "Update-SqlObject" {
+Describe "Update-Object" {
 	BeforeEach { . "$PSScriptRoot/../BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 

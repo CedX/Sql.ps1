@@ -12,7 +12,7 @@ using module ../SqlOrderHintCollection.psm1
 .OUTPUTS
 	Either the entity with the specified primary key, or all entities.
 #>
-function Find-SqlObject {
+function Find-Object {
 	[CmdletBinding(DefaultParameterSetName = "Id")]
 	[OutputType([object])]
 	param (
@@ -60,13 +60,13 @@ function Find-SqlObject {
 			$command, $parameters = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
 			$command.Timeout = $Timeout
 			$command.Transaction = $Transaction
-			Invoke-SqlQuery $Connection -As $Class -Command $command
+			Invoke-Query $Connection -As $Class -Command $command
 		}
 		else {
 			$command, $parameters = $Builder.GetFindCommand($Class, $Id, $Columns)
 			$command.Timeout = $Timeout
 			$command.Transaction = $Transaction
-			Get-SqlSingle $Connection -As $Class -Command $command -ErrorAction Ignore -Parameters $parameters
+			Get-Single $Connection -As $Class -Command $command -ErrorAction Ignore -Parameters $parameters
 		}
 	}
 }
@@ -79,7 +79,7 @@ function Find-SqlObject {
 .OUTPUTS
 	The generated primary key value.
 #>
-function Publish-SqlObject {
+function Publish-Object {
 	[CmdletBinding()]
 	[OutputType([long])]
 	param (
@@ -111,7 +111,7 @@ function Publish-SqlObject {
 		$command.Timeout = $Timeout
 		$command.Transaction = $Transaction
 
-		$id = Get-SqlScalar $Connection -As ([long]) -Command $command -Parameters $parameters
+		$id = Get-Scalar $Connection -As ([long]) -Command $command -Parameters $parameters
 		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
 		if ($column) { $column.SetValue($InputObject, [SqlMapper]::ChangeType($id, $column)) }
 		$id
@@ -128,7 +128,7 @@ function Publish-SqlObject {
 .OUTPUTS
 	[void] None when the command has been invoked with the `-All` parameter.
 #>
-function Remove-SqlObject {
+function Remove-Object {
 	[CmdletBinding(DefaultParameterSetName = "InputObject")]
 	[OutputType([bool])]
 	[OutputType([void])]
@@ -174,13 +174,13 @@ function Remove-SqlObject {
 			$command, $parameters = $Builder.GetDeleteAllCommand($Class, $Truncate)
 			$command.Timeout = $Timeout
 			$command.Transaction = $Transaction
-			Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters | Out-Null
+			Invoke-NonQuery $Connection -Command $command -Parameters $parameters | Out-Null
 		}
 		else {
 			$command, $parameters = $Builder.GetDeleteCommand($InputObject)
 			$command.Timeout = $Timeout
 			$command.Transaction = $Transaction
-			(Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters) -gt 0
+			(Invoke-NonQuery $Connection -Command $command -Parameters $parameters) -gt 0
 		}
 	}
 }
@@ -193,7 +193,7 @@ function Remove-SqlObject {
 .OUTPUTS
 	`$true` if an entity with the specified primary key exists, otherwise `$false`.
 #>
-function Test-SqlObject {
+function Test-Object {
 	[CmdletBinding()]
 	[OutputType([bool])]
 	param (
@@ -228,7 +228,7 @@ function Test-SqlObject {
 		$command, $parameters = $Builder.GetExistsCommand($Class, $Id)
 		$command.Timeout = $Timeout
 		$command.Transaction = $Transaction
-		Get-SqlScalar $Connection -As ([bool]) -Command $command -Parameters $parameters
+		Get-Scalar $Connection -As ([bool]) -Command $command -Parameters $parameters
 	}
 }
 
@@ -240,7 +240,7 @@ function Test-SqlObject {
 .OUTPUTS
 	The number of rows affected.
 #>
-function Update-SqlObject {
+function Update-Object {
 	[CmdletBinding()]
 	[OutputType([int])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
@@ -276,6 +276,6 @@ function Update-SqlObject {
 		$command, $parameters = $Builder.GetUpdateCommand($InputObject, $Columns)
 		$command.Timeout = $Timeout
 		$command.Transaction = $Transaction
-		Invoke-SqlNonQuery $Connection -Command $command -Parameters $parameters
+		Invoke-NonQuery $Connection -Command $command -Parameters $parameters
 	}
 }

@@ -9,7 +9,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The first row.
 #>
-function Get-SqlFirst {
+function Get-First {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (
@@ -55,7 +55,7 @@ function Get-SqlFirst {
 .OUTPUTS
 	The first column of the first row.
 #>
-function Get-SqlScalar {
+function Get-Scalar {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (
@@ -98,7 +98,7 @@ function Get-SqlScalar {
 .OUTPUTS
 	The single row.
 #>
-function Get-SqlSingle {
+function Get-Single {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (
@@ -151,7 +151,7 @@ function Get-SqlSingle {
 .OUTPUTS
 	The number of rows affected.
 #>
-function Invoke-SqlNonQuery {
+function Invoke-NonQuery {
 	[CmdletBinding()]
 	[OutputType([int])]
 	param (
@@ -189,7 +189,7 @@ function Invoke-SqlNonQuery {
 .OUTPUTS
 	The sequence of object tuples whose properties correspond to the columns.
 #>
-function Invoke-SqlQuery {
+function Invoke-Query {
 	[CmdletBinding()]
 	[OutputType([object])]
 	param (

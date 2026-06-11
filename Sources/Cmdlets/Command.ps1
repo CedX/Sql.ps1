@@ -17,7 +17,7 @@ using module ../SqlParameterCollection.psm1
 .OUTPUTS
 	The newly created command.
 #>
-function New-SqlCommand {
+function New-Command {
 	[CmdletBinding()]
 	[OutputType([SqlCommand])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
@@ -52,7 +52,7 @@ function New-SqlCommand {
 .OUTPUTS
 	The newly created command builder.
 #>
-function New-SqlCommandBuilder {
+function New-CommandBuilder {
 	[CmdletBinding(DefaultParameterSetName = "LastInsertIdFunction")]
 	[OutputType([SqlCommand])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
@@ -120,7 +120,7 @@ function New-SqlCommandBuilder {
 .OUTPUTS
 	The newly created order hint.
 #>
-function New-SqlOrderHint {
+function New-OrderHint {
 	[CmdletBinding()]
 	[OutputType([SqlOrderHint])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
@@ -147,7 +147,7 @@ function New-SqlOrderHint {
 .OUTPUTS
 	The newly created order hint collection.
 #>
-function New-SqlOrderHintCollection {
+function New-OrderHintCollection {
 	[CmdletBinding()]
 	[OutputType([SqlOrderHintCollection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
@@ -171,7 +171,7 @@ function New-SqlOrderHintCollection {
 .OUTPUTS
 	The newly created parameter.
 #>
-function New-SqlParameter {
+function New-Parameter {
 	[CmdletBinding()]
 	[OutputType([SqlParameter])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
@@ -220,7 +220,7 @@ function New-SqlParameter {
 .OUTPUTS
 	The newly created parameter collection.
 #>
-function New-SqlParameterCollection {
+function New-ParameterCollection {
 	[CmdletBinding()]
 	[OutputType([SqlParameterCollection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

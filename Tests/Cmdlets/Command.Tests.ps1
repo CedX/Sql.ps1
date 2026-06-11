@@ -4,9 +4,9 @@ using module ../../Sources/SortOrder.psm1
 
 <#
 .SYNOPSIS
-	Tests the features of the `New-SqlOrderHintCollection` cmdlet.
+	Tests the features of the `New-OrderHintCollection` cmdlet.
 #>
-Describe "New-SqlOrderHintCollection" {
+Describe "New-OrderHintCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlOrderHintCollection
 		$collection | Should -BeNullOrEmpty
@@ -34,9 +34,9 @@ Describe "New-SqlOrderHintCollection" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `New-SqlParameter` cmdlet.
+	Tests the features of the `New-Parameter` cmdlet.
 #>
-Describe "New-SqlParameter" {
+Describe "New-Parameter" {
 	It "should normalize the parameter name" -ForEach @(
 		@{ Name = ""; Expected = "?" }
 		@{ Name = "?"; Expected = "?" }
@@ -66,9 +66,9 @@ Describe "New-SqlParameter" {
 
 <#
 .SYNOPSIS
-	Tests the features of the `New-SqlParameterCollection` cmdlet.
+	Tests the features of the `New-ParameterCollection` cmdlet.
 #>
-Describe "New-SqlParameterCollection" {
+Describe "New-ParameterCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlParameterCollection
 		$collection | Should -BeNullOrEmpty
