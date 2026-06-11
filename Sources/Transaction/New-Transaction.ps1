@@ -3,46 +3,6 @@ using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
-	Commits the specified database transaction.
-.INPUTS
-	The transaction to commit.
-#>
-function Approve-Transaction {
-	[CmdletBinding()]
-	[OutputType([void])]
-	param (
-		# The transaction to commit.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
-		[IDbTransaction] $InputObject
-	)
-
-	process {
-		$InputObject.Commit()
-	}
-}
-
-<#
-.SYNOPSIS
-	Rolls back the specified database transaction.
-.INPUTS
-	The transaction to roll back.
-#>
-function Deny-Transaction {
-	[CmdletBinding()]
-	[OutputType([void])]
-	param (
-		# The transaction to roll back.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
-		[IDbTransaction] $InputObject
-	)
-
-	process {
-		$InputObject.Rollback()
-	}
-}
-
-<#
-.SYNOPSIS
 	Creates a new transaction associated with the specified connection.
 .OUTPUTS
 	The newly created transaction.
