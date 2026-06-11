@@ -11,6 +11,7 @@
 
 	AliasesToExport = @()
 	CmdletsToExport = @()
+	RequiredAssemblies = , "Binaries/Belin.Sql.dll"
 	VariablesToExport = @()
 
 	FunctionsToExport = @(
