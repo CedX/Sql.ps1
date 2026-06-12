@@ -18,6 +18,7 @@
 	FunctionsToExport = @(
 		"Close-Connection"
 		"Complete-Transaction"
+		"Get-Mapper"
 		"New-Command"
 		"New-CommandBuilder"
 		"New-Connection"
@@ -30,7 +31,6 @@
 		"Undo-Transaction"
 		# "Find-Object"
 		# "Get-First"
-		# "Get-Mapper"
 		# "Get-Scalar"
 		# "Get-Single"
 		# "Invoke-NonQuery"
