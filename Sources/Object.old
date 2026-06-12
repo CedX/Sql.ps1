@@ -1,0 +1,281 @@
+using namespace System.Data
+using namespace System.Diagnostics.CodeAnalysis
+using module ../SqlCommandBuilder.psm1
+using module ../SqlMapper.psm1
+using module ../SqlOrderHintCollection.psm1
+
+<#
+.SYNOPSIS
+	Finds either an entity with the specified primary key, or all entities.
+.INPUTS
+	The primary key value.
+.OUTPUTS
+	Either the entity with the specified primary key, or all entities.
+#>
+function Find-Object {
+	[CmdletBinding(DefaultParameterSetName = "Id")]
+	[OutputType([object])]
+	param (
+		# The connection to the data source.
+		[Parameter(Mandatory, Position = 0)]
+		[IDbConnection] $Connection,
+
+		# The type of object to find.
+		[Parameter(Mandatory, Position = 1)]
+		[Type] $Class,
+
+		# The primary key value.
+		[Parameter(Mandatory, ParameterSetName = "Id", Position = 2, ValueFromPipeline)]
+		[object] $Id,
+
+		# Value indicating whether to find all entities.
+		[Parameter(ParameterSetName = "All")]
+		[switch] $All,
+
+		# The hints describing the sort order of columns.
+		[Parameter(ParameterSetName = "All")]
+		[SqlOrderHintCollection] $OrderBy,
+
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
+		# The list of columns to select. By default, all columns.
+		[ValidateNotNull()]
+		[string[]] $Columns = @(),
+
+		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
+		[ValidateRange("NonNegative")]
+		[int] $Timeout = 30,
+
+		# The transaction within which the command executes.
+		[IDbTransaction] $Transaction
+	)
+
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
+	process {
+		if ($All) {
+			$command, $parameters = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			Invoke-Query $Connection -As $Class -Command $command
+		}
+		else {
+			$command, $parameters = $Builder.GetFindCommand($Class, $Id, $Columns)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			Get-Single $Connection -As $Class -Command $command -ErrorAction Ignore -Parameters $parameters
+		}
+	}
+}
+
+<#
+.SYNOPSIS
+	Inserts the specified entity.
+.INPUTS
+	The entity to insert.
+.OUTPUTS
+	The generated primary key value.
+#>
+function Publish-Object {
+	[CmdletBinding()]
+	[OutputType([long])]
+	param (
+		# The connection to the data source.
+		[Parameter(Mandatory, Position = 0)]
+		[IDbConnection] $Connection,
+
+		# The entity to insert.
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
+		[object] $InputObject,
+
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
+		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
+		[ValidateRange("NonNegative")]
+		[int] $Timeout = 30,
+
+		# The transaction within which the command executes.
+		[IDbTransaction] $Transaction
+	)
+
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
+	process {
+		$command, $parameters = $Builder.GetInsertCommand($InputObject)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+
+		$id = Get-Scalar $Connection -As ([long]) -Command $command -Parameters $parameters
+		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
+		if ($column) { $column.SetValue($InputObject, [SqlMapper]::ChangeType($id, $column)) }
+		$id
+	}
+}
+
+<#
+.SYNOPSIS
+	Deletes either the specified entity, or all entities.
+.INPUTS
+	The entity to delete.
+.OUTPUTS
+	[bool] `$true` if the specified entity has been deleted, otherwise `$false`.
+.OUTPUTS
+	[void] None when the command has been invoked with the `-All` parameter.
+#>
+function Remove-Object {
+	[CmdletBinding(DefaultParameterSetName = "InputObject")]
+	[OutputType([bool])]
+	[OutputType([void])]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	param (
+		# The connection to the data source.
+		[Parameter(Mandatory, Position = 0)]
+		[IDbConnection] $Connection,
+
+		# The entity to delete.
+		[Parameter(Mandatory, ParameterSetName = "InputObject", Position = 1, ValueFromPipeline)]
+		[object] $InputObject,
+
+		# The type of object to delete.
+		[Parameter(Mandatory, ParameterSetName = "All", Position = 1)]
+		[Type] $Class,
+
+		# Value indicating whether to delete all entities.
+		[Parameter(ParameterSetName = "All")]
+		[switch] $All,
+
+		# Value indicating whether to truncate the underlying table.
+		[Parameter(ParameterSetName = "All")]
+		[switch] $Truncate,
+
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
+		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
+		[ValidateRange("NonNegative")]
+		[int] $Timeout = 30,
+
+		# The transaction within which the command executes.
+		[IDbTransaction] $Transaction
+	)
+
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
+	process {
+		if ($All) {
+			$command, $parameters = $Builder.GetDeleteAllCommand($Class, $Truncate)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			Invoke-NonQuery $Connection -Command $command -Parameters $parameters | Out-Null
+		}
+		else {
+			$command, $parameters = $Builder.GetDeleteCommand($InputObject)
+			$command.Timeout = $Timeout
+			$command.Transaction = $Transaction
+			(Invoke-NonQuery $Connection -Command $command -Parameters $parameters) -gt 0
+		}
+	}
+}
+
+<#
+.SYNOPSIS
+	Checks whether an entity with the specified primary key exists.
+.INPUTS
+	The primary key value.
+.OUTPUTS
+	`$true` if an entity with the specified primary key exists, otherwise `$false`.
+#>
+function Test-Object {
+	[CmdletBinding()]
+	[OutputType([bool])]
+	param (
+		# The connection to the data source.
+		[Parameter(Mandatory, Position = 0)]
+		[IDbConnection] $Connection,
+
+		# The type of object to check.
+		[Parameter(Mandatory, Position = 1)]
+		[Type] $Class,
+
+		# The primary key value.
+		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
+		[object] $Id,
+
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
+		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
+		[ValidateRange("NonNegative")]
+		[int] $Timeout = 30,
+
+		# The transaction within which the command executes.
+		[IDbTransaction] $Transaction
+	)
+
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
+	process {
+		$command, $parameters = $Builder.GetExistsCommand($Class, $Id)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+		Get-Scalar $Connection -As ([bool]) -Command $command -Parameters $parameters
+	}
+}
+
+<#
+.SYNOPSIS
+	Updates the specified entity.
+.INPUTS
+	The entity to update.
+.OUTPUTS
+	The number of rows affected.
+#>
+function Update-Object {
+	[CmdletBinding()]
+	[OutputType([int])]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	param (
+		# The connection to the data source.
+		[Parameter(Mandatory, Position = 0)]
+		[IDbConnection] $Connection,
+
+		# The entity to update.
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
+		[object] $InputObject,
+
+		# An optional command builder used to build the SQL query to be executed.
+		[SqlCommandBuilder] $Builder,
+
+		# The list of columns to update. By default, all columns.
+		[ValidateNotNull()]
+		[string[]] $Columns = @(),
+
+		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
+		[ValidateRange("NonNegative")]
+		[int] $Timeout = 30,
+
+		# The transaction within which the command executes.
+		[IDbTransaction] $Transaction
+	)
+
+	begin {
+		$Builder ??= [SqlCommandBuilder]::new($Connection)
+	}
+
+	process {
+		$command, $parameters = $Builder.GetUpdateCommand($InputObject, $Columns)
+		$command.Timeout = $Timeout
+		$command.Transaction = $Transaction
+		Invoke-NonQuery $Connection -Command $command -Parameters $parameters
+	}
+}
