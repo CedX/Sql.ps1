@@ -28,5 +28,5 @@ function Get-Scalar {
 		[Type] $As = [object]
 	)
 
-	[DbConnectionExtensions]::ExecuteScalar($Connection, $Command, $Parameters)
+	[DbConnectionExtensions]::ExecuteScalar($Connection, $As, $Command, $Parameters)
 }

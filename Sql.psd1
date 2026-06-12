@@ -23,7 +23,7 @@
 		"Get-Mapper"
 		"Get-Scalar"
 		"Get-Single"
-		# "Invoke-NonQuery"
+		"Invoke-NonQuery"
 		# "Invoke-Query"
 		"New-Command"
 		"New-CommandBuilder"
@@ -38,7 +38,7 @@
 		"Start-Transaction"
 		# "Test-Object"
 		"Undo-Transaction"
-		# "Update-Object"
+		"Update-Object"
 	)
 
 	PrivateData = @{

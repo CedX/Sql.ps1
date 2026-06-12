@@ -50,21 +50,21 @@ function Remove-Object {
 	)
 
 	begin {
-		$Builder ??= [SqlCommandBuilder]::new($Connection)
+		$Builder ??= New-CommandBuilder $Connection
 	}
 
 	process {
 		if ($All) {
-			$command, $parameters = $Builder.GetDeleteAllCommand($Class, $Truncate)
-			$command.Timeout = $Timeout
-			$command.Transaction = $Transaction
-			Invoke-NonQuery $Connection -Command $command -Parameters $parameters | Out-Null
+			$command = $Builder.GetDeleteAllCommand($Class, $Truncate)
+			$command.Item1.Timeout = $Timeout
+			$command.Item1.Transaction = $Transaction
+			Invoke-NonQuery $Connection -Command $command.Item1 -Parameters $command.Item2 | Out-Null
 		}
 		else {
-			$command, $parameters = $Builder.GetDeleteCommand($InputObject)
-			$command.Timeout = $Timeout
-			$command.Transaction = $Transaction
-			(Invoke-NonQuery $Connection -Command $command -Parameters $parameters) -gt 0
+			$command = $Builder.GetDeleteCommand($InputObject)
+			$command.Item1.Timeout = $Timeout
+			$command.Item1.Transaction = $Transaction
+			(Invoke-NonQuery $Connection -Command $command.Item1 -Parameters $command.Item2) -gt 0
 		}
 	}
 }

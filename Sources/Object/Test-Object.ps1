@@ -37,13 +37,13 @@ function Test-Object {
 	)
 
 	begin {
-		$Builder ??= [SqlCommandBuilder]::new($Connection)
+		$Builder ??= New-CommandBuilder $Connection
 	}
 
 	process {
-		$command, $parameters = $Builder.GetExistsCommand($Class, $Id)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-		Get-Scalar $Connection -As ([bool]) -Command $command -Parameters $parameters
+		$command = $Builder.GetExistsCommand($Class, $Id)
+		$command.Item1.Timeout = $Timeout
+		$command.Item1.Transaction = $Transaction
+		Get-Scalar $Connection -As ([bool]) -Command $command.Item1 -Parameters $command.Item2
 	}
 }

@@ -1,3 +1,5 @@
+using module ../../Sql.psd1
+
 <#
 .SYNOPSIS
 	Tests the features of the `Get-Scalar` cmdlet.

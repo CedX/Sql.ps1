@@ -75,23 +75,23 @@ Describe "Get-Mapper" {
 	}
 
 	Context "CreateInstance" {
-		It "should create a [psobject] instance" {
+		It "should support creating an object of type [psobject]" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
-			$object = (Get-SqlMapper).CreateInstance([psobject], $properties)
-			$object | Should -BeOfType ([psobject])
-			$object.CLASS | Should -BeExactly "Bard/minstrel"
-			$object.firstName | Should -BeExactly Cédric
-			$object.gender | Should -BeExactly ([CharacterGender]::Balrog.ToString())
-			$object.lastName | Should -BeNullOrEmpty
+			$psObject = (Get-SqlMapper).CreateInstance([psobject], $properties)
+			$psObject | Should -BeOfType ([psobject])
+			$psObject.CLASS | Should -BeExactly "Bard/minstrel"
+			$psObject.firstName | Should -BeExactly Cédric
+			$psObject.gender | Should -BeExactly ([CharacterGender]::Balrog.ToString())
+			$psObject.lastName | Should -BeNullOrEmpty
 		}
 
 		It "should create an object of the specified type" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
-			$object = (Get-SqlMapper).CreateInstance([Character], $properties)
-			$object | Should -BeOfType ([Character])
-			$object.FirstName | Should -BeExactly Cédric
-			$object.Gender | Should -Be ([CharacterGender]::Balrog)
-			$object.LastName | Should -Be ""
+			$character = (Get-SqlMapper).CreateInstance([Character], $properties)
+			$character | Should -BeOfType ([Character])
+			$character.FirstName | Should -BeExactly Cédric
+			$character.Gender | Should -Be ([CharacterGender]::Balrog)
+			$character.LastName | Should -Be ""
 		}
 	}
 

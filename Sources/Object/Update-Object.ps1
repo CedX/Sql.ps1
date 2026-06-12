@@ -39,13 +39,13 @@ function Update-Object {
 	)
 
 	begin {
-		$Builder ??= [SqlCommandBuilder]::new($Connection)
+		$Builder ??= New-CommandBuilder $Connection
 	}
 
 	process {
-		$command, $parameters = $Builder.GetUpdateCommand($InputObject, $Columns)
-		$command.Timeout = $Timeout
-		$command.Transaction = $Transaction
-		Invoke-NonQuery $Connection -Command $command -Parameters $parameters
+		$command = $Builder.GetUpdateCommand($InputObject, $Columns)
+		$command.Item1.Timeout = $Timeout
+		$command.Item1.Transaction = $Transaction
+		Invoke-NonQuery $Connection -Command $command.Item1 -Parameters $command.Item2
 	}
 }

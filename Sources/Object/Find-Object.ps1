@@ -49,21 +49,21 @@ function Find-Object {
 	)
 
 	begin {
-		$Builder ??= [SqlCommandBuilder]::new($Connection)
+		$Builder ??= New-CommandBuilder $Connection
 	}
 
 	process {
 		if ($All) {
-			$command, $parameters = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
-			$command.Timeout = $Timeout
-			$command.Transaction = $Transaction
-			Invoke-Query $Connection -As $Class -Command $command
+			$command = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
+			$command.Item1.Timeout = $Timeout
+			$command.Item1.Transaction = $Transaction
+			Invoke-Query $Connection -As $Class -Command $command.Item1
 		}
 		else {
-			$command, $parameters = $Builder.GetFindCommand($Class, $Id, $Columns)
-			$command.Timeout = $Timeout
-			$command.Transaction = $Transaction
-			Get-Single $Connection -As $Class -Command $command -ErrorAction Ignore -Parameters $parameters
+			$command = $Builder.GetFindCommand($Class, $Id, $Columns)
+			$command.Item1.Timeout = $Timeout
+			$command.Item1.Transaction = $Transaction
+			Get-Single $Connection -As $Class -Command $command.Item1 -ErrorAction Ignore -Parameters $command.Item2
 		}
 	}
 }
