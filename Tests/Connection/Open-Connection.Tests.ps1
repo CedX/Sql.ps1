@@ -5,14 +5,14 @@ using module ../../Sql.psd1
 
 <#
 .SYNOPSIS
-	Tests the features of the `Close-Connection` cmdlet.
+	Tests the features of the `Open-Connection` cmdlet.
 #>
-Describe "Close-Connection" {
-	It "should close the specified connection" {
+Describe "Open-Connection" {
+	It "should open the specified connection" {
 		$connection = [SQLiteConnection]::new("DataSource=:memory:")
-		$connection.Open()
-		$connection.State | Should -Be ([ConnectionState]::Open)
-		Close-SqlConnection $connection
 		$connection.State | Should -Be ([ConnectionState]::Closed)
+		Open-SqlConnection $connection
+		$connection.State | Should -Be ([ConnectionState]::Open)
+		$connection.Close()
 	}
 }
