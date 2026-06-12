@@ -1,15 +1,44 @@
+using namespace Belin.Sql
 using namespace System.Data
-using module ../Sources/SqlParameter.psm1
-using module ../Sources/SqlParameterCollection.psm1
+using namespace System.Collections.Generic
+using module ../../Sql.psd1
 
 <#
 .SYNOPSIS
-	Tests the features of the `SqlParameterCollection` class.
+	Tests the features of the `New-ParameterCollection` cmdlet.
 #>
-Describe "SqlParameterCollection" {
+Describe "New-ParameterCollection" {
+	Context "Constructor" {
+		It "should create an empty collection by default" {
+			$collection = New-SqlParameterCollection
+			$collection | Should -BeNullOrEmpty
+		}
+
+		It "should create a collection from a single parameter" {
+			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123 -DbType Int64)
+			$collection | Should -HaveCount 1
+
+			$parameter = $collection[0]
+			$parameter.Name | Should -BeExactly "?1"
+			$parameter.Value | Should -Be 123
+			$parameter.DbType | Should -Be ([DbType]::Int64)
+		}
+
+		It "should create a collection from an array of parameters" {
+			$parameters = (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
+			$collection = New-SqlParameterCollection $parameters
+			$collection | Should -HaveCount 2
+
+			$parameter = $collection[$collection.Count - 1]
+			$parameter.Name | Should -BeExactly "@Key"
+			$parameter.Value | Should -BeExactly Unique
+			$parameter.DbType | Should -Be ([DbType]::AnsiString)
+		}
+	}
+
 	Context "AddWithValue" {
 		It "should add a new parameter to the collection" {
-			$collection = [SqlParameterCollection]::new()
+			$collection = New-SqlParameterCollection
 			$collection | Should -BeNullOrEmpty
 
 			$parameter = $collection.AddWithValue("Name", "Value1")
@@ -24,43 +53,15 @@ Describe "SqlParameterCollection" {
 		}
 	}
 
-	Context "Constructor" {
-		It "should create an empty collection by default" {
-			$collection = [SqlParameterCollection]::new()
-			$collection | Should -BeNullOrEmpty
-		}
-
-		It "should create a collection from a single parameter" {
-			$collection = [SqlParameterCollection]::new([SqlParameter]@{ Name = "?1"; Value = 123; DbType = [DbType]::Int64 })
-			$collection | Should -HaveCount 1
-
-			$parameter = $collection[0]
-			$parameter.Name | Should -BeExactly "?1"
-			$parameter.Value | Should -Be 123
-			$parameter.DbType | Should -Be ([DbType]::Int64)
-		}
-
-		It "should create a collection from an array of parameters" {
-			$parameters = [SqlParameter]::new("?1", 123), [SqlParameter]@{ Name = "@Key"; Value = "Unique"; DbType = [DbType]::AnsiString }
-			$collection = [SqlParameterCollection]::new($parameters)
-			$collection | Should -HaveCount 2
-
-			$parameter = $collection[$collection.Count - 1]
-			$parameter.Name | Should -BeExactly "@Key"
-			$parameter.Value | Should -BeExactly Unique
-			$parameter.DbType | Should -Be ([DbType]::AnsiString)
-		}
-	}
-
 	Context "Contains" {
 		It "should return `$true if the collection contains the specified parameter" {
-			$collection = [SqlParameterCollection]::new([SqlParameter]::new("@Key", $null))
+			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
 			$collection.Contains("Key") | Should -BeTrue
 			$collection.Contains("@Key") | Should -BeTrue
 		}
 
 		It "should return `$false if the collection does not contain the specified parameter" {
-			$collection = [SqlParameterCollection]::new([SqlParameter]::new("@Key", $null))
+			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
 			$collection.Contains("Foo") | Should -BeFalse
 			$collection.Contains("@Foo") | Should -BeFalse
 		}
@@ -69,6 +70,12 @@ Describe "SqlParameterCollection" {
 	Context "ImplicitConversion" {
 		It "should create a collection from the specified array of postional parameters" {
 			[SqlParameterCollection] $collection = "foo", "bar"
+			$collection.PSForEach{ $_.Name } | Should -Be "?1", "?2"
+			$collection.PSForEach{ $_.Value } | Should -Be "foo", "bar"
+		}
+
+		It "should create a collection from the specified list of postional parameters" {
+			[SqlParameterCollection] $collection = [List[object]]::new(("foo", "bar"))
 			$collection.PSForEach{ $_.Name } | Should -Be "?1", "?2"
 			$collection.PSForEach{ $_.Value } | Should -Be "foo", "bar"
 		}
@@ -82,7 +89,7 @@ Describe "SqlParameterCollection" {
 
 	Context "Indexer" {
 		It "should return the parameter with the specified name" {
-			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			$parameter = $collection["Key"]
 			$parameter.Name | Should -BeExactly "@Key"
 			$parameter.Value | Should -BeExactly Unique
@@ -90,7 +97,7 @@ Describe "SqlParameterCollection" {
 		}
 
 		It "should return `$null, or throw an error, if the specified name does not exist" {
-			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			$collection["@Foo"] | Should -BeNullOrEmpty
 
 			Set-StrictMode -Version Latest
@@ -101,13 +108,13 @@ Describe "SqlParameterCollection" {
 
 	Context "IndexOf" {
 		It "should return the index if the parameter is found" {
-			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			$collection.IndexOf("Key") | Should -Be 1
 			$collection.IndexOf("@Key") | Should -Be 1
 		}
 
 		It "should return -1 if the parameter is not found" {
-			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			$collection.IndexOf("Foo") | Should -Be -1
 			$collection.IndexOf("@Foo") | Should -Be -1
 		}
@@ -115,7 +122,7 @@ Describe "SqlParameterCollection" {
 
 	Context "RemoveAt" {
 		It "should remove the parameter with the specified name" {
-			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			$collection | Should -HaveCount 2
 			$collection.RemoveAt("Key")
 			$collection | Should -HaveCount 1
@@ -124,7 +131,7 @@ Describe "SqlParameterCollection" {
 		}
 
 		It "should throw an error if the specified name does not exist" {
-			$collection = [SqlParameterCollection]::new((("?1", 123), ("@Key", "Unique")))
+			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			{ $collection.RemoveAt("Foo") } | Should -Throw
 		}
 	}

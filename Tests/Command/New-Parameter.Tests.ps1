@@ -1,24 +1,40 @@
+using namespace Belin.Sql
 using namespace System.Collections.Generic
-using module ../Sources/SqlParameter.psm1
+using namespace System.Data
+using module ../../Sql.psd1
 
 <#
 .SYNOPSIS
-	Tests the features of the `SqlParameter` class.
+	Tests the features of the `New-Parameter` cmdlet.
 #>
-Describe "SqlParameter" {
+Describe "New-Parameter" {
 	Context "ImplicitConversion" {
-		It "should create a parameter from the specified tuple" {
-			[SqlParameter] $parameter = @()
+		It "should create a parameter from the specified array" {
+			[SqlParameter] $parameter = "", $null
 			$parameter.Name | Should -BeExactly "?"
 			$parameter.Value | Should -Be ([DBNull]::Value)
 
-			$parameter = , ":foo"
+			$parameter = ":foo", "bar"
 			$parameter.Name | Should -BeExactly ":foo"
+			$parameter.Value | Should -BeExactly "bar"
+
+			$parameter = "bar", 123
+			$parameter.Name | Should -BeExactly "@bar"
+			$parameter.Value | Should -Be 123
+		}
+
+		It "should create a parameter from the specified tuple" {
+			[SqlParameter] $parameter = [ValueTuple]::Create("", [object] $null)
+			$parameter.Name | Should -BeExactly "?"
 			$parameter.Value | Should -Be ([DBNull]::Value)
 
-			$parameter = "bar", "Baz"
+			$parameter = [ValueTuple]::Create(":foo", [object] "bar")
+			$parameter.Name | Should -BeExactly ":foo"
+			$parameter.Value | Should -BeExactly "bar"
+
+			$parameter = [ValueTuple]::Create("bar", [object] 123)
 			$parameter.Name | Should -BeExactly "@bar"
-			$parameter.Value | Should -BeExactly Baz
+			$parameter.Value | Should -Be 123
 		}
 
 		It "should create a parameter from the specified key/value pair" {
@@ -33,7 +49,7 @@ Describe "SqlParameter" {
 	}
 
 	Context "Name" {
-		It "should return the normalized name" -ForEach @(
+		It "should normalize the parameter name" -ForEach @(
 			@{ Name = ""; Expected = "?" }
 			@{ Name = "?"; Expected = "?" }
 			@{ Name = "?1"; Expected = "?1" }
@@ -42,12 +58,13 @@ Describe "SqlParameter" {
 			@{ Name = ":baz"; Expected = ":baz" }
 			@{ Name = "`$qux"; Expected = "`$qux" }
 		) {
-			[SqlParameter]::new($name).Name | Should -BeExactly $expected
+			$parameter = New-SqlParameter $name
+			$parameter.Name | Should -BeExactly $expected
 		}
 	}
 
 	Context "Value" {
-		It "should return the normalized value" -ForEach @(
+		It "should normalize the parameter value" -ForEach @(
 			@{ Value = $null; Expected = [DBNull]::Value }
 			@{ Value = [DBNull]::Value; Expected = [DBNull]::Value }
 			@{ Value = 123; Expected = 123 }
@@ -56,7 +73,8 @@ Describe "SqlParameter" {
 			@{ Value = "Foo"; Expected = "Foo" }
 			@{ Value = [datetime]::UnixEpoch; Expected = [datetime]::UnixEpoch }
 		) {
-			[SqlParameter]::new("Name", $value).Value | Should -BeExactly $expected
+			$parameter = New-SqlParameter Name $value
+			$parameter.Value | Should -BeExactly $expected
 		}
 	}
 }
