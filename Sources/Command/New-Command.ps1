@@ -32,7 +32,7 @@ function New-Command {
 
 	process {
 		$command = [SqlCommand]::new($Text)
-		# TODO ???? $command.NoEnumerate = $true
+		$command.NoEnumerate = $true
 		$command.Timeout = $Timeout
 		$command.Transaction = $Transaction
 		$command.Type = $Type

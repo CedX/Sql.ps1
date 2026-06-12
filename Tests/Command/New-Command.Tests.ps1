@@ -8,7 +8,7 @@ using module ../../Sql.psd1
 Describe "New-Command" {
 	Context "ImplicitConversion" {
 		It "should create a command from the specified string" {
-			[SqlCommand] $command = "SELECT * FROM Characters"
+			[Belin.Sql.SqlCommand] $command = "SELECT * FROM Characters"
 			$command.Text | Should -BeExactly "SELECT * FROM Characters"
 		}
 	}

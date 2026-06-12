@@ -1,6 +1,6 @@
 using namespace Belin.Sql
-using module ../Sql.psd1
-using module ./Character.psm1
+using module ../../Sql.psd1
+using module ../Character.psm1
 
 <#
 .SYNOPSIS

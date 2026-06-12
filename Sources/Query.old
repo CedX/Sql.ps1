@@ -1,4 +1,0 @@
-using namespace System.Data
-using module ../SqlCommand.psm1
-using module ../SqlMapper.psm1
-using module ../SqlParameterCollection.psm1

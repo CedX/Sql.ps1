@@ -28,21 +28,24 @@ function Get-First {
 		[Type] $As = [psobject]
 	)
 
-	begin {
-		$dbCommand = $null
-		$reader = $null
-		if ($Connection.State -eq [ConnectionState]::Closed) { Open-SqlConnection $Connection }
-	}
+	try { [DbConnectionExtensions]::QueryFirst($Connection, $As, $Command, $Parameters) }
+	catch [InvalidOperationException] { Write-Error $_ }
 
-	end {
-		$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
-		$reader = $dbCommand.ExecuteReader()
-		if ($reader.Read()) { [SqlMapper]::Instance.CreateInstance($As, $reader) }
-		else { Write-Error "The result set is empty." -Category InvalidOperation }
-	}
+	# begin {
+	# 	$dbCommand = $null
+	# 	$reader = $null
+	# 	if ($Connection.State -eq [ConnectionState]::Closed) { Open-SqlConnection $Connection }
+	# }
 
-	clean {
-		${reader}?.Close()
-		${dbCommand}?.Dispose()
-	}
+	# end {
+	# 	$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
+	# 	$reader = $dbCommand.ExecuteReader()
+	# 	if ($reader.Read()) { [SqlMapper]::Instance.CreateInstance($As, $reader) }
+	# 	else { Write-Error "The result set is empty." -Category InvalidOperation }
+	# }
+
+	# clean {
+	# 	${reader}?.Close()
+	# 	${dbCommand}?.Dispose()
+	# }
 }

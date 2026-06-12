@@ -28,28 +28,6 @@ function Get-Single {
 		[Type] $As = [psobject]
 	)
 
-	begin {
-		$dbCommand = $null
-		$reader = $null
-		if ($Connection.State -eq [ConnectionState]::Closed) { Open-SqlConnection $Connection }
-	}
-
-	end {
-		$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
-		$reader = $dbCommand.ExecuteReader()
-
-		$rowCount = 0
-		while ($reader.Read()) {
-			if (++$rowCount -gt 1) { break }
-			$record = [SqlMapper]::Instance.CreateInstance($As, $reader)
-		}
-
-		if ($rowCount -eq 1) { $record }
-		else { Write-Error "The result set is empty or contains more than one record." -Category InvalidOperation }
-	}
-
-	clean {
-		${reader}?.Close()
-		${dbCommand}?.Dispose()
-	}
+	try { [DbConnectionExtensions]::QuerySingle($Connection, $As, $Command, $Parameters) }
+	catch [InvalidOperationException] { Write-Error $_ }
 }
