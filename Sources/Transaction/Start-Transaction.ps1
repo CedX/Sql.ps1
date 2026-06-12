@@ -3,11 +3,11 @@ using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
-	Creates a new transaction associated with the specified connection.
+	Starts a new transaction.
 .OUTPUTS
 	The newly created transaction.
 #>
-function New-Transaction {
+function Start-Transaction {
 	[CmdletBinding()]
 	[OutputType([System.Data.IDbTransaction])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]

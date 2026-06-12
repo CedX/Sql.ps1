@@ -2,11 +2,11 @@ using namespace System.Data
 
 <#
 .SYNOPSIS
-	Rolls back the specified database transaction.
+	Rolls back the specified transaction.
 .INPUTS
 	The transaction to roll back.
 #>
-function Deny-Transaction {
+function Undo-Transaction {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (

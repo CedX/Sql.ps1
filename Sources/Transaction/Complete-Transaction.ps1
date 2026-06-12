@@ -2,11 +2,11 @@ using namespace System.Data
 
 <#
 .SYNOPSIS
-	Commits the specified database transaction.
+	Commits the specified transaction.
 .INPUTS
 	The transaction to commit.
 #>
-function Approve-Transaction {
+function Complete-Transaction {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
