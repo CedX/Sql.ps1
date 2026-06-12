@@ -1,0 +1,28 @@
+using namespace System.Data
+using namespace System.Data.Common
+using namespace System.Diagnostics.CodeAnalysis
+
+
+<#
+.SYNOPSIS
+	Creates a new parameter collection.
+.INPUTS
+	The collection whose elements are copied to the parameter collection.
+.OUTPUTS
+	The newly created parameter collection.
+#>
+function New-ParameterCollection {
+	[CmdletBinding()]
+	[OutputType([SqlParameterCollection])]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	param (
+		# The collection whose elements are copied to the parameter collection.
+		[Parameter(Position = 0, ValueFromPipeline)]
+		[ValidateNotNull()]
+		[SqlParameter[]] $Parameters = @()
+	)
+
+	process {
+		[SqlParameterCollection]::new($Parameters)
+	}
+}

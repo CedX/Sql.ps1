@@ -14,12 +14,14 @@ Describe "New-OrderHint" {
 			$orderHint.SortOrder | Should -Be ([SortOrder]::Ascending)
 		}
 
-		It "should create an order hint from the specified tuple" {
+		It "should create an order hint from the specified array" {
 			[SqlOrderHint] $orderHint = "ID", "Descending"
 			$orderHint.Column | Should -BeExactly ID
 			$orderHint.SortOrder | Should -Be ([SortOrder]::Descending)
+		}
 
-			$orderHint = [ValueTuple]::Create("ID", [SortOrder]::Descending)
+		It "should create an order hint from the specified tuple" {
+			[SqlOrderHint] $orderHint = [ValueTuple]::Create("ID", [SortOrder]::Descending)
 			$orderHint.Column | Should -BeExactly ID
 			$orderHint.SortOrder | Should -Be ([SortOrder]::Descending)
 		}
