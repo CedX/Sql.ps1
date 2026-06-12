@@ -1,7 +1,7 @@
 using namespace System.Diagnostics.CodeAnalysis
 using assembly ../../Binaries/System.Data.SQLite.dll
 using module ../../Sql.psd1
-using module ../Fixtures/Character.psm1
+using module ../Character.psm1
 
 <#
 .SYNOPSIS
