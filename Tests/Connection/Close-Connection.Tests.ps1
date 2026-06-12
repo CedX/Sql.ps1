@@ -9,7 +9,7 @@ using module ../../Sql.psd1
 Describe "Close-Connection" {
 	It "should close the specified connection" {
 		$connection = [System.Data.SQLite.SQLiteConnection]::new("DataSource=:memory:")
-		$connection.Open()
+		Open-SqlConnection $connection
 		$connection.State | Should -Be ([ConnectionState]::Open)
 		Close-SqlConnection $connection
 		$connection.State | Should -Be ([ConnectionState]::Closed)

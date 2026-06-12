@@ -40,7 +40,7 @@ function New-Connection {
 		}
 
 		$connection = [IDbConnection] [Activator]::CreateInstance($connectionType, $ConnectionString)
-		if ($Open) { $connection.Open() }
+		if ($Open) { Open-SqlConnection $connection }
 		$connection
 	}
 }

@@ -21,6 +21,6 @@ function Start-Transaction {
 		[IsolationLevel] $IsolationLevel = [IsolationLevel]::Unspecified
 	)
 
-	if ($Connection.State -eq [ConnectionState]::Closed) { $Connection.Open() }
+	if ($Connection.State -eq [ConnectionState]::Closed) { Open-SqlConnection $Connection }
 	$Connection.BeginTransaction($IsolationLevel)
 }
