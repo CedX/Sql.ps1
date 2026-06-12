@@ -113,7 +113,7 @@ function Publish-Object {
 
 		$id = Get-Scalar $Connection -As ([long]) -Command $command -Parameters $parameters
 		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
-		if ($column) { $column.SetValue($InputObject, [SqlMapper]::ChangeType($id, $column)) }
+		if ($column) { $column.SetValue($InputObject, [SqlMapper]::Instance.ChangeType($id, $column)) }
 		$id
 	}
 }

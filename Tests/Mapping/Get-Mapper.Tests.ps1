@@ -14,6 +14,66 @@ Describe "Get-Mapper" {
 		Get-SqlMapper | Should -BeExactly (Get-SqlMapper)
 	}
 
+	Context "ChangeType" {
+		It "convert the specified value to an object of the given type" -ForEach @(
+			@{ Value = $null; ConversionType = [bool]; IsNullable = $false; Expected = $false }
+			@{ Value = $null; ConversionType = [Nullable[bool]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [bool]; IsNullable = $false; Expected = $false }
+			@{ Value = 0; ConversionType = [Nullable[bool]]; IsNullable = $true; Expected = $false }
+			@{ Value = 1; ConversionType = [bool]; IsNullable = $false; Expected = $true }
+			@{ Value = 1; ConversionType = [Nullable[bool]]; IsNullable = $true; Expected = $true }
+			@{ Value = "false"; ConversionType = [bool]; IsNullable = $false; Expected = $false }
+			@{ Value = "true"; ConversionType = [bool]; IsNullable = $false; Expected = $true }
+
+			@{ Value = $null; ConversionType = [char]; IsNullable = $false; Expected = [char]::MinValue }
+			@{ Value = $null; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [char]; IsNullable = $false; Expected = [char]::MinValue }
+			@{ Value = 65535; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = [char]::MaxValue }
+			@{ Value = 97; ConversionType = [char]; IsNullable = $false; Expected = 'a' }
+			@{ Value = 98; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = 'b' }
+			@{ Value = "a"; ConversionType = [char]; IsNullable = $false; Expected = 'a' }
+			@{ Value = "b"; ConversionType = [Nullable[char]]; IsNullable = $true; Expected = 'b' }
+
+			@{ Value = $null; ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::MinValue }
+			@{ Value = $null; ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = $null }
+			@{ Value = [datetime]::MaxValue; ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::MaxValue }
+			@{ Value = [datetime]::UnixEpoch; ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = [datetime]::UnixEpoch }
+			@{ Value = [datetime]::new(2025, 6, 7, 10, 45, 1); ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::new(2025, 6, 7, 10, 45, 1) }
+			@{ Value = [datetime]::new(2026, 1, 31); ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = [datetime]::new(2026, 1, 31) }
+			@{ Value = "2025-06-07 10:45:01"; ConversionType = [datetime]; IsNullable = $false; Expected = [datetime]::new(2025, 6, 7, 10, 45, 1) }
+			@{ Value = "2025-06-07T10:45:01"; ConversionType = [Nullable[datetime]]; IsNullable = $true; Expected = [datetime]::new(2025, 6, 7, 10, 45, 1) }
+
+			@{ Value = $null; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Sunday }
+			@{ Value = $null; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Sunday }
+			@{ Value = 1; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = [DayOfWeek]::Monday }
+			@{ Value = 5; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Friday }
+			@{ Value = 6; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = [DayOfWeek]::Saturday }
+			@{ Value = "sunday"; ConversionType = [DayOfWeek]; IsNullable = $false; Expected = [DayOfWeek]::Sunday }
+			@{ Value = "friday"; ConversionType = [Nullable[DayOfWeek]]; IsNullable = $true; Expected = [DayOfWeek]::Friday }
+
+			@{ Value = $null; ConversionType = [double]; IsNullable = $false; Expected = 0.0 }
+			@{ Value = $null; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [double]; IsNullable = $false; Expected = 0.0 }
+			@{ Value = 0; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = 0.0 }
+			@{ Value = 123; ConversionType = [double]; IsNullable = $false; Expected = 123.0 }
+			@{ Value = -123.456; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = -123.456 }
+			@{ Value = "123"; ConversionType = [double]; IsNullable = $false; Expected = 123.0 }
+			@{ Value = "-123.456"; ConversionType = [Nullable[double]]; IsNullable = $true; Expected = -123.456 }
+
+			@{ Value = $null; ConversionType = [int]; IsNullable = $false; Expected = 0 }
+			@{ Value = $null; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = $null }
+			@{ Value = 0; ConversionType = [int]; IsNullable = $false; Expected = 0 }
+			@{ Value = 0; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = 0 }
+			@{ Value = 123; ConversionType = [int]; IsNullable = $false; Expected = 123 }
+			@{ Value = -123.456; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = -123 }
+			@{ Value = "123"; ConversionType = [int]; IsNullable = $false; Expected = 123 }
+			@{ Value = "-123"; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = -123 }
+		) {
+			[SqlMapper]::Instance.ChangeType($value, $conversionType, $isNullable) | Should -BeExactly $expected
+		}
+	}
+
 	Context "CreateInstance" {
 		It "should create a [psobject] instance" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
