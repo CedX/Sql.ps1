@@ -1,5 +1,6 @@
-using module ../Sources/DbTableInfo.psm1
-using module ./Fixtures/Character.psm1
+using namespace Belin.Sql
+using module ../Sql.psd1
+using module ./Character.psm1
 
 <#
 .SYNOPSIS
