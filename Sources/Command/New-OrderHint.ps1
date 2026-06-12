@@ -1,4 +1,5 @@
 using namespace Belin.Sql
+using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS

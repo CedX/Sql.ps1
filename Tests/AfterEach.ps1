@@ -1,1 +1,2 @@
 $connection.Close()
+$connection.Dispose()

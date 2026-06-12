@@ -4,7 +4,6 @@ using namespace System.ComponentModel.DataAnnotations.Schema
 .SYNOPSIS
 	Represents a fictional character from a well-known saga.
 #>
-[NoRunspaceAffinity()]
 [Table("Characters", Schema = "main")]
 class Character {
 
