@@ -12,7 +12,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function New-CommandBuilder {
 	[CmdletBinding(DefaultParameterSetName = "Connection")]
 	[OutputType([Belin.Sql.SqlCommandBuilder])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, ParameterSetName = "Connection", Position = 0)]

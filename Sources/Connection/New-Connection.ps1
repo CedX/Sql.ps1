@@ -10,12 +10,12 @@ using namespace System.Diagnostics.CodeAnalysis
 	The newly created database connection.
 #>
 function New-Connection {
-	[CmdletBinding(DefaultParameterSetName = "Type")]
+	[CmdletBinding(DefaultParameterSetName = "Class")]
 	[OutputType([System.Data.IDbConnection])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The type of connection class to instantiate.
-		[Parameter(Mandatory, ParameterSetName = "Type", Position = 0)]
+		[Parameter(Mandatory, ParameterSetName = "Class", Position = 0)]
 		[Type] $Class,
 
 		# The name of an ADO.NET provider.
@@ -39,8 +39,8 @@ function New-Connection {
 			default { $Class }
 		}
 
-		$connection = [IDbConnection] [Activator]::CreateInstance($connectionType, $ConnectionString)
-		if ($Open) { Open-SqlConnection $connection }
+		$connection = [IDbConnection] [Activator]::CreateInstance($connectionType, @($ConnectionString))
+		if ($Open) { $connection.Open() }
 		$connection
 	}
 }

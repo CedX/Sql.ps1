@@ -13,7 +13,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function Update-Object {
 	[CmdletBinding()]
 	[OutputType([int])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]

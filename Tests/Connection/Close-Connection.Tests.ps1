@@ -1,5 +1,4 @@
 using namespace System.Data
-using namespace System.Data.SQLite
 using assembly ../../Binaries/System.Data.SQLite.dll
 using module ../../Sql.psd1
 
@@ -9,7 +8,7 @@ using module ../../Sql.psd1
 #>
 Describe "Close-Connection" {
 	It "should close the specified connection" {
-		$connection = [SQLiteConnection]::new("DataSource=:memory:")
+		$connection = [System.Data.SQLite.SQLiteConnection]::new("DataSource=:memory:")
 		$connection.Open()
 		$connection.State | Should -Be ([ConnectionState]::Open)
 		Close-SqlConnection $connection

@@ -13,8 +13,8 @@ using namespace System.Diagnostics.CodeAnalysis
 function Measure-Object {
 	[CmdletBinding()]
 	[OutputType([int])]
-	[SuppressMessage("PSAvoidOverwritingBuiltInCmdlets")]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
+	[SuppressMessage("PSAvoidOverwritingBuiltInCmdlets", "")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]

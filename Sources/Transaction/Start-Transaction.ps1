@@ -10,7 +10,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function Start-Transaction {
 	[CmdletBinding()]
 	[OutputType([System.Data.IDbTransaction])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]

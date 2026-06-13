@@ -13,7 +13,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function New-Parameter {
 	[CmdletBinding()]
 	[OutputType([Belin.Sql.SqlParameter])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The parameter name.
 		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
