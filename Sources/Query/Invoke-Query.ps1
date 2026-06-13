@@ -32,22 +32,6 @@ function Invoke-Query {
 		[string[]] $SplitOn = @()
 	)
 
-	begin {
-		$dbCommand = $null
-		$reader = $null
-		if ($Connection.State -eq [ConnectionState]::Closed) { Open-SqlConnection $Connection }
-	}
-
-	end {
-		$dbCommand = $Command.ToDbCommand($Connection, $Parameters)
-		$reader = $dbCommand.ExecuteReader()
-		while ($reader.Read()) {
-			$As.Count -gt 1 ? [SqlMapper]::Instance.CreateInstance($As, $reader, $SplitOn) : [SqlMapper]::Instance.CreateInstance($As[0], $reader)
-		}
-	}
-
-	clean {
-		${reader}?.Close()
-		${dbCommand}?.Dispose()
-	}
+	if ($As.Count -gt 1) { [DbConnectionExtensions]::Query($Connection, $As, $Command, $Parameters, $SplitOn) }
+	else { [DbConnectionExtensions]::Query($Connection, $As[0], $Command, $Parameters) }
 }

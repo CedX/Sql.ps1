@@ -28,13 +28,13 @@ Describe "Invoke-Query" {
 		$records = Invoke-SqlQuery $connection -As ([psobject], [psobject]) -Command $sql -Parameters @{ FirstName = "Frodo" } -SplitOn id
 		$records | Should -HaveCount 1
 
-		$left = $records[0]
+		$left = $records.Item1
 		$left.ID | Should -Be 6
 		$left.firstName | Should -BeExactly Frodo
 		$left.lastName | Should -BeExactly Baggins
 		$left.fullName | Should -BeNullOrEmpty
 
-		$right = $records[1]
+		$right = $records.Item2
 		$right.ID | Should -Be 6
 		$right.fullName | Should -BeExactly "Frodo Baggins"
 		$right.gender | Should -BeExactly Hobbit
