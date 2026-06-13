@@ -12,7 +12,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function New-OrderHint {
 	[CmdletBinding()]
 	[OutputType([Belin.Sql.SqlOrderHint])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
 	param (
 		# The name of the column for which the hint is being provided.
 		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]

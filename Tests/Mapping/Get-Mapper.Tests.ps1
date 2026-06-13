@@ -1,4 +1,4 @@
-using namespace Belin.Sql
+﻿using namespace Belin.Sql
 using namespace System.Collections.Generic
 using namespace System.Diagnostics.CodeAnalysis
 using module ../../Sql.psd1

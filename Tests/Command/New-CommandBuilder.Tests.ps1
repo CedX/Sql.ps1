@@ -1,4 +1,4 @@
-using namespace System.Diagnostics.CodeAnalysis
+﻿using namespace System.Diagnostics.CodeAnalysis
 using assembly ../../Binaries/System.Data.SQLite.dll
 using module ../../Sql.psd1
 using module ../Character.psm1
@@ -9,10 +9,10 @@ using module ../Character.psm1
 #>
 Describe "New-CommandBuilder" {
 	BeforeAll {
-		[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
+		[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments")]
 		$character = [Character]@{ Id = 1000; FirstName = "Cédric"; Gender = [CharacterGender]::DarkLord }
 
-		[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
+		[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments")]
 		$connection = New-SqlConnection ([System.Data.SQLite.SQLiteConnection]) "DataSource=:memory:"
 	}
 

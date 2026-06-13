@@ -16,7 +16,7 @@ function Remove-Object {
 	[CmdletBinding(DefaultParameterSetName = "InputObject")]
 	[OutputType([bool])]
 	[OutputType([void])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]

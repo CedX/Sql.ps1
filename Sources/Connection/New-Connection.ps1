@@ -12,7 +12,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function New-Connection {
 	[CmdletBinding(DefaultParameterSetName = "Type")]
 	[OutputType([System.Data.IDbConnection])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
 	param (
 		# The type of connection class to instantiate.
 		[Parameter(Mandatory, ParameterSetName = "Type", Position = 0)]

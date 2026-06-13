@@ -12,7 +12,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function New-OrderHintCollection {
 	[CmdletBinding()]
 	[OutputType([Belin.Sql.SqlOrderHintCollection])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
 	param (
 		# The collection whose elements are copied to the order hint collection.
 		[Parameter(Position = 0, ValueFromPipeline)]

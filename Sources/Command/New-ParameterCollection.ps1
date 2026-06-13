@@ -12,7 +12,7 @@ using namespace System.Diagnostics.CodeAnalysis
 function New-ParameterCollection {
 	[CmdletBinding()]
 	[OutputType([Belin.Sql.SqlParameterCollection])]
-	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions")]
 	param (
 		# The collection whose elements are copied to the parameter collection.
 		[Parameter(Position = 0, ValueFromPipeline)]

@@ -1,4 +1,4 @@
-using module ../../Sql.psd1
+﻿using module ../../Sql.psd1
 using module ../Character.psm1
 
 <#
