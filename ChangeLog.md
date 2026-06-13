@@ -4,7 +4,7 @@
 - Breaking change: renamed the `Approve-SqlTransaction` cmdlet to `Complete-SqlTransaction`.
 - Breaking change: renamed the `Deny-SqlTransaction` cmdlet to `Undo-SqlTransaction`.
 - Breaking change: renamed the `New-SqlTransaction` cmdlet to `Start-SqlTransaction`.
-- Added the `Open-SqlConnection` cmdlet.
+- Added the `Measure-SqlObject` and `Open-SqlConnection` cmdlets.
 
 ## Version [2.0.1](https://github.com/CedX/Sql.ps1/compare/v2.0.0...v2.0.1)
 - Fixed the default value of the `SqlCommandBuilder.SupportsTruncateTable` property.
