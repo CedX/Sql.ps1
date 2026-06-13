@@ -49,22 +49,9 @@ function Remove-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		$Builder ??= New-CommandBuilder $Connection
-	}
-
+	begin { $Builder ??= New-CommandBuilder $Connection }
 	process {
-		if ($All) {
-			$command = $Builder.GetDeleteAllCommand($Class, $Truncate)
-			$command.Item1.Timeout = $Timeout
-			$command.Item1.Transaction = $Transaction
-			Invoke-NonQuery $Connection -Command $command.Item1 -Parameters $command.Item2 | Out-Null
-		}
-		else {
-			$command = $Builder.GetDeleteCommand($InputObject)
-			$command.Item1.Timeout = $Timeout
-			$command.Item1.Transaction = $Transaction
-			(Invoke-NonQuery $Connection -Command $command.Item1 -Parameters $command.Item2) -gt 0
-		}
+		if ($All) { [DbConnectionExtensions]::DeleteAll($Connection, $Class, $Truncate, $Timeout, $Transaction, $Builder) }
+		else { [DbConnectionExtensions]::Delete($Connection, $InputObject, $Timeout, $Transaction, $Builder) -gt 0 }
 	}
 }

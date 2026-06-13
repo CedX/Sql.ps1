@@ -32,18 +32,6 @@ function Publish-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		$Builder ??= New-CommandBuilder $Connection
-	}
-
-	process {
-		$command = $Builder.GetInsertCommand($InputObject)
-		$command.Item1.Timeout = $Timeout
-		$command.Item1.Transaction = $Transaction
-
-		$id = Get-Scalar $Connection -As ([long]) -Command $command.Item1 -Parameters $command.Item2
-		$column = [SqlMapper]::Instance.GetTable($InputObject.GetType()).IdentityColumn
-		if ($column) { $column.SetValue($InputObject, [SqlMapper]::Instance.ChangeType($id, $column)) }
-		$id
-	}
+	begin { $Builder ??= New-CommandBuilder $Connection }
+	process { [DbConnectionExtensions]::Insert($Connection, $InputObject, $Timeout, $Transaction, $Builder) }
 }

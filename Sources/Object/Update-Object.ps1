@@ -38,14 +38,6 @@ function Update-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		$Builder ??= New-CommandBuilder $Connection
-	}
-
-	process {
-		$command = $Builder.GetUpdateCommand($InputObject, $Columns)
-		$command.Item1.Timeout = $Timeout
-		$command.Item1.Transaction = $Transaction
-		Invoke-NonQuery $Connection -Command $command.Item1 -Parameters $command.Item2
-	}
+	begin { $Builder ??= New-CommandBuilder $Connection }
+	process { [DbConnectionExtensions]::Update($Connection, $InputObject, $Columns, $Timeout, $Transaction, $Builder) }
 }

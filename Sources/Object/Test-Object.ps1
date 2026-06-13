@@ -36,14 +36,6 @@ function Test-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		$Builder ??= New-CommandBuilder $Connection
-	}
-
-	process {
-		$command = $Builder.GetExistsCommand($Class, $Id)
-		$command.Item1.Timeout = $Timeout
-		$command.Item1.Transaction = $Transaction
-		Get-Scalar $Connection -As ([bool]) -Command $command.Item1 -Parameters $command.Item2
-	}
+	begin { $Builder ??= New-CommandBuilder $Connection }
+	process { [DbConnectionExtensions]::Exists($Connection, $Class, $Id, $Timeout, $Transaction, $Builder) }
 }

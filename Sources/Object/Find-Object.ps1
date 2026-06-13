@@ -48,22 +48,9 @@ function Find-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin {
-		$Builder ??= New-CommandBuilder $Connection
-	}
-
+	begin { $Builder ??= New-CommandBuilder $Connection }
 	process {
-		if ($All) {
-			$command = $Builder.GetFindAllCommand($Class, $OrderBy, $Columns)
-			$command.Item1.Timeout = $Timeout
-			$command.Item1.Transaction = $Transaction
-			Invoke-Query $Connection -As $Class -Command $command.Item1
-		}
-		else {
-			$command = $Builder.GetFindCommand($Class, $Id, $Columns)
-			$command.Item1.Timeout = $Timeout
-			$command.Item1.Transaction = $Transaction
-			Get-Single $Connection -As $Class -Command $command.Item1 -ErrorAction Ignore -Parameters $command.Item2
-		}
+		if ($All) { [DbConnectionExtensions]::FindAll($Connection, $Class, $OrderBy, $Columns, $Timeout, $Transaction, $Builder) }
+		else { [DbConnectionExtensions]::Find($Connection, $Class, $Id, $Columns, $Timeout, $Transaction, $Builder) }
 	}
 }
