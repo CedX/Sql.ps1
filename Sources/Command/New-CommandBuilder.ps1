@@ -68,15 +68,18 @@ function New-CommandBuilder {
 		[switch] $UsePositionalParameters
 	)
 
-	$Connection ? [SqlCommandBuilder]::Create($Connection) : [SqlCommandBuilder]@{
-		CatalogLocation = $CatalogLocation
-		CatalogSeparator = $CatalogSeparator
-		LastInsertIdFunction = $LastInsertIdFunction
-		ParameterPrefix = $ParameterPrefix
-		QuotePrefix = $QuotePrefix
-		QuoteSuffix = $QuoteSuffix
-		SchemaSeparator = $SchemaSeparator
-		SupportsReturningClause = $SupportsReturningClause
-		UsePositionalParameters = $UsePositionalParameters
+	if ($Connection) { [SqlCommandBuilder]::Create($Connection) }
+	else {
+		[SqlCommandBuilder]@{
+			CatalogLocation = $CatalogLocation
+			CatalogSeparator = $CatalogSeparator
+			LastInsertIdFunction = $LastInsertIdFunction
+			ParameterPrefix = $ParameterPrefix
+			QuotePrefix = $QuotePrefix
+			QuoteSuffix = $QuoteSuffix
+			SchemaSeparator = $SchemaSeparator
+			SupportsReturningClause = $SupportsReturningClause
+			UsePositionalParameters = $UsePositionalParameters
+		}
 	}
 }
