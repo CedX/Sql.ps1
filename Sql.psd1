@@ -25,6 +25,7 @@
 		"Get-Single"
 		"Invoke-NonQuery"
 		"Invoke-Query"
+		"Measure-Object"
 		"New-Command"
 		"New-CommandBuilder"
 		"New-Connection"
