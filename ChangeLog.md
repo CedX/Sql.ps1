@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [3.0.1](https://github.com/CedX/Sql.ps1/compare/v3.0.0...v3.0.1)
+- Fixed the `New-SqlCommandBuilder` cmdlet when using the [SQL Server](https://www.microsoft.com/en-us/sql-server) provider.
+
 ## Version [3.0.0](https://github.com/CedX/Sql.ps1/compare/v2.0.1...v3.0.0)
 - Breaking change: renamed the `Approve-SqlTransaction` cmdlet to `Complete-SqlTransaction`.
 - Breaking change: renamed the `Deny-SqlTransaction` cmdlet to `Undo-SqlTransaction`.
