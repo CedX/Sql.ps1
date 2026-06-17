@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [3.0.2](https://github.com/CedX/Sql.ps1/compare/v3.0.1...v3.0.2)
+- Fixed the `Get-SqlScalar` cmdlet when using a nullable type or a reference type as target type.
+
 ## Version [3.0.1](https://github.com/CedX/Sql.ps1/compare/v3.0.0...v3.0.1)
 - Fixed the `New-SqlCommandBuilder` cmdlet when using the [SQL Server](https://www.microsoft.com/en-us/sql-server) provider.
 
