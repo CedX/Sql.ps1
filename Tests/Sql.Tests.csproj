@@ -4,7 +4,7 @@
 		<Copyright>© Cédric Belin</Copyright>
 		<Description>A simple micro-ORM, based on ADO.NET and data annotations.</Description>
 		<Product>SQL Mapper for PowerShell</Product>
-		<Version>3.0.1</Version>
+		<Version>3.0.2</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
