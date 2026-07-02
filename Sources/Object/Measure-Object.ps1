@@ -39,6 +39,11 @@ function Measure-Object {
 		[IDbTransaction] $Transaction
 	)
 
-	begin { $Builder ??= New-CommandBuilder $Connection }
-	process { [DbConnectionExtensions]::CountAll($Connection, $Class, $Timeout, $Transaction, $Builder) }
+	begin {
+		$Builder ??= New-CommandBuilder $Connection
+	}
+
+	process {
+		if ($All) { [DbConnectionExtensions]::CountAll($Connection, $Class, $Timeout, $Transaction, $Builder) }
+	}
 }

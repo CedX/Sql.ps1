@@ -12,6 +12,7 @@ using namespace System.Data
 function Find-Object {
 	[CmdletBinding(DefaultParameterSetName = "Id")]
 	[OutputType([object])]
+	[OutputType([System.Collections.Generic.IList[object]])]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]

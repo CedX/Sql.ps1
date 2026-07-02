@@ -9,7 +9,8 @@ using namespace System.Data
 #>
 function Invoke-Query {
 	[CmdletBinding()]
-	[OutputType([object])]
+	[OutputType([System.Collections.Generic.IList[object]])]
+	[OutputType([System.Collections.Generic.IList[System.Runtime.CompilerServices.ITuple]])]
 	param (
 		# The connection to the data source.
 		[Parameter(Mandatory, Position = 0)]
