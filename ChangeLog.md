@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [3.0.3](https://github.com/CedX/Sql.ps1/compare/v3.0.2...v3.0.3)
+- Fixed the `(Get-SqlMapper).ChangeType()` method when the value to convert is `DBNull.Value`.
+
 ## Version [3.0.2](https://github.com/CedX/Sql.ps1/compare/v3.0.1...v3.0.2)
 - Fixed the `Get-SqlScalar` cmdlet when using a nullable type or a reference type as target type.
 
