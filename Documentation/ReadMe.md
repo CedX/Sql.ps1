@@ -4,7 +4,7 @@ based on [ADO.NET](https://learn.microsoft.com/en-us/dotnet/framework/data/adone
 If you like [SQL](https://en.wikipedia.org/wiki/SQL) but dislike the boilerplate of ADO.NET: **SQL Mapper for PowerShell** might be for you!
 
 > [!NOTE]
-> Think of [Dapper](https://www.learndapper.com) and its alternatives, but specifically designed for [PowerShell](https://learn.microsoft.com/en-us/powershell).
+> Think of [Dapper](https://www.learndapper.com) and its alternatives, but specifically designed for PowerShell.
 
 ## Quick start
 Install the latest version of **SQL Mapper for PowerShell**
