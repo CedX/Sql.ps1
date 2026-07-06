@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [3.1.0](https://github.com/CedX/Sql.ps1/compare/v3.0.3...v3.1.0)
+- Added support for SQL parameter values wrapped in `PSObject` instances.
+
 ## Version [3.0.3](https://github.com/CedX/Sql.ps1/compare/v3.0.2...v3.0.3)
 - Fixed the `(Get-SqlMapper).ChangeType()` method when the value to convert is `DBNull.Value`.
 
