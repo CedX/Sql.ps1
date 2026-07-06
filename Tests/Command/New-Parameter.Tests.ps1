@@ -76,5 +76,10 @@ Describe "New-Parameter" {
 			$parameter = New-SqlParameter Name $value
 			$parameter.Value | Should -BeExactly $expected
 		}
+
+		It "should support the values wrapped in a [psobject] instance" -ForEach ([DBNull]::Value, "Foo", [datetime]::UnixEpoch) {
+			$parameter = New-SqlParameter Name ([psobject]::AsPSObject($_))
+			$parameter.Value | Should -BeExactly $_
+		}
 	}
 }
