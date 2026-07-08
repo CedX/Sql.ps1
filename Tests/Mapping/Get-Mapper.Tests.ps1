@@ -119,9 +119,9 @@ Describe "Get-Mapper" {
 			$table.Columns.gender.PropertyType | Should -Be ([CharacterGender])
 			$table.Columns.lastName.PropertyType | Should -Be ([string])
 
-			$table.Columns.firstName.CanWrite | Should -BeTrue
-			$table.Columns.fullName.IsComputed | Should -BeTrue
-			$table.Columns.ID.IsIdentity | Should -BeTrue
+			$table.Columns.firstName.CanWrite | Should-BeTrue
+			$table.Columns.fullName.IsComputed | Should-BeTrue
+			$table.Columns.ID.IsIdentity | Should-BeTrue
 		}
 	}
 }

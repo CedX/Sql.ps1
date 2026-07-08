@@ -33,13 +33,13 @@ Describe "New-OrderHintCollection" {
 	Context "Contains" {
 		It "should return `$true if the collection contains the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint Key)
-			$collection.Contains("key") | Should -BeTrue
-			$collection.Contains("KEY") | Should -BeTrue
+			$collection.Contains("key") | Should-BeTrue
+			$collection.Contains("KEY") | Should-BeTrue
 		}
 
 		It "should return `$false if the collection does not contain the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint Key)
-			$collection.Contains("foo") | Should -BeFalse
+			$collection.Contains("foo") | Should-BeFalse
 		}
 	}
 

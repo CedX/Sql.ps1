@@ -54,14 +54,14 @@ Describe "New-ParameterCollection" {
 	Context "Contains" {
 		It "should return `$true if the collection contains the specified parameter" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
-			$collection.Contains("Key") | Should -BeTrue
-			$collection.Contains("@Key") | Should -BeTrue
+			$collection.Contains("Key") | Should-BeTrue
+			$collection.Contains("@Key") | Should-BeTrue
 		}
 
 		It "should return `$false if the collection does not contain the specified parameter" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
-			$collection.Contains("Foo") | Should -BeFalse
-			$collection.Contains("@Foo") | Should -BeFalse
+			$collection.Contains("Foo") | Should-BeFalse
+			$collection.Contains("@Foo") | Should-BeFalse
 		}
 	}
 

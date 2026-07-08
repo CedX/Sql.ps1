@@ -22,8 +22,8 @@ Describe "Remove-Object" {
 		It "should delete the entity with the specified identifier" {
 			$sql = "SELECT * FROM Characters WHERE ID = @Id"
 			$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 }
-			Remove-SqlObject $connection -InputObject $record | Should -BeTrue
-			Remove-SqlObject $connection -InputObject $record | Should -BeFalse
+			Remove-SqlObject $connection -InputObject $record | Should-BeTrue
+			Remove-SqlObject $connection -InputObject $record | Should-BeFalse
 			Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore | Should -BeNullOrEmpty
 		}
 	}

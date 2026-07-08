@@ -10,13 +10,13 @@ using module ../Character.psm1
 Describe "DbColumnInfo" {
 	Context "CanRead" {
 		It "should return `$true if the property can be read" -ForEach "FirstName", "FullName", "Gender", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanRead | Should -BeTrue
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanRead | Should-BeTrue
 		}
 	}
 
 	Context "CanWrite" {
 		It "should return `$true if the property can be written" -ForEach "FirstName", "FullName", "Gender", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanWrite | Should -BeTrue
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanWrite | Should-BeTrue
 		}
 	}
 
@@ -33,31 +33,31 @@ Describe "DbColumnInfo" {
 
 	Context "IsComputed" {
 		It "should return `$false if the property is not computed" -ForEach "FirstName", "Gender" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeFalse
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should-BeFalse
 		}
 
 		It "should return `$true if the property is computed" -ForEach "FullName", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should -BeTrue
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should-BeTrue
 		}
 	}
 
 	Context "IsIdentity" {
 		It "should return `$false if the property is not an identity" -ForEach "FirstName", "FullName", "Gender" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeFalse
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should-BeFalse
 		}
 
 		It "should return `$true if the property is an identity" -ForEach "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should -BeTrue
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should-BeTrue
 		}
 	}
 
 	Context "IsNullable" {
 		It "should return `$false if the property is not nullable" -ForEach "FirstName", "Gender", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeFalse
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should-BeFalse
 		}
 
 		It "should return `$true if the property is nullable" -ForEach "FullName" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should -BeTrue
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should-BeTrue
 		}
 	}
 
