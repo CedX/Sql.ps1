@@ -12,7 +12,7 @@ Describe "Find-Object" {
 	Context "All" {
 		It "should return the complete list of entities, sorted by default according to the identity column" {
 			$records = Find-SqlObject $connection -All -Class ([Character])
-			$records | Should -HaveCount 16
+			Should-Be 16 $records.Count
 			$records[0].Id | Should -Be 1
 			$records[0].FullName | Should -BeExactly Aragorn
 			$records[15].Id | Should -Be 16
@@ -21,7 +21,7 @@ Describe "Find-Object" {
 
 		It "should allow sorting the results by a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -OrderBy ([ordered]@{ gender = "Ascending"; fullName = "Descending" })
-			$records | Should -HaveCount 16
+			Should-Be 16 $records.Count
 			$records[0].Id | Should -Be 11
 			$records[0].FullName | Should -BeExactly Gothmog
 			$records[15].Id | Should -Be 8

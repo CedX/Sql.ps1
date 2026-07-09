@@ -24,7 +24,7 @@ Describe "Remove-Object" {
 			$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 }
 			Remove-SqlObject $connection -InputObject $record | Should-BeTrue
 			Remove-SqlObject $connection -InputObject $record | Should-BeFalse
-			Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore | Should -BeNullOrEmpty
+			Should-BeNull (Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore)
 		}
 	}
 }

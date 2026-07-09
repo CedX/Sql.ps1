@@ -10,12 +10,12 @@ Describe "Invoke-NonQuery" {
 
 	It "should return the number of rows affected by the SQL query" {
 		$parameters = @{ Gender = "Balrog" }
-		Get-SqlScalar $connection -Command "SELECT COUNT(*) FROM Characters" | Should -Be 16
-		Invoke-SqlNonQuery $connection -Command "DELETE FROM Characters WHERE Gender = @Gender" -Parameters $parameters | Should -Be 2
-		Get-SqlScalar $connection -Command "SELECT COUNT(*) FROM Characters" | Should -Be 14
+		Should-Be 16 (Get-SqlScalar $connection -Command "SELECT COUNT(*) FROM Characters")
+		Should-Be 2 (Invoke-SqlNonQuery $connection -Command "DELETE FROM Characters WHERE Gender = @Gender" -Parameters $parameters)
+		Should-Be 14 (Get-SqlScalar $connection -Command "SELECT COUNT(*) FROM Characters")
 
 		$parameters = @{ Gender = "Elf" }
-		Invoke-SqlNonQuery $connection -Command "DELETE FROM Characters WHERE Gender = @Gender" -Parameters $parameters | Should -Be 3
-		Get-SqlScalar $connection -Command "SELECT COUNT(*) FROM Characters" | Should -Be 11
+		Should-Be 3 (Invoke-SqlNonQuery $connection -Command "DELETE FROM Characters WHERE Gender = @Gender" -Parameters $parameters)
+		Should-Be 11 (Get-SqlScalar $connection -Command "SELECT COUNT(*) FROM Characters")
 	}
 }

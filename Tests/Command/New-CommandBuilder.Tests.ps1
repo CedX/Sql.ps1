@@ -122,7 +122,7 @@ Describe "New-CommandBuilder" {
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetInsertCommand($character)
-			$command.Item2 | Should -HaveCount 3
+			Should-Be 3 $command.Item2.Count
 			$command.Item2["firstName"].Value | Should -BeExactly Cédric
 			$command.Item2["gender"].Value | Should -BeExactly DarkLord
 			$command.Item2["lastName"].Value | Should -Be ""
@@ -139,7 +139,7 @@ Describe "New-CommandBuilder" {
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character)
-			$command.Item2 | Should -HaveCount 4
+			Should-Be 4 $command.Item2.Count
 			$command.Item2["ID"].Value | Should -Be 1000
 			$command.Item2["firstName"].Value | Should -BeExactly Cédric
 			$command.Item2["gender"].Value | Should -BeExactly DarkLord
@@ -148,7 +148,7 @@ Describe "New-CommandBuilder" {
 
 		It "should allow updating a specific set of columns" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character, "firstName")
-			$command.Item2 | Should -HaveCount 2
+			Should-Be 2 $command.Item2.Count
 			$command.Item2["ID"].Value | Should -Be 1000
 			$command.Item2["firstName"].Value | Should -BeExactly Cédric
 		}

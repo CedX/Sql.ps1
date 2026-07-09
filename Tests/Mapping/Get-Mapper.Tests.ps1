@@ -114,7 +114,7 @@ Describe "Get-Mapper" {
 			$table.Name | Should -BeExactly Characters
 			$table.Type | Should -Be ([Character])
 
-			$table.Columns.Keys | Should -HaveCount 5
+			Should-Be 5 $table.Columns.Count
 			$table.IdentityColumn | Should -Be $table.Columns.ID
 			$table.Columns.gender.PropertyType | Should -Be ([CharacterGender])
 			$table.Columns.lastName.PropertyType | Should -Be ([string])

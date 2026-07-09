@@ -12,7 +12,7 @@ Describe "DbTableInfo" {
 			[DbTableInfo]::new([ConsoleKeyInfo]).Columns.Keys | Should -BeNullOrEmpty
 
 			$columns = [DbTableInfo]::new([Character]).Columns
-			$columns.Keys | Should -HaveCount 5
+			Should-Be 5 $columns.Count
 			"firstName", "fullName", "gender", "ID", "lastName" | Should -BeIn $columns.Keys
 		}
 	}

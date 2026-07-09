@@ -13,7 +13,7 @@ Describe "New-OrderHintCollection" {
 
 	It "should create a collection from a single order hint" {
 		$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending)
-		$collection | Should -HaveCount 1
+		Should-Be 1 $collection.Count
 
 		$orderHint = $collection[0]
 		$orderHint.Column | Should -BeExactly ID
@@ -23,7 +23,7 @@ Describe "New-OrderHintCollection" {
 	It "should create a collection from an array of order hints" {
 		$orderHints = (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
 		$collection = New-SqlOrderHintCollection $orderHints
-		$collection | Should -HaveCount 2
+		Should-Be 2 $collection.Count
 
 		$orderHint = $collection[$collection.Count - 1]
 		$orderHint.Column | Should -BeExactly Name
@@ -98,9 +98,9 @@ Describe "New-OrderHintCollection" {
 	Context "RemoveAt" {
 		It "should remove the order hint with the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			$collection | Should -HaveCount 2
+			Should-Be 2 $collection.Count
 			$collection.RemoveAt("name")
-			$collection | Should -HaveCount 1
+			Should-Be 1 $collection.Count
 			$collection.RemoveAt("id")
 			$collection | Should -BeNullOrEmpty
 		}

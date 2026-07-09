@@ -16,6 +16,6 @@ Describe "Get-Scalar" {
 		Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "Characters"; Type = "table" } | Should -BeExactly Characters
 
 		$sql = "SELECT tbl_name FROM sqlite_schema WHERE name = @Name"
-		Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "FooBarBazQux" } | Should -BeNullOrEmpty
+		Should-BeNull (Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "FooBarBazQux" })
 	}
 }

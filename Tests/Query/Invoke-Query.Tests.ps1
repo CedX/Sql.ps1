@@ -12,7 +12,7 @@ Describe "Invoke-Query" {
 	It "should return the records produced by the SQL query" {
 		$sql = "SELECT * FROM Characters WHERE gender = @Gender ORDER BY fullName"
 		$records = Invoke-SqlQuery $connection -As ([Character]) -Command $sql -Parameters @{ Gender = "Elf" }
-		$records | Should -HaveCount 3
+		Should-Be 3 $records.Count
 
 		$elrond = $records[0]
 		$elrond.FullName | Should -BeExactly Elrond
@@ -26,18 +26,18 @@ Describe "Invoke-Query" {
 	It "should allow the data rows to be split into distinct objects" {
 		$sql = "SELECT ID, firstName, lastName, ID, fullName, gender FROM Characters WHERE firstName = @FirstName"
 		$records = Invoke-SqlQuery $connection -As ([psobject], [psobject]) -Command $sql -Parameters @{ FirstName = "Frodo" } -SplitOn id
-		$records | Should -HaveCount 1
+		Should-Be 1 $records.Count
 
 		$left = $records.Item1
-		$left.ID | Should -Be 6
+		Should-Be 6 $left.ID
 		$left.firstName | Should -BeExactly Frodo
 		$left.lastName | Should -BeExactly Baggins
-		$left.fullName | Should -BeNullOrEmpty
+		Should-BeNull $left.fullName
 
 		$right = $records.Item2
-		$right.ID | Should -Be 6
+		Should-Be 6 $right.ID
 		$right.fullName | Should -BeExactly "Frodo Baggins"
 		$right.gender | Should -BeExactly Hobbit
-		$right.firstName | Should -BeNullOrEmpty
+		Should-BeNull $right.firstName
 	}
 }

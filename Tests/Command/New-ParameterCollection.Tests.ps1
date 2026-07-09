@@ -15,7 +15,7 @@ Describe "New-ParameterCollection" {
 
 	It "should create a collection from a single parameter" {
 		$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123 -DbType Int64)
-		$collection | Should -HaveCount 1
+		Should-Be 1 $collection.Count
 
 		$parameter = $collection[0]
 		$parameter.Name | Should -BeExactly "?1"
@@ -26,7 +26,7 @@ Describe "New-ParameterCollection" {
 	It "should create a collection from an array of parameters" {
 		$parameters = (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 		$collection = New-SqlParameterCollection $parameters
-		$collection | Should -HaveCount 2
+		Should-Be 2 $collection.Count
 
 		$parameter = $collection[$collection.Count - 1]
 		$parameter.Name | Should -BeExactly "@Key"
@@ -40,12 +40,12 @@ Describe "New-ParameterCollection" {
 			$collection | Should -BeNullOrEmpty
 
 			$parameter = $collection.AddWithValue("Name", "Value1")
-			$collection | Should -HaveCount 1
+			Should-Be 1 $collection.Count
 			$parameter.Name | Should -BeExactly "@Name"
 			$parameter.Value | Should -BeExactly Value1
 
 			$parameter = $collection.AddWithValue("Value2")
-			$collection | Should -HaveCount 2
+			Should-Be 2 $collection.Count
 			$parameter.Name | Should -BeExactly "?2"
 			$parameter.Value | Should -BeExactly Value2
 		}
@@ -121,9 +121,9 @@ Describe "New-ParameterCollection" {
 	Context "RemoveAt" {
 		It "should remove the parameter with the specified name" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			$collection | Should -HaveCount 2
+			Should-Be 2 $collection.Count
 			$collection.RemoveAt("Key")
-			$collection | Should -HaveCount 1
+			Should-Be 1 $collection.Count
 			$collection.RemoveAt("?1")
 			$collection | Should -BeNullOrEmpty
 		}
