@@ -18,7 +18,7 @@ Describe "New-ParameterCollection" {
 		Should-Be 1 $collection.Count
 
 		$parameter = $collection[0]
-		$parameter.Name | Should -BeExactly "?1"
+		Should-BeString "?1" $parameter.Name -CaseSensitive
 		Should-Be 123 $parameter.Value
 		Should-Be ([DbType]::Int64) $parameter.DbType
 	}
@@ -29,8 +29,8 @@ Describe "New-ParameterCollection" {
 		Should-Be 2 $collection.Count
 
 		$parameter = $collection[$collection.Count - 1]
-		$parameter.Name | Should -BeExactly "@Key"
-		$parameter.Value | Should -BeExactly Unique
+		Should-BeString "@Key" $parameter.Name -CaseSensitive
+		Should-BeString Unique $parameter.Value -CaseSensitive
 		Should-Be ([DbType]::AnsiString) $parameter.DbType
 	}
 
@@ -41,13 +41,13 @@ Describe "New-ParameterCollection" {
 
 			$parameter = $collection.AddWithValue("Name", "Value1")
 			Should-Be 1 $collection.Count
-			$parameter.Name | Should -BeExactly "@Name"
-			$parameter.Value | Should -BeExactly Value1
+			Should-BeString "@Name" $parameter.Name -CaseSensitive
+			Should-BeString Value1 $parameter.Value -CaseSensitive
 
 			$parameter = $collection.AddWithValue("Value2")
 			Should-Be 2 $collection.Count
-			$parameter.Name | Should -BeExactly "?2"
-			$parameter.Value | Should -BeExactly Value2
+			Should-BeString "?2" $parameter.Name -CaseSensitive
+			Should-BeString Value2 $parameter.Value -CaseSensitive
 		}
 	}
 
@@ -89,8 +89,8 @@ Describe "New-ParameterCollection" {
 		It "should return the parameter with the specified name" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			$parameter = $collection["Key"]
-			$parameter.Name | Should -BeExactly "@Key"
-			$parameter.Value | Should -BeExactly Unique
+			Should-BeString "@Key" $parameter.Name -CaseSensitive
+			Should-BeString Unique $parameter.Value -CaseSensitive
 			Should-Be $parameter $collection[1]
 		}
 

@@ -14,18 +14,18 @@ Describe "Find-Object" {
 			$records = Find-SqlObject $connection -All -Class ([Character])
 			Should-Be 16 $records.Count
 			Should-Be 1 $records[0].Id
-			$records[0].FullName | Should -BeExactly Aragorn
+			Should-BeString Aragorn $records[0].FullName -CaseSensitive
 			Should-Be 16 $records[15].Id
-			$records[15].FullName | Should -BeExactly Sauron
+			Should-BeString Sauron $records[15].FullName -CaseSensitive
 		}
 
 		It "should allow sorting the results by a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -OrderBy ([ordered]@{ gender = "Ascending"; fullName = "Descending" })
 			Should-Be 16 $records.Count
 			Should-Be 11 $records[0].Id
-			$records[0].FullName | Should -BeExactly Gothmog
+			Should-BeString Gothmog $records[0].FullName -CaseSensitive
 			Should-Be 8 $records[15].Id
-			$records[15].FullName | Should -BeExactly Gandalf
+			Should-BeString Gandalf $records[15].FullName -CaseSensitive
 		}
 
 		It "should allow selecting a specific set of columns" {
@@ -44,12 +44,12 @@ Describe "Find-Object" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2
 			Should-NotBeNull $record
 			Should-Be 2 $record.Id
-			$record.FullName | Should -BeExactly Balin
+			Should-BeString Balin $record.FullName -CaseSensitive
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14
 			Should-NotBeNull $record
 			Should-Be 14 $record.Id
-			$record.FullName | Should -BeExactly "Sam Gamgee"
+			Should-BeString "Sam Gamgee" $record.FullName -CaseSensitive
 		}
 
 		It "should allow selecting a specific set of columns" {

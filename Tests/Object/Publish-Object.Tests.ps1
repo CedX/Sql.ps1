@@ -26,7 +26,7 @@ Describe "Publish-Object" {
 
 		$cedric = $records[0]
 		Should-Be $id $cedric.Id
-		$cedric.FullName | Should -BeExactly "Cédric Belin"
+		Should-BeString "Cédric Belin" $cedric.FullName -CaseSensitive
 		Should-Be $record.Gender $cedric.Gender
 	}
 }

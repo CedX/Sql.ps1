@@ -11,40 +11,40 @@ Describe "New-Parameter" {
 	Context "ImplicitConversion" {
 		It "should create a parameter from the specified array" {
 			[SqlParameter] $parameter = "", $null
-			$parameter.Name | Should -BeExactly "?"
+			Should-BeString "?" $parameter.Name -CaseSensitive
 			Should-Be ([DBNull]::Value) $parameter.Value
 
 			$parameter = ":foo", "bar"
-			$parameter.Name | Should -BeExactly ":foo"
-			$parameter.Value | Should -BeExactly "bar"
+			Should-BeString ":foo" $parameter.Name -CaseSensitive
+			Should-BeString "bar" $parameter.Value -CaseSensitive
 
 			$parameter = "bar", 123
-			$parameter.Name | Should -BeExactly "@bar"
+			Should-BeString "@bar" $parameter.Name -CaseSensitive
 			Should-Be 123 $parameter.Value
 		}
 
 		It "should create a parameter from the specified tuple" {
 			[SqlParameter] $parameter = [ValueTuple]::Create("", [object] $null)
-			$parameter.Name | Should -BeExactly "?"
+			Should-BeString "?" $parameter.Name -CaseSensitive
 			Should-Be ([DBNull]::Value) $parameter.Value
 
 			$parameter = [ValueTuple]::Create(":foo", [object] "bar")
-			$parameter.Name | Should -BeExactly ":foo"
-			$parameter.Value | Should -BeExactly "bar"
+			Should-BeString ":foo" $parameter.Name -CaseSensitive
+			Should-BeString "bar" $parameter.Value -CaseSensitive
 
 			$parameter = [ValueTuple]::Create("bar", [object] 123)
-			$parameter.Name | Should -BeExactly "@bar"
+			Should-BeString "@bar" $parameter.Name -CaseSensitive
 			Should-Be 123 $parameter.Value
 		}
 
 		It "should create a parameter from the specified key/value pair" {
 			[SqlParameter] $parameter = [KeyValuePair[string, object]]::new("foo", $null)
-			$parameter.Name | Should -BeExactly "@foo"
+			Should-BeString "@foo" $parameter.Name -CaseSensitive
 			Should-Be ([DBNull]::Value) $parameter.Value
 
 			$parameter = [KeyValuePair[string, object]]::new(":bar", "Baz")
-			$parameter.Name | Should -BeExactly ":bar"
-			$parameter.Value | Should -BeExactly Baz
+			Should-BeString ":bar" $parameter.Name -CaseSensitive
+			Should-BeString Baz $parameter.Value -CaseSensitive
 		}
 	}
 
@@ -59,7 +59,7 @@ Describe "New-Parameter" {
 			@{ Name = "`$qux"; Expected = "`$qux" }
 		) {
 			$parameter = New-SqlParameter $name
-			$parameter.Name | Should -BeExactly $expected
+			Should-BeString $expected $parameter.Name -CaseSensitive
 		}
 	}
 
@@ -74,12 +74,12 @@ Describe "New-Parameter" {
 			@{ Value = [datetime]::UnixEpoch; Expected = [datetime]::UnixEpoch }
 		) {
 			$parameter = New-SqlParameter Name $value
-			$parameter.Value | Should -BeExactly $expected
+			Should-Be $expected $parameter.Value
 		}
 
 		It "should support the values wrapped in a [psobject] instance" -ForEach ([DBNull]::Value, "Foo", [datetime]::UnixEpoch) {
 			$parameter = New-SqlParameter Name ([psobject]::AsPSObject($_))
-			$parameter.Value | Should -BeExactly $_
+			Should-Be $_ $parameter.Value
 		}
 	}
 }
