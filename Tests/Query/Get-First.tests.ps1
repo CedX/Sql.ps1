@@ -12,12 +12,12 @@ Describe "Get-First" {
 	It "should return the first record produced by the SQL query" {
 		$sql = "SELECT * FROM Characters WHERE fullName = @FullName"
 		$record = Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ FullName = "Sauron" }
-		$record.FirstName | Should -BeExactly Sauron
+		Should-BeString Sauron $record.FirstName -CaseSensitive
 		Should-Be ([CharacterGender]::DarkLord) $record.Gender
 	}
 
 	It "should throw an error if the query produces no results" {
 		$sql = "SELECT * FROM Characters WHERE fullName = @FullName"
-		{ Get-SqlFirst $connection -Command $sql -Parameters @{ FullName = "Cédric" } -ErrorAction Stop } | Should -Throw
+		Should-Throw -ScriptBlock { Get-SqlFirst $connection -Command $sql -Parameters @{ FullName = "Cédric" } -ErrorAction Stop }
 	}
 }

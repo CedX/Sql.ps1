@@ -11,7 +11,7 @@ Describe "Measure-Object" {
 
 	Context "All" {
 		It "should return the total number of entities from the underlying table" {
-			Measure-SqlObject $connection -Class ([Character]) -All | Should -Be 16
+			Should-Be 16 (Measure-SqlObject $connection -Class ([Character]) -All)
 		}
 	}
 }

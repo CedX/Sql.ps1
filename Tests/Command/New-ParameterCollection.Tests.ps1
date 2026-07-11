@@ -99,7 +99,7 @@ Describe "New-ParameterCollection" {
 			$collection["@Foo"] | Should -BeNullOrEmpty
 
 			Set-StrictMode -Version Latest
-			{ $collection["@Foo"] } | Should -Throw
+			Should-Throw -ScriptBlock { $collection["@Foo"] }
 			Set-StrictMode -Off
 		}
 	}
@@ -130,7 +130,7 @@ Describe "New-ParameterCollection" {
 
 		It "should throw an error if the specified name does not exist" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			{ $collection.RemoveAt("Foo") } | Should -Throw
+			Should-Throw -ScriptBlock { $collection.RemoveAt("Foo") }
 		}
 	}
 }

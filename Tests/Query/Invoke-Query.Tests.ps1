@@ -15,11 +15,11 @@ Describe "Invoke-Query" {
 		Should-Be 3 $records.Count
 
 		$elrond = $records[0]
-		$elrond.FullName | Should -BeExactly Elrond
+		Should-BeString Elrond $elrond.FullName -CaseSensitive
 		Should-Be ([CharacterGender]::Elf) $elrond.Gender
 
 		$galadriel = $records[1]
-		$galadriel.FullName | Should -BeExactly Galadriel
+		Should-BeString Galadriel $galadriel.FullName -CaseSensitive
 		Should-Be ([CharacterGender]::Elf) $galadriel.Gender
 	}
 
@@ -30,14 +30,14 @@ Describe "Invoke-Query" {
 
 		$left = $records.Item1
 		Should-Be 6 $left.ID
-		$left.firstName | Should -BeExactly Frodo
-		$left.lastName | Should -BeExactly Baggins
+		Should-BeString Frodo $left.firstName -CaseSensitive
+		Should-BeString Baggins $left.lastName -CaseSensitive
 		Should-BeNull $left.fullName
 
 		$right = $records.Item2
 		Should-Be 6 $right.ID
-		$right.fullName | Should -BeExactly "Frodo Baggins"
-		$right.gender | Should -BeExactly Hobbit
+		Should-BeString "Frodo Baggins" $right.fullName -CaseSensitive
+		Should-BeString Hobbit $right.gender -CaseSensitive
 		Should-BeNull $right.firstName
 	}
 }

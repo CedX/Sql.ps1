@@ -77,7 +77,7 @@ Describe "New-OrderHintCollection" {
 			$collection["foo"] | Should -BeNullOrEmpty
 
 			Set-StrictMode -Version Latest
-			{ $collection["foo"] } | Should -Throw
+			Should-Throw -ScriptBlock { $collection["foo"] }
 			Set-StrictMode -Off
 		}
 	}
@@ -107,7 +107,7 @@ Describe "New-OrderHintCollection" {
 
 		It "should throw an error if the specified column name does not exist" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			{ $collection.RemoveAt("Foo") } | Should -Throw
+			Should-Throw -ScriptBlock { $collection.RemoveAt("Foo") }
 		}
 	}
 }

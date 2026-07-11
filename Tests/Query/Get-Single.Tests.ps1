@@ -12,17 +12,17 @@ Describe "Get-Single" {
 	It "should return the single record produced by the SQL query" {
 		$sql = "SELECT * FROM Characters WHERE fullName = @FullName"
 		$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ FullName = "Saruman" }
-		$record.FirstName | Should -BeExactly Saruman
+		Should-BeString Saruman $record.FirstName -CaseSensitive
 		Should-Be ([CharacterGender]::Istari) $record.Gender
 	}
 
 	It "should throw an error if the query produces no results" {
 		$sql = "SELECT * FROM Characters WHERE fullName = @FullName"
-		{ Get-SqlSingle $connection -Command $sql -Parameters @{ FullName = "Cédric" } -ErrorAction Stop } | Should -Throw
+		Should-Throw -ScriptBlock { Get-SqlSingle $connection -Command $sql -Parameters @{ FullName = "Cédric" } -ErrorAction Stop }
 	}
 
 	It "should throw an error if the query produces more than one result" {
 		$sql = "SELECT * FROM Characters WHERE gender = @Gender"
-		{ Get-SqlSingle $connection -Command $sql -Parameters @{ Gender = "Human" } -ErrorAction Stop } | Should -Throw
+		Should-Throw -ScriptBlock { Get-SqlSingle $connection -Command $sql -Parameters @{ Gender = "Human" } -ErrorAction Stop }
 	}
 }
