@@ -19,7 +19,7 @@ Describe "New-ParameterCollection" {
 
 		$parameter = $collection[0]
 		$parameter.Name | Should -BeExactly "?1"
-		$parameter.Value | Should -Be 123
+		Should-Be 123 $parameter.Value
 		Should-Be ([DbType]::Int64) $parameter.DbType
 	}
 
@@ -54,28 +54,28 @@ Describe "New-ParameterCollection" {
 	Context "Contains" {
 		It "should return `$true if the collection contains the specified parameter" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
-			$collection.Contains("Key") | Should-BeTrue
-			$collection.Contains("@Key") | Should-BeTrue
+			Should-BeTrue $collection.Contains("Key")
+			Should-BeTrue $collection.Contains("@Key")
 		}
 
 		It "should return `$false if the collection does not contain the specified parameter" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
-			$collection.Contains("Foo") | Should-BeFalse
-			$collection.Contains("@Foo") | Should-BeFalse
+			Should-BeFalse $collection.Contains("Foo")
+			Should-BeFalse $collection.Contains("@Foo")
 		}
 	}
 
 	Context "ImplicitConversion" {
 		It "should create a collection from the specified array of postional parameters" {
 			[SqlParameterCollection] $collection = "foo", "bar"
-			$collection.PSForEach{ $_.Name } | Should -Be "?1", "?2"
-			$collection.PSForEach{ $_.Value } | Should -Be "foo", "bar"
+			Should-BeCollection ("?1", "?2") $collection.PSForEach{ $_.Name }
+			Should-BeCollection ("foo", "bar") $collection.PSForEach{ $_.Value }
 		}
 
 		It "should create a collection from the specified list of postional parameters" {
 			[SqlParameterCollection] $collection = [List[object]]::new(("foo", "bar"))
-			$collection.PSForEach{ $_.Name } | Should -Be "?1", "?2"
-			$collection.PSForEach{ $_.Value } | Should -Be "foo", "bar"
+			Should-BeCollection ("?1", "?2") $collection.PSForEach{ $_.Name }
+			Should-BeCollection ("foo", "bar") $collection.PSForEach{ $_.Value }
 		}
 
 		It "should create a collection from the specified hash table of named parameters" {
@@ -91,7 +91,7 @@ Describe "New-ParameterCollection" {
 			$parameter = $collection["Key"]
 			$parameter.Name | Should -BeExactly "@Key"
 			$parameter.Value | Should -BeExactly Unique
-			$collection[1] | Should -Be $parameter
+			Should-Be $parameter $collection[1]
 		}
 
 		It "should return `$null, or throw an error, if the specified name does not exist" {
@@ -107,14 +107,14 @@ Describe "New-ParameterCollection" {
 	Context "IndexOf" {
 		It "should return the index if the parameter is found" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			$collection.IndexOf("Key") | Should -Be 1
-			$collection.IndexOf("@Key") | Should -Be 1
+			Should-Be 1 $collection.IndexOf("Key")
+			Should-Be 1 $collection.IndexOf("@Key")
 		}
 
 		It "should return -1 if the parameter is not found" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			$collection.IndexOf("Foo") | Should -Be -1
-			$collection.IndexOf("@Foo") | Should -Be -1
+			Should-Be -1 $collection.IndexOf("Foo")
+			Should-Be -1 $collection.IndexOf("@Foo")
 		}
 	}
 

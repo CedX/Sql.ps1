@@ -18,7 +18,7 @@ Describe "Update-Object" {
 
 		$sauron.LastName = "The big bad guy"
 		$sauron.Gender = [CharacterGender]::Istari
-		Update-SqlObject $connection -InputObject $sauron | Should -Be 1
+		Should-Be 1 (Update-SqlObject $connection -InputObject $sauron)
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$sauron.FullName | Should -BeExactly "Sauron The big bad guy"
@@ -34,7 +34,7 @@ Describe "Update-Object" {
 
 		$saruman.LastName = "The traitor"
 		$saruman.Gender = [CharacterGender]::DarkLord
-		Update-SqlObject $connection -InputObject $saruman -Columns gender | Should -Be 1
+		Should-Be 1 (Update-SqlObject $connection -InputObject $saruman -Columns gender)
 
 		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$saruman.FullName | Should -BeExactly Saruman

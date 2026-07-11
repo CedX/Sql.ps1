@@ -33,33 +33,33 @@ Describe "New-OrderHintCollection" {
 	Context "Contains" {
 		It "should return `$true if the collection contains the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint Key)
-			$collection.Contains("key") | Should-BeTrue
-			$collection.Contains("KEY") | Should-BeTrue
+			Should-BeTrue $collection.Contains("key")
+			Should-BeTrue $collection.Contains("KEY")
 		}
 
 		It "should return `$false if the collection does not contain the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint Key)
-			$collection.Contains("foo") | Should-BeFalse
+			Should-BeFalse $collection.Contains("foo")
 		}
 	}
 
 	Context "ImplicitConversion" {
 		It "should create a collection from the specified array of column names" {
 			[SqlOrderHintCollection] $collection = "ID", "Name"
-			$collection.PSForEach{ $_.Column } | Should -Be "ID", "Name"
-			$collection.PSForEach{ $_.SortOrder } | Should -Be ([SortOrder]::Ascending, [SortOrder]::Ascending)
+			Should-BeCollection ("ID", "Name") $collection.PSForEach{ $_.Column }
+			Should-BeCollection ([SortOrder]::Ascending, [SortOrder]::Ascending) $collection.PSForEach{ $_.SortOrder }
 		}
 
 		It "should create a collection from the specified list of column names" {
 			[SqlOrderHintCollection] $collection = [List[string]]::new([string[]] ("ID", "Name"))
-			$collection.PSForEach{ $_.Column } | Should -Be "ID", "Name"
-			$collection.PSForEach{ $_.SortOrder } | Should -Be ([SortOrder]::Ascending, [SortOrder]::Ascending)
+			Should-BeCollection ("ID", "Name") $collection.PSForEach{ $_.Column }
+			Should-BeCollection ([SortOrder]::Ascending, [SortOrder]::Ascending) $collection.PSForEach{ $_.SortOrder }
 		}
 
 		It "should create a collection from the specified dictionary of column names and sort orders" {
 			[SqlOrderHintCollection] $collection = [ordered]@{ ID = [SortOrder]::Descending; Name = [SortOrder]::Ascending }
-			$collection.PSForEach{ $_.Column } | Should -Be "ID", "Name"
-			$collection.PSForEach{ $_.SortOrder } | Should -Be ([SortOrder]::Descending, [SortOrder]::Ascending)
+			Should-BeCollection ("ID", "Name") $collection.PSForEach{ $_.Column }
+			Should-BeCollection ([SortOrder]::Descending, [SortOrder]::Ascending) $collection.PSForEach{ $_.SortOrder }
 		}
 	}
 
@@ -69,7 +69,7 @@ Describe "New-OrderHintCollection" {
 			$orderHint = $collection["id"]
 			$orderHint.Column | Should -BeExactly ID
 			Should-Be ([SortOrder]::Descending) $orderHint.SortOrder
-			$collection[0] | Should -Be $orderHint
+			Should-Be $orderHint $collection[0]
 		}
 
 		It "should return `$null, or throw an error, if the specified column name does not exist" {
@@ -85,13 +85,13 @@ Describe "New-OrderHintCollection" {
 	Context "IndexOf" {
 		It "should return the index if the order hint is found" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			$collection.IndexOf("id") | Should -Be 0
-			$collection.IndexOf("name") | Should -Be 1
+			Should-Be 0 $collection.IndexOf("id")
+			Should-Be 1 $collection.IndexOf("name")
 		}
 
 		It "should return -1 if the order hint is not found" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			$collection.IndexOf("foo") | Should -Be -1
+			Should-Be -1 $collection.IndexOf("foo")
 		}
 	}
 

@@ -10,7 +10,7 @@ Describe "Get-Scalar" {
 
 	It "should return the single value produced by the query" {
 		$sql = "SELECT COUNT(*) FROM Characters WHERE gender = @Gender"
-		Get-SqlScalar $connection -As ([int]) -Command $sql -Parameters @{ Gender = "Balrog" } | Should -Be 2
+		Should-Be 2 (Get-SqlScalar $connection -As ([int]) -Command $sql -Parameters @{ Gender = "Balrog" })
 
 		$sql = "SELECT tbl_name FROM sqlite_schema WHERE type = @Type AND name = @Name"
 		Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "Characters"; Type = "table" } | Should -BeExactly Characters

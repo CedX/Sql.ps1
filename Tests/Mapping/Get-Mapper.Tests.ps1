@@ -103,7 +103,7 @@ Describe "Get-Mapper" {
 			$character | Should -BeOfType ([Character])
 			$character.FirstName | Should -BeExactly Cédric
 			Should-Be ([CharacterGender]::Balrog) $character.Gender
-			$character.LastName | Should -Be ""
+			Should-BeEmptyString $character.LastName
 		}
 	}
 
@@ -115,13 +115,13 @@ Describe "Get-Mapper" {
 			Should-Be ([Character]) $table.Type
 
 			Should-Be 5 $table.Columns.Count
-			$table.IdentityColumn | Should -Be $table.Columns.ID
+			Should-Be $table.Columns.ID $table.IdentityColumn
 			Should-Be ([CharacterGender]) $table.Columns.gender.PropertyType
 			Should-Be ([string]) $table.Columns.lastName.PropertyType
 
-			$table.Columns.firstName.CanWrite | Should-BeTrue
-			$table.Columns.fullName.IsComputed | Should-BeTrue
-			$table.Columns.ID.IsIdentity | Should-BeTrue
+			Should-BeTrue $table.Columns.firstName.CanWrite
+			Should-BeTrue $table.Columns.fullName.IsComputed
+			Should-BeTrue $table.Columns.ID.IsIdentity
 		}
 	}
 }

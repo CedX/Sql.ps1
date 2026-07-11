@@ -14,19 +14,19 @@ Describe "Publish-Object" {
 		Should-BeNull (Invoke-SqlQuery $connection -As ([Character]) -Command $sql)
 
 		$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin"; Gender = "Istari" }
-		$record.Id | Should -Be 0
+		Should-Be 0 $record.Id
 		Should-BeEmptyString $record.FullName
 
 		$id = Publish-SqlObject $connection -InputObject $record
 		$id | Should -BeGreaterThan 16
-		$record.Id | Should -Be $id
+		Should-Be $id $record.Id
 
 		$records = Invoke-SqlQuery $connection -As ([Character]) -Command $sql
 		Should-Be 1 $records.Count
 
 		$cedric = $records[0]
-		$cedric.Id | Should -Be $id
+		Should-Be $id $cedric.Id
 		$cedric.FullName | Should -BeExactly "Cédric Belin"
-		$cedric.Gender | Should -Be $record.Gender
+		Should-Be $record.Gender $cedric.Gender
 	}
 }

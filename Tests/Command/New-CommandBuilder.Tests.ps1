@@ -26,7 +26,7 @@ Describe "New-CommandBuilder" {
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteCommand($character)
 			$command.Item2[0].Name | Should -BeExactly "@ID"
-			$command.Item2[0].Value | Should -Be 1000
+			Should-Be 1000 $command.Item2[0].Value
 		}
 	}
 
@@ -53,7 +53,7 @@ Describe "New-CommandBuilder" {
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetExistsCommand([Character], $character.Id)
 			$command.Item2[0].Name | Should -BeExactly "@ID"
-			$command.Item2[0].Value | Should -Be 1000
+			Should-Be 1000 $command.Item2[0].Value
 		}
 	}
 
@@ -69,7 +69,7 @@ Describe "New-CommandBuilder" {
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetFindCommand([Character], $character.Id)
 			$command.Item2[0].Name | Should -BeExactly "@ID"
-			$command.Item2[0].Value | Should -Be 1000
+			Should-Be 1000 $command.Item2[0].Value
 		}
 
 		It "should allow selecting a specific set of columns" {
@@ -125,7 +125,7 @@ Describe "New-CommandBuilder" {
 			Should-Be 3 $command.Item2.Count
 			$command.Item2["firstName"].Value | Should -BeExactly Cédric
 			$command.Item2["gender"].Value | Should -BeExactly DarkLord
-			$command.Item2["lastName"].Value | Should -Be ""
+			Should-BeEmptyString $command.Item2["lastName"].Value
 		}
 	}
 
@@ -140,16 +140,16 @@ Describe "New-CommandBuilder" {
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character)
 			Should-Be 4 $command.Item2.Count
-			$command.Item2["ID"].Value | Should -Be 1000
+			Should-Be 1000 $command.Item2["ID"].Value
 			$command.Item2["firstName"].Value | Should -BeExactly Cédric
 			$command.Item2["gender"].Value | Should -BeExactly DarkLord
-			$command.Item2["lastName"].Value | Should -Be ""
+			Should-BeEmptyString $command.Item2["lastName"].Value
 		}
 
 		It "should allow updating a specific set of columns" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character, "firstName")
 			Should-Be 2 $command.Item2.Count
-			$command.Item2["ID"].Value | Should -Be 1000
+			Should-Be 1000 $command.Item2["ID"].Value
 			$command.Item2["firstName"].Value | Should -BeExactly Cédric
 		}
 	}

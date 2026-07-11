@@ -13,27 +13,27 @@ Describe "Find-Object" {
 		It "should return the complete list of entities, sorted by default according to the identity column" {
 			$records = Find-SqlObject $connection -All -Class ([Character])
 			Should-Be 16 $records.Count
-			$records[0].Id | Should -Be 1
+			Should-Be 1 $records[0].Id
 			$records[0].FullName | Should -BeExactly Aragorn
-			$records[15].Id | Should -Be 16
+			Should-Be 16 $records[15].Id
 			$records[15].FullName | Should -BeExactly Sauron
 		}
 
 		It "should allow sorting the results by a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -OrderBy ([ordered]@{ gender = "Ascending"; fullName = "Descending" })
 			Should-Be 16 $records.Count
-			$records[0].Id | Should -Be 11
+			Should-Be 11 $records[0].Id
 			$records[0].FullName | Should -BeExactly Gothmog
-			$records[15].Id | Should -Be 8
+			Should-Be 8 $records[15].Id
 			$records[15].FullName | Should -BeExactly Gandalf
 		}
 
 		It "should allow selecting a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -Columns gender
-			$records[0].Id | Should -Be 1
+			Should-Be 1 $records[0].Id
 			Should-Be ([CharacterGender]::Human) $records[0].Gender
 			$records[0].FullName | Should -BeNullOrEmpty
-			$records[15].Id | Should -Be 16
+			Should-Be 16 $records[15].Id
 			Should-Be ([CharacterGender]::DarkLord) $records[15].Gender
 			$records[15].FullName | Should -BeNullOrEmpty
 		}
@@ -43,12 +43,12 @@ Describe "Find-Object" {
 		It "should find the entity with the specified identifier" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2
 			$record | Should -Not -BeNullOrEmpty
-			$record.Id | Should -Be 2
+			Should-Be 2 $record.Id
 			$record.FullName | Should -BeExactly Balin
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14
 			$record | Should -Not -BeNullOrEmpty
-			$record.Id | Should -Be 14
+			Should-Be 14 $record.Id
 			$record.FullName | Should -BeExactly "Sam Gamgee"
 		}
 

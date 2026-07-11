@@ -10,13 +10,13 @@ using module ../Character.psm1
 Describe "DbColumnInfo" {
 	Context "CanRead" {
 		It "should return `$true if the property can be read" -ForEach "FirstName", "FullName", "Gender", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanRead | Should-BeTrue
+			Should-BeTrue ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanRead)
 		}
 	}
 
 	Context "CanWrite" {
 		It "should return `$true if the property can be written" -ForEach "FirstName", "FullName", "Gender", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanWrite | Should-BeTrue
+			Should-BeTrue ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).CanWrite)
 		}
 	}
 
@@ -27,37 +27,37 @@ Describe "DbColumnInfo" {
 			@{ Name = "Gender"; Expected = [DbType]::AnsiString }
 			@{ Name = "Id"; Expected = [DbType]::Int32 }
 		) {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).DbType | Should -Be $expected
+			Should-Be $expected ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).DbType)
 		}
 	}
 
 	Context "IsComputed" {
 		It "should return `$false if the property is not computed" -ForEach "FirstName", "Gender" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should-BeFalse
+			Should-BeFalse ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed)
 		}
 
 		It "should return `$true if the property is computed" -ForEach "FullName", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed | Should-BeTrue
+			Should-BeTrue ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsComputed)
 		}
 	}
 
 	Context "IsIdentity" {
 		It "should return `$false if the property is not an identity" -ForEach "FirstName", "FullName", "Gender" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should-BeFalse
+			Should-BeFalse ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity)
 		}
 
 		It "should return `$true if the property is an identity" -ForEach "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity | Should-BeTrue
+			Should-BeTrue ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsIdentity)
 		}
 	}
 
 	Context "IsNullable" {
 		It "should return `$false if the property is not nullable" -ForEach "FirstName", "Gender", "Id" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should-BeFalse
+			Should-BeFalse ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable)
 		}
 
 		It "should return `$true if the property is nullable" -ForEach "FullName" {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable | Should-BeTrue
+			Should-BeTrue ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($_)).IsNullable)
 		}
 	}
 
@@ -79,7 +79,7 @@ Describe "DbColumnInfo" {
 			@{ Name = "Gender"; Expected = [CharacterGender] }
 			@{ Name = "Id"; Expected = [int] }
 		) {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).PropertyType | Should -Be $expected
+			Should-Be $expected ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).PropertyType)
 		}
 	}
 

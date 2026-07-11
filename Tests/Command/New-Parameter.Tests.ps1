@@ -20,7 +20,7 @@ Describe "New-Parameter" {
 
 			$parameter = "bar", 123
 			$parameter.Name | Should -BeExactly "@bar"
-			$parameter.Value | Should -Be 123
+			Should-Be 123 $parameter.Value
 		}
 
 		It "should create a parameter from the specified tuple" {
@@ -34,7 +34,7 @@ Describe "New-Parameter" {
 
 			$parameter = [ValueTuple]::Create("bar", [object] 123)
 			$parameter.Name | Should -BeExactly "@bar"
-			$parameter.Value | Should -Be 123
+			Should-Be 123 $parameter.Value
 		}
 
 		It "should create a parameter from the specified key/value pair" {

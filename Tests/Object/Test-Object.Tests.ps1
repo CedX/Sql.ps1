@@ -10,10 +10,10 @@ Describe "Test-Object" {
 	AfterEach { . "$PSScriptRoot/../AfterEach.ps1" }
 
 	It "should `$true if the specified identifier exists" {
-		Test-SqlObject $connection -Class ([Character]) -Id 1 | Should-BeTrue
+		Should-BeTrue (Test-SqlObject $connection -Class ([Character]) -Id 1)
 	}
 
 	It "should `$false if the specified identifier does not exist" {
-		Test-SqlObject $connection -Class ([Character]) -Id 666 | Should-BeFalse
+		Should-BeFalse (Test-SqlObject $connection -Class ([Character]) -Id 666)
 	}
 }
