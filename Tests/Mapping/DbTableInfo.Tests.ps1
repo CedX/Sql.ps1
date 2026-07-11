@@ -13,7 +13,7 @@ Describe "DbTableInfo" {
 
 			$columns = [DbTableInfo]::new([Character]).Columns
 			Should-Be 5 $columns.Count
-			"firstName", "fullName", "gender", "ID", "lastName" | Should -BeIn $columns.Keys
+			Should-BeCollection ("firstName", "fullName", "gender", "ID", "lastName") $columns.Keys
 		}
 	}
 
@@ -23,17 +23,17 @@ Describe "DbTableInfo" {
 
 			$identityColumn = [DbTableInfo]::new([Character]).IdentityColumn
 			Should-NotBeNull $identityColumn
-			$identityColumn.Name | Should -BeExactly ID
+			Should-BeString ID $identityColumn.Name -CaseSensitive
 		}
 	}
 
 	Context "Name" {
 		It "should return the class name when there is no [Table] attribute" {
-			[DbTableInfo]::new([ConsoleKeyInfo]).Name | Should -BeExactly ConsoleKeyInfo
+			Should-BeString ConsoleKeyInfo ([DbTableInfo]::new([ConsoleKeyInfo]).Name) -CaseSensitive
 		}
 
 		It "should return the value of the [Table] attribute when it is present" {
-			[DbTableInfo]::new([Character]).Name | Should -BeExactly Characters
+			Should-BeString Characters ([DbTableInfo]::new([Character]).Name) -CaseSensitive
 		}
 	}
 
@@ -43,7 +43,7 @@ Describe "DbTableInfo" {
 		}
 
 		It "should return the value of the [Table] attribute when it is present" {
-			[DbTableInfo]::new([Character]).Schema | Should -BeExactly main
+			Should-BeString main ([DbTableInfo]::new([Character]).Schema) -CaseSensitive
 		}
 	}
 }

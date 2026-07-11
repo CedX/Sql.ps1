@@ -19,13 +19,13 @@ Describe "New-CommandBuilder" {
 	Context "GetDeleteCommand" {
 		It "should return the SQL command to delete an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteCommand($character)
-			$command.Item1.Text | Should -BeLikeExactly 'DELETE FROM "main"."Characters"*'
-			$command.Item1.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
+			Should-BeLikeString 'DELETE FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteCommand($character)
-			$command.Item2[0].Name | Should -BeExactly "@ID"
+			Should-BeString "@ID" $command.Item2[0].Name -CaseSensitive
 			Should-Be 1000 $command.Item2[0].Value
 		}
 	}
@@ -33,7 +33,7 @@ Describe "New-CommandBuilder" {
 	Context "GetDeleteAllCommand" {
 		It "should return the SQL command to delete an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteAllCommand([Character])
-			$command.Item1.Text | Should -BeExactly 'DELETE FROM "main"."Characters"'
+			Should-BeString 'DELETE FROM "main"."Characters"' $command.Item1.Text -CaseSensitive
 		}
 
 		It "should also return an empty parameter collection" {
@@ -45,14 +45,14 @@ Describe "New-CommandBuilder" {
 	Context "GetExistsCommand" {
 		It "should return the SQL command to check the existence of an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetExistsCommand([Character], $character.Id)
-			$command.Item1.Text | Should -BeLikeExactly "SELECT 1*"
-			$command.Item1.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
-			$command.Item1.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
+			Should-BeLikeString "SELECT 1*" $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetExistsCommand([Character], $character.Id)
-			$command.Item2[0].Name | Should -BeExactly "@ID"
+			Should-BeString "@ID" $command.Item2[0].Name -CaseSensitive
 			Should-Be 1000 $command.Item2[0].Value
 		}
 	}
@@ -60,34 +60,34 @@ Describe "New-CommandBuilder" {
 	Context "GetFindCommand" {
 		It "should return the SQL command to find an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetFindCommand([Character], $character.Id)
-			$command.Item1.Text | Should -BeLikeExactly 'SELECT "*'
-			$command.Item1.Text | Should -Not -BeLike '*`**'
-			$command.Item1.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
-			$command.Item1.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
+			Should-BeLikeString 'SELECT "*' $command.Item1.Text -CaseSensitive
+			Should-NotBeLikeString '*`**' $command.Item1.Text
+			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetFindCommand([Character], $character.Id)
-			$command.Item2[0].Name | Should -BeExactly "@ID"
+			Should-BeString "@ID" $command.Item2[0].Name -CaseSensitive
 			Should-Be 1000 $command.Item2[0].Value
 		}
 
 		It "should allow selecting a specific set of columns" {
 			$command = (New-SqlCommandBuilder $connection).GetFindCommand([Character], $character.Id, "firstName")
-			$command.Item1.Text | Should -BeLikeExactly 'SELECT "firstName"*'
-			$command.Item1.Text | Should -Not -BeLike "*gender*"
-			$command.Item1.Text | Should -Not -BeLike "*lastName*"
-			$command.Item1.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
+			Should-BeLikeString 'SELECT "firstName"*' $command.Item1.Text -CaseSensitive
+			Should-NotBeLikeString "*gender*" $command.Item1.Text
+			Should-NotBeLikeString "*lastName*" $command.Item1.Text
+			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
 		}
 	}
 
 	Context "GetFindAllCommand" {
 		It "should return the SQL command to find all entities" {
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character])
-			$command.Item1.Text | Should -BeLikeExactly 'SELECT "*'
-			$command.Item1.Text | Should -Not -BeLike '*`**'
-			$command.Item1.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
-			$command.Item1.Text | Should -BeLikeExactly '*ORDER BY "ID" ASC'
+			Should-BeLikeString 'SELECT "*' $command.Item1.Text -CaseSensitive
+			Should-NotBeLikeString '*`**' $command.Item1.Text
+			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*ORDER BY "ID" ASC' $command.Item1.Text -CaseSensitive
 		}
 
 		It "should also return an empty parameter collection" {
@@ -98,33 +98,33 @@ Describe "New-CommandBuilder" {
 		It "should allow sorting the results by a specific set of columns" {
 			$orderHints = [ordered]@{ gender = "Ascending"; fullName = "Descending" }
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character], $orderHints)
-			$command.Item1.Text | Should -BeLikeExactly 'SELECT "*'
-			$command.Item1.Text | Should -Not -BeLike '*`**'
-			$command.Item1.Text | Should -BeLikeExactly '*FROM "main"."Characters"*'
-			$command.Item1.Text | Should -BeLikeExactly '*ORDER BY "gender" ASC, "fullName" DESC'
+			Should-BeLikeString 'SELECT "*' $command.Item1.Text -CaseSensitive
+			Should-NotBeLikeString '*`**' $command.Item1.Text
+			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*ORDER BY "gender" ASC, "fullName" DESC' $command.Item1.Text -CaseSensitive
 		}
 
 		It "should allow selecting a specific set of columns" {
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character], "firstName")
-			$command.Item1.Text | Should -BeLikeExactly 'SELECT "firstName"*'
-			$command.Item1.Text | Should -Not -BeLike "*gender*"
-			$command.Item1.Text | Should -Not -BeLike "*lastName*"
-			$command.Item1.Text | Should -BeLikeExactly '*ORDER BY "ID" ASC'
+			Should-BeLikeString 'SELECT "firstName"*' $command.Item1.Text -CaseSensitive
+			Should-NotBeLikeString "*gender*" $command.Item1.Text
+			Should-NotBeLikeString "*lastName*" $command.Item1.Text
+			Should-BeLikeString '*ORDER BY "ID" ASC' $command.Item1.Text -CaseSensitive
 		}
 	}
 
 	Context "GetInsertCommand" {
 		It "should return the SQL command to insert an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetInsertCommand($character)
-			$command.Item1.Text | Should -BeLikeExactly 'INSERT INTO "main"."Characters" (*'
-			$command.Item1.Text | Should -BeLikeExactly "*VALUES (*"
+			Should-BeLikeString 'INSERT INTO "main"."Characters" (*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString "*VALUES (*" $command.Item1.Text -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetInsertCommand($character)
 			Should-Be 3 $command.Item2.Count
-			$command.Item2["firstName"].Value | Should -BeExactly Cédric
-			$command.Item2["gender"].Value | Should -BeExactly DarkLord
+			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
+			Should-Be ([CharacterGender]::DarkLord) $command.Item2["gender"].Value
 			Should-BeEmptyString $command.Item2["lastName"].Value
 		}
 	}
@@ -132,17 +132,17 @@ Describe "New-CommandBuilder" {
 	Context "GetUpdateCommand" {
 		It "should return the SQL command to update an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character)
-			$command.Item1.Text | Should -BeLikeExactly 'UPDATE "main"."Characters"*'
-			$command.Item1.Text | Should -BeLikeExactly '*SET "*'
-			$command.Item1.Text | Should -BeLikeExactly '*WHERE "ID" = @ID'
+			Should-BeLikeString 'UPDATE "main"."Characters"*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*SET "*' $command.Item1.Text -CaseSensitive
+			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character)
 			Should-Be 4 $command.Item2.Count
 			Should-Be 1000 $command.Item2["ID"].Value
-			$command.Item2["firstName"].Value | Should -BeExactly Cédric
-			$command.Item2["gender"].Value | Should -BeExactly DarkLord
+			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
+			Should-Be ([CharacterGender]::DarkLord) $command.Item2["gender"].Value
 			Should-BeEmptyString $command.Item2["lastName"].Value
 		}
 
@@ -150,7 +150,7 @@ Describe "New-CommandBuilder" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character, "firstName")
 			Should-Be 2 $command.Item2.Count
 			Should-Be 1000 $command.Item2["ID"].Value
-			$command.Item2["firstName"].Value | Should -BeExactly Cédric
+			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
 		}
 	}
 }

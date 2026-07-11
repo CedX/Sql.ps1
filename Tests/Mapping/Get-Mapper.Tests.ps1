@@ -10,8 +10,8 @@ using module ../Character.psm1
 #>
 Describe "Get-Mapper" {
 	It "should return the singleton instance of the SQL mapper" {
-		Get-SqlMapper | Should -BeExactly ([SqlMapper]::Instance)
-		Get-SqlMapper | Should -BeExactly (Get-SqlMapper)
+		Should-BeSame ([SqlMapper]::Instance) (Get-SqlMapper)
+		Should-BeSame (Get-SqlMapper) (Get-SqlMapper)
 	}
 
 	Context "ChangeType" {
@@ -82,7 +82,7 @@ Describe "Get-Mapper" {
 			@{ Value = "123"; ConversionType = [int]; IsNullable = $false; Expected = 123 }
 			@{ Value = "-123"; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = -123 }
 		) {
-			[SqlMapper]::Instance.ChangeType($value, $conversionType, $isNullable) | Should -BeExactly $expected
+			Should-Be $expected ([SqlMapper]::Instance.ChangeType($value, $conversionType, $isNullable))
 		}
 	}
 
@@ -91,9 +91,9 @@ Describe "Get-Mapper" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$psObject = (Get-SqlMapper).CreateInstance([psobject], $properties)
 			Should-HaveType ([psobject]) $psObject
-			$psObject.CLASS | Should -BeExactly "Bard/minstrel"
-			$psObject.firstName | Should -BeExactly Cédric
-			$psObject.gender | Should -BeExactly ([CharacterGender]::Balrog.ToString())
+			Should-BeString "Bard/minstrel" $psObject.CLASS -CaseSensitive
+			Should-BeString Cédric $psObject.firstName -CaseSensitive
+			Should-BeString ([CharacterGender]::Balrog.ToString()) $psObject.gender -CaseSensitive
 			Should-BeNull $psObject.lastName
 		}
 
@@ -101,7 +101,7 @@ Describe "Get-Mapper" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$character = (Get-SqlMapper).CreateInstance([Character], $properties)
 			Should-HaveType ([Character]) $character
-			$character.FirstName | Should -BeExactly Cédric
+			Should-BeString Cédric $character.FirstName -CaseSensitive
 			Should-Be ([CharacterGender]::Balrog) $character.Gender
 			Should-BeEmptyString $character.LastName
 		}
@@ -110,8 +110,8 @@ Describe "Get-Mapper" {
 	Context "GetTable" {
 		It "should return detailed information about the database table associated with the specified entity class" {
 			$table = (Get-SqlMapper).GetTable([Character])
-			$table.Schema | Should -BeExactly main
-			$table.Name | Should -BeExactly Characters
+			Should-BeString main $table.Schema -CaseSensitive
+			Should-BeString Characters $table.Name -CaseSensitive
 			Should-Be ([Character]) $table.Type
 
 			Should-Be 5 $table.Columns.Count

@@ -68,7 +68,7 @@ Describe "DbColumnInfo" {
 			@{ Name = "Gender"; Expected = "gender" }
 			@{ Name = "Id"; Expected = "ID" }
 		) {
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).Name | Should -BeExactly $expected
+			Should-BeString $expected ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).Name) -CaseSensitive
 		}
 	}
 
@@ -86,8 +86,8 @@ Describe "DbColumnInfo" {
 	Context "GetValue" {
 		It "should return the value of the spcified property" {
 			$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($record) | Should -BeExactly Cédric
-			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($record) | Should -BeExactly Belin
+			Should-BeString Cédric ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($record)) -CaseSensitive
+			Should-BeString Belin ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($record)) -CaseSensitive
 		}
 	}
 
@@ -96,8 +96,8 @@ Describe "DbColumnInfo" {
 			$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
 			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($record, "Jeffrey")
 			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("LastName")).SetValue($record, "Snover")
-			$record.FirstName | Should -BeExactly Jeffrey
-			$record.LastName | Should -BeExactly Snover
+			Should-BeString Jeffrey $record.FirstName -CaseSensitive
+			Should-BeString Snover $record.LastName -CaseSensitive
 		}
 	}
 }
