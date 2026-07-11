@@ -90,17 +90,17 @@ Describe "Get-Mapper" {
 		It "should support creating an object of type [psobject]" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$psObject = (Get-SqlMapper).CreateInstance([psobject], $properties)
-			$psObject | Should -BeOfType ([psobject])
+			Should-HaveType ([psobject]) $psObject
 			$psObject.CLASS | Should -BeExactly "Bard/minstrel"
 			$psObject.firstName | Should -BeExactly Cédric
 			$psObject.gender | Should -BeExactly ([CharacterGender]::Balrog.ToString())
-			$psObject.lastName | Should -BeNullOrEmpty
+			Should-BeNull $psObject.lastName
 		}
 
 		It "should create an object of the specified type" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$character = (Get-SqlMapper).CreateInstance([Character], $properties)
-			$character | Should -BeOfType ([Character])
+			Should-HaveType ([Character]) $character
 			$character.FirstName | Should -BeExactly Cédric
 			Should-Be ([CharacterGender]::Balrog) $character.Gender
 			Should-BeEmptyString $character.LastName

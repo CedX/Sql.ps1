@@ -18,7 +18,7 @@ Describe "Publish-Object" {
 		Should-BeEmptyString $record.FullName
 
 		$id = Publish-SqlObject $connection -InputObject $record
-		$id | Should -BeGreaterThan 16
+		Should-BeGreaterThan 16 $id
 		Should-Be $id $record.Id
 
 		$records = Invoke-SqlQuery $connection -As ([Character]) -Command $sql

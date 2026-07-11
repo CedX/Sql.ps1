@@ -10,7 +10,7 @@ using module ../../Sql.psd1
 Describe "New-ParameterCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlParameterCollection
-		$collection | Should -BeNullOrEmpty
+		Should-Be 0 $collection.Count
 	}
 
 	It "should create a collection from a single parameter" {
@@ -37,7 +37,7 @@ Describe "New-ParameterCollection" {
 	Context "AddWithValue" {
 		It "should add a new parameter to the collection" {
 			$collection = New-SqlParameterCollection
-			$collection | Should -BeNullOrEmpty
+			Should-Be 0 $collection.Count
 
 			$parameter = $collection.AddWithValue("Name", "Value1")
 			Should-Be 1 $collection.Count
@@ -80,8 +80,8 @@ Describe "New-ParameterCollection" {
 
 		It "should create a collection from the specified hash table of named parameters" {
 			[SqlParameterCollection] $collection = @{ foo = "bar"; baz = "qux" }
-			Compare-Object @("@foo", "@baz") $collection.PSForEach{ $_.Name } | Should -BeNullOrEmpty
-			Compare-Object @("bar", "qux") $collection.PSForEach{ $_.Value } | Should -BeNullOrEmpty
+			Should-BeNull (Compare-Object @("@foo", "@baz") $collection.PSForEach{ $_.Name })
+			Should-BeNull (Compare-Object @("bar", "qux") $collection.PSForEach{ $_.Value })
 		}
 	}
 
@@ -96,7 +96,7 @@ Describe "New-ParameterCollection" {
 
 		It "should return `$null, or throw an error, if the specified name does not exist" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			$collection["@Foo"] | Should -BeNullOrEmpty
+			Should-BeNull $collection["@Foo"]
 
 			Set-StrictMode -Version Latest
 			Should-Throw -ScriptBlock { $collection["@Foo"] }
@@ -125,7 +125,7 @@ Describe "New-ParameterCollection" {
 			$collection.RemoveAt("Key")
 			Should-Be 1 $collection.Count
 			$collection.RemoveAt("?1")
-			$collection | Should -BeNullOrEmpty
+			Should-Be 0 $collection.Count
 		}
 
 		It "should throw an error if the specified name does not exist" {

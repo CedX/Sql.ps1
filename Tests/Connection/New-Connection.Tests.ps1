@@ -12,7 +12,7 @@ Describe "New-Connection" {
 		@{ Provider = "SqlClient"; ConnectionString = "Server=localhost; Database=TestDb; Uid=user; Pwd=password"; Expected = [System.Data.SqlClient.SqlConnection] }
 	) {
 		$connection = New-SqlConnection $provider $connectionString
-		$connection | Should -BeOfType $expected
+		Should-HaveType $expected $connection
 		Should-Be ([ConnectionState]::Closed) $connection.State
 	}
 

@@ -38,7 +38,7 @@ Describe "New-CommandBuilder" {
 
 		It "should also return an empty parameter collection" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteAllCommand([Character])
-			$command.Item2 | Should -BeNullOrEmpty
+			Should-Be 0 $command.Item2.Count
 		}
 	}
 
@@ -92,7 +92,7 @@ Describe "New-CommandBuilder" {
 
 		It "should also return an empty parameter collection" {
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character])
-			$command.Item2 | Should -BeNullOrEmpty
+			Should-Be 0 $command.Item2.Count
 		}
 
 		It "should allow sorting the results by a specific set of columns" {

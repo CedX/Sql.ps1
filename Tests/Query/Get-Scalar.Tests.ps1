@@ -13,7 +13,7 @@ Describe "Get-Scalar" {
 		Should-Be 2 (Get-SqlScalar $connection -As ([int]) -Command $sql -Parameters @{ Gender = "Balrog" })
 
 		$sql = "SELECT tbl_name FROM sqlite_schema WHERE type = @Type AND name = @Name"
-		Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "Characters"; Type = "table" } | Should -BeExactly Characters
+		Should-BeString Characters (Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "Characters"; Type = "table" }) -CaseSensitive
 
 		$sql = "SELECT tbl_name FROM sqlite_schema WHERE name = @Name"
 		Should-BeNull (Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "FooBarBazQux" })

@@ -8,7 +8,7 @@ using namespace System.Collections.Generic
 Describe "New-OrderHintCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlOrderHintCollection
-		$collection | Should -BeNullOrEmpty
+		Should-Be 0 $collection.Count
 	}
 
 	It "should create a collection from a single order hint" {
@@ -16,7 +16,7 @@ Describe "New-OrderHintCollection" {
 		Should-Be 1 $collection.Count
 
 		$orderHint = $collection[0]
-		$orderHint.Column | Should -BeExactly ID
+		Should-BeString ID $orderHint.Column -CaseSensitive
 		Should-Be ([SortOrder]::Descending) $orderHint.SortOrder
 	}
 
@@ -26,7 +26,7 @@ Describe "New-OrderHintCollection" {
 		Should-Be 2 $collection.Count
 
 		$orderHint = $collection[$collection.Count - 1]
-		$orderHint.Column | Should -BeExactly Name
+		Should-BeString Name $orderHint.Column -CaseSensitive
 		Should-Be ([SortOrder]::Ascending) $orderHint.SortOrder
 	}
 
@@ -67,14 +67,14 @@ Describe "New-OrderHintCollection" {
 		It "should return the order hint with the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
 			$orderHint = $collection["id"]
-			$orderHint.Column | Should -BeExactly ID
+			Should-BeString ID $orderHint.Column -CaseSensitive
 			Should-Be ([SortOrder]::Descending) $orderHint.SortOrder
 			Should-Be $orderHint $collection[0]
 		}
 
 		It "should return `$null, or throw an error, if the specified column name does not exist" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			$collection["foo"] | Should -BeNullOrEmpty
+			Should-BeNull $collection["foo"]
 
 			Set-StrictMode -Version Latest
 			Should-Throw -ScriptBlock { $collection["foo"] }
@@ -102,7 +102,7 @@ Describe "New-OrderHintCollection" {
 			$collection.RemoveAt("name")
 			Should-Be 1 $collection.Count
 			$collection.RemoveAt("id")
-			$collection | Should -BeNullOrEmpty
+			Should-Be 0 $collection.Count
 		}
 
 		It "should throw an error if the specified column name does not exist" {

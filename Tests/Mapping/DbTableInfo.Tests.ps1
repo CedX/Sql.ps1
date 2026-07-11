@@ -9,7 +9,7 @@ using module ../Character.psm1
 Describe "DbTableInfo" {
 	Context "Columns" {
 		It "should return all columns associated with the specified entity class" {
-			[DbTableInfo]::new([ConsoleKeyInfo]).Columns.Keys | Should -BeNullOrEmpty
+			Should-Be 0 ([DbTableInfo]::new([ConsoleKeyInfo]).Columns.Count)
 
 			$columns = [DbTableInfo]::new([Character]).Columns
 			Should-Be 5 $columns.Count
@@ -19,10 +19,10 @@ Describe "DbTableInfo" {
 
 	Context "IdentityColumn" {
 		It "should return the identity column associated with the specified entity class, if any" {
-			[DbTableInfo]::new([ConsoleKeyInfo]).IdentityColumn | Should -BeNullOrEmpty
+			Should-BeNull ([DbTableInfo]::new([ConsoleKeyInfo]).IdentityColumn)
 
 			$identityColumn = [DbTableInfo]::new([Character]).IdentityColumn
-			$identityColumn | Should -Not -BeNullOrEmpty
+			Should-NotBeNull $identityColumn
 			$identityColumn.Name | Should -BeExactly ID
 		}
 	}
@@ -39,7 +39,7 @@ Describe "DbTableInfo" {
 
 	Context "Schema" {
 		It "should return `$null` when there is no [Table] attribute" {
-			[DbTableInfo]::new([ConsoleKeyInfo]).Schema | Should -BeNullOrEmpty
+			Should-BeNull ([DbTableInfo]::new([ConsoleKeyInfo]).Schema)
 		}
 
 		It "should return the value of the [Table] attribute when it is present" {

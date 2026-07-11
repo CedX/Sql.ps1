@@ -32,38 +32,38 @@ Describe "Find-Object" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -Columns gender
 			Should-Be 1 $records[0].Id
 			Should-Be ([CharacterGender]::Human) $records[0].Gender
-			$records[0].FullName | Should -BeNullOrEmpty
+			Should-BeEmptyString $records[0].FullName
 			Should-Be 16 $records[15].Id
 			Should-Be ([CharacterGender]::DarkLord) $records[15].Gender
-			$records[15].FullName | Should -BeNullOrEmpty
+			Should-BeEmptyString $records[15].FullName
 		}
 	}
 
 	Context "Id" {
 		It "should find the entity with the specified identifier" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2
-			$record | Should -Not -BeNullOrEmpty
+			Should-NotBeNull $record
 			Should-Be 2 $record.Id
 			$record.FullName | Should -BeExactly Balin
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14
-			$record | Should -Not -BeNullOrEmpty
+			Should-NotBeNull $record
 			Should-Be 14 $record.Id
 			$record.FullName | Should -BeExactly "Sam Gamgee"
 		}
 
 		It "should allow selecting a specific set of columns" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
-			$record.FullName | Should -BeNullOrEmpty
+			Should-BeEmptyString $record.FullName
 			Should-Be ([CharacterGender]::Dwarf) $record.Gender
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14 -Columns gender
-			$record.FullName | Should -BeNullOrEmpty
+			Should-BeEmptyString $record.FullName
 			Should-Be ([CharacterGender]::Hobbit) $record.Gender
 		}
 
 		It "should return `$null if the entity is not found" {
-			Find-SqlObject $connection -Class ([Character]) -Id 666 | Should -BeNullOrEmpty
+			Should-BeNull (Find-SqlObject $connection -Class ([Character]) -Id 666)
 		}
 	}
 }

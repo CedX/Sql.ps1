@@ -12,7 +12,7 @@ Describe "Remove-Object" {
 	Context "All" {
 		It "should remove all entities from the underlying table" {
 			$sql = "SELECT COUNT(*) FROM Characters"
-			Get-SqlScalar $connection -As ([int]) -Command $sql | Should -BeGreaterThan 0
+			Should-BeGreaterThan 0 (Get-SqlScalar $connection -As ([int]) -Command $sql)
 			Remove-SqlObject $connection -Class ([Character]) -All -Truncate
 			Should-Be 0 (Get-SqlScalar $connection -As ([int]) -Command $sql)
 		}
