@@ -16,7 +16,7 @@ function New-Command {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The text of the SQL statement.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[string] $Text,
 
 		# The wait time, in seconds, before terminating the attempt to execute the command and generating an error.

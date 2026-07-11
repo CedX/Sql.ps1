@@ -15,16 +15,16 @@ function New-Connection {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The type of connection class to instantiate.
-		[Parameter(Mandatory, ParameterSetName = "Class", Position = 0)]
+		[Parameter(Mandatory, ParameterSetName = "Class", Position = 1)]
 		[Type] $Class,
 
 		# The name of an ADO.NET provider.
-		[Parameter(Mandatory, ParameterSetName = "Provider", Position = 0)]
+		[Parameter(Mandatory, ParameterSetName = "Provider", Position = 1)]
 		[ValidateSet("Odbc", "OleDb", "SqlClient")]
 		[string] $Provider,
 
 		# The connection string used to open the database.
-		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
 		[string] $ConnectionString,
 
 		# Value indicating whether to open the connection.

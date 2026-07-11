@@ -102,7 +102,7 @@ Describe "Get-Mapper" {
 			$character = (Get-SqlMapper).CreateInstance([Character], $properties)
 			$character | Should -BeOfType ([Character])
 			$character.FirstName | Should -BeExactly Cédric
-			$character.Gender | Should -Be ([CharacterGender]::Balrog)
+			Should-Be ([CharacterGender]::Balrog) $character.Gender
 			$character.LastName | Should -Be ""
 		}
 	}
@@ -112,12 +112,12 @@ Describe "Get-Mapper" {
 			$table = (Get-SqlMapper).GetTable([Character])
 			$table.Schema | Should -BeExactly main
 			$table.Name | Should -BeExactly Characters
-			$table.Type | Should -Be ([Character])
+			Should-Be ([Character]) $table.Type
 
 			Should-Be 5 $table.Columns.Count
 			$table.IdentityColumn | Should -Be $table.Columns.ID
-			$table.Columns.gender.PropertyType | Should -Be ([CharacterGender])
-			$table.Columns.lastName.PropertyType | Should -Be ([string])
+			Should-Be ([CharacterGender]) $table.Columns.gender.PropertyType
+			Should-Be ([string]) $table.Columns.lastName.PropertyType
 
 			$table.Columns.firstName.CanWrite | Should-BeTrue
 			$table.Columns.fullName.IsComputed | Should-BeTrue

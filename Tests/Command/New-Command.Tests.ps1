@@ -9,7 +9,7 @@ Describe "New-Command" {
 	Context "ImplicitConversion" {
 		It "should create a command from the specified string" {
 			[Belin.Sql.SqlCommand] $command = "SELECT * FROM Characters"
-			$command.Text | Should -BeExactly "SELECT * FROM Characters"
+			Should-BeString "SELECT * FROM Characters" $command.Text -CaseSensitive
 		}
 	}
 }

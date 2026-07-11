@@ -14,7 +14,7 @@ Describe "Update-Object" {
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$sauron.FullName | Should -BeExactly Sauron
-		$sauron.Gender | Should -Be ([CharacterGender]::DarkLord)
+		Should-Be ([CharacterGender]::DarkLord) $sauron.Gender
 
 		$sauron.LastName = "The big bad guy"
 		$sauron.Gender = [CharacterGender]::Istari
@@ -22,7 +22,7 @@ Describe "Update-Object" {
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$sauron.FullName | Should -BeExactly "Sauron The big bad guy"
-		$sauron.Gender | Should -Be ([CharacterGender]::Istari)
+		Should-Be ([CharacterGender]::Istari) $sauron.Gender
 	}
 
 	It "should allow updating a specific set of columns" {
@@ -30,7 +30,7 @@ Describe "Update-Object" {
 
 		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$saruman.FullName | Should -BeExactly Saruman
-		$saruman.Gender | Should -Be ([CharacterGender]::Istari)
+		Should-Be ([CharacterGender]::Istari) $saruman.Gender
 
 		$saruman.LastName = "The traitor"
 		$saruman.Gender = [CharacterGender]::DarkLord
@@ -38,6 +38,6 @@ Describe "Update-Object" {
 
 		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$saruman.FullName | Should -BeExactly Saruman
-		$saruman.Gender | Should -Be ([CharacterGender]::DarkLord)
+		Should-Be ([CharacterGender]::DarkLord) $saruman.Gender
 	}
 }

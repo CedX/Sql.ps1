@@ -16,11 +16,11 @@ Describe "Invoke-Query" {
 
 		$elrond = $records[0]
 		$elrond.FullName | Should -BeExactly Elrond
-		$elrond.Gender | Should -Be ([CharacterGender]::Elf)
+		Should-Be ([CharacterGender]::Elf) $elrond.Gender
 
 		$galadriel = $records[1]
 		$galadriel.FullName | Should -BeExactly Galadriel
-		$galadriel.Gender | Should -Be ([CharacterGender]::Elf)
+		Should-Be ([CharacterGender]::Elf) $galadriel.Gender
 	}
 
 	It "should allow the data rows to be split into distinct objects" {

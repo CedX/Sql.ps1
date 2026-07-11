@@ -13,7 +13,7 @@ Describe "Get-Single" {
 		$sql = "SELECT * FROM Characters WHERE fullName = @FullName"
 		$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ FullName = "Saruman" }
 		$record.FirstName | Should -BeExactly Saruman
-		$record.Gender | Should -Be ([CharacterGender]::Istari)
+		Should-Be ([CharacterGender]::Istari) $record.Gender
 	}
 
 	It "should throw an error if the query produces no results" {

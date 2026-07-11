@@ -15,7 +15,7 @@ function New-OrderHintCollection {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The collection whose elements are copied to the order hint collection.
-		[Parameter(Position = 0, ValueFromPipeline)]
+		[Parameter(Position = 1, ValueFromPipeline)]
 		[ValidateNotNull()]
 		[SqlOrderHint[]] $OrderHints = @()
 	)

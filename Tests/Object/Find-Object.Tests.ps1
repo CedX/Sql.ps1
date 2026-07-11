@@ -31,10 +31,10 @@ Describe "Find-Object" {
 		It "should allow selecting a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -Columns gender
 			$records[0].Id | Should -Be 1
-			$records[0].Gender | Should -Be ([CharacterGender]::Human)
+			Should-Be ([CharacterGender]::Human) $records[0].Gender
 			$records[0].FullName | Should -BeNullOrEmpty
 			$records[15].Id | Should -Be 16
-			$records[15].Gender | Should -Be ([CharacterGender]::DarkLord)
+			Should-Be ([CharacterGender]::DarkLord) $records[15].Gender
 			$records[15].FullName | Should -BeNullOrEmpty
 		}
 	}
@@ -55,11 +55,11 @@ Describe "Find-Object" {
 		It "should allow selecting a specific set of columns" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
 			$record.FullName | Should -BeNullOrEmpty
-			$record.Gender | Should -Be ([CharacterGender]::Dwarf)
+			Should-Be ([CharacterGender]::Dwarf) $record.Gender
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14 -Columns gender
 			$record.FullName | Should -BeNullOrEmpty
-			$record.Gender | Should -Be ([CharacterGender]::Hobbit)
+			Should-Be ([CharacterGender]::Hobbit) $record.Gender
 		}
 
 		It "should return `$null if the entity is not found" {

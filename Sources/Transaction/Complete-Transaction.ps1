@@ -11,7 +11,7 @@ function Complete-Transaction {
 	[OutputType([void])]
 	param (
 		# The transaction to commit.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[IDbTransaction] $InputObject
 	)
 

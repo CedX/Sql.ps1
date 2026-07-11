@@ -11,7 +11,7 @@ function Undo-Transaction {
 	[OutputType([void])]
 	param (
 		# The transaction to roll back.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[IDbTransaction] $InputObject
 	)
 

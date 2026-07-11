@@ -14,15 +14,15 @@ function Test-Object {
 	[OutputType([bool])]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The type of object to check.
-		[Parameter(Mandatory, Position = 1)]
+		[Parameter(Mandatory, Position = 2)]
 		[Type] $Class,
 
 		# The primary key value.
-		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 3, ValueFromPipeline)]
 		[object] $Id,
 
 		# An optional command builder used to build the SQL query to be executed.

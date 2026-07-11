@@ -19,15 +19,15 @@ function Remove-Object {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The entity to delete.
-		[Parameter(Mandatory, ParameterSetName = "InputObject", Position = 1, ValueFromPipeline)]
+		[Parameter(Mandatory, ParameterSetName = "InputObject", Position = 2, ValueFromPipeline)]
 		[object] $InputObject,
 
 		# The type of object to delete.
-		[Parameter(Mandatory, ParameterSetName = "All", Position = 1)]
+		[Parameter(Mandatory, ParameterSetName = "All", Position = 2)]
 		[Type] $Class,
 
 		# Value indicating whether to delete all entities.

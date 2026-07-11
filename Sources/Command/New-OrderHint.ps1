@@ -15,11 +15,11 @@ function New-OrderHint {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The name of the column for which the hint is being provided.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[string] $Column,
 
 		# The sort order of the column.
-		[Parameter(Position = 1)]
+		[Parameter(Position = 2)]
 		[SortOrder] $SortOrder = [SortOrder]::Ascending
 	)
 

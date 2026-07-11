@@ -12,15 +12,15 @@ function Get-Scalar {
 	[OutputType([object])]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The command to be executed.
-		[Parameter(Mandatory, Position = 1)]
+		[Parameter(Mandatory, Position = 2)]
 		[SqlCommand] $Command,
 
 		# The parameters of the SQL statement.
-		[Parameter(Position = 2)]
+		[Parameter(Position = 3)]
 		[SqlParameterCollection] $Parameters,
 
 		# The type of object to return.

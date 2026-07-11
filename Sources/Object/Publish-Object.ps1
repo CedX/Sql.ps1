@@ -14,11 +14,11 @@ function Publish-Object {
 	[OutputType([long])]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The entity to insert.
-		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
 		[object] $InputObject,
 
 		# An optional command builder used to build the SQL query to be executed.

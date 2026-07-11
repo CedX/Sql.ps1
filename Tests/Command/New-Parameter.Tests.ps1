@@ -12,7 +12,7 @@ Describe "New-Parameter" {
 		It "should create a parameter from the specified array" {
 			[SqlParameter] $parameter = "", $null
 			$parameter.Name | Should -BeExactly "?"
-			$parameter.Value | Should -Be ([DBNull]::Value)
+			Should-Be ([DBNull]::Value) $parameter.Value
 
 			$parameter = ":foo", "bar"
 			$parameter.Name | Should -BeExactly ":foo"
@@ -26,7 +26,7 @@ Describe "New-Parameter" {
 		It "should create a parameter from the specified tuple" {
 			[SqlParameter] $parameter = [ValueTuple]::Create("", [object] $null)
 			$parameter.Name | Should -BeExactly "?"
-			$parameter.Value | Should -Be ([DBNull]::Value)
+			Should-Be ([DBNull]::Value) $parameter.Value
 
 			$parameter = [ValueTuple]::Create(":foo", [object] "bar")
 			$parameter.Name | Should -BeExactly ":foo"
@@ -40,7 +40,7 @@ Describe "New-Parameter" {
 		It "should create a parameter from the specified key/value pair" {
 			[SqlParameter] $parameter = [KeyValuePair[string, object]]::new("foo", $null)
 			$parameter.Name | Should -BeExactly "@foo"
-			$parameter.Value | Should -Be ([DBNull]::Value)
+			Should-Be ([DBNull]::Value) $parameter.Value
 
 			$parameter = [KeyValuePair[string, object]]::new(":bar", "Baz")
 			$parameter.Name | Should -BeExactly ":bar"

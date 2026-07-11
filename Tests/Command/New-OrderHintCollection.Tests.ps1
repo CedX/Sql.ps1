@@ -17,7 +17,7 @@ Describe "New-OrderHintCollection" {
 
 		$orderHint = $collection[0]
 		$orderHint.Column | Should -BeExactly ID
-		$orderHint.SortOrder | Should -Be ([SortOrder]::Descending)
+		Should-Be ([SortOrder]::Descending) $orderHint.SortOrder
 	}
 
 	It "should create a collection from an array of order hints" {
@@ -27,7 +27,7 @@ Describe "New-OrderHintCollection" {
 
 		$orderHint = $collection[$collection.Count - 1]
 		$orderHint.Column | Should -BeExactly Name
-		$orderHint.SortOrder | Should -Be ([SortOrder]::Ascending)
+		Should-Be ([SortOrder]::Ascending) $orderHint.SortOrder
 	}
 
 	Context "Contains" {
@@ -68,7 +68,7 @@ Describe "New-OrderHintCollection" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
 			$orderHint = $collection["id"]
 			$orderHint.Column | Should -BeExactly ID
-			$orderHint.SortOrder | Should -Be ([SortOrder]::Descending)
+			Should-Be ([SortOrder]::Descending) $orderHint.SortOrder
 			$collection[0] | Should -Be $orderHint
 		}
 

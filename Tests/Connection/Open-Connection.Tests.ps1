@@ -9,9 +9,9 @@ using module ../../Sql.psd1
 Describe "Open-Connection" {
 	It "should open the specified connection" {
 		$connection = [System.Data.SQLite.SQLiteConnection]::new("DataSource=:memory:")
-		$connection.State | Should -Be ([ConnectionState]::Closed)
+		Should-Be ([ConnectionState]::Closed) $connection.State
 		Open-SqlConnection $connection
-		$connection.State | Should -Be ([ConnectionState]::Open)
+		Should-Be ([ConnectionState]::Open) $connection.State
 		$connection.Close()
 	}
 }

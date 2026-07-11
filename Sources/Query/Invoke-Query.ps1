@@ -13,15 +13,15 @@ function Invoke-Query {
 	[OutputType([System.Collections.Generic.IList[System.Runtime.CompilerServices.ITuple]])]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The command to be executed.
-		[Parameter(Mandatory, Position = 1)]
+		[Parameter(Mandatory, Position = 2)]
 		[SqlCommand] $Command,
 
 		# The parameters of the SQL statement.
-		[Parameter(Position = 2)]
+		[Parameter(Position = 3)]
 		[SqlParameterCollection] $Parameters,
 
 		# The type of objects to return.

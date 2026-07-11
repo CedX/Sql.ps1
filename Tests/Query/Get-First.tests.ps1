@@ -13,7 +13,7 @@ Describe "Get-First" {
 		$sql = "SELECT * FROM Characters WHERE fullName = @FullName"
 		$record = Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ FullName = "Sauron" }
 		$record.FirstName | Should -BeExactly Sauron
-		$record.Gender | Should -Be ([CharacterGender]::DarkLord)
+		Should-Be ([CharacterGender]::DarkLord) $record.Gender
 	}
 
 	It "should throw an error if the query produces no results" {

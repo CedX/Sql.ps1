@@ -15,15 +15,15 @@ function Find-Object {
 	[OutputType([System.Collections.Generic.IList[object]])]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The type of object to find.
-		[Parameter(Mandatory, Position = 1)]
+		[Parameter(Mandatory, Position = 2)]
 		[Type] $Class,
 
 		# The primary key value.
-		[Parameter(Mandatory, ParameterSetName = "Id", Position = 2, ValueFromPipeline)]
+		[Parameter(Mandatory, ParameterSetName = "Id", Position = 3, ValueFromPipeline)]
 		[object] $Id,
 
 		# Value indicating whether to find all entities.

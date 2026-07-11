@@ -10,8 +10,8 @@ Describe "Close-Connection" {
 	It "should close the specified connection" {
 		$connection = [System.Data.SQLite.SQLiteConnection]::new("DataSource=:memory:")
 		$connection.Open()
-		$connection.State | Should -Be ([ConnectionState]::Open)
+		Should-Be ([ConnectionState]::Open) $connection.State
 		Close-SqlConnection $connection
-		$connection.State | Should -Be ([ConnectionState]::Closed)
+		Should-Be ([ConnectionState]::Closed) $connection.State
 	}
 }

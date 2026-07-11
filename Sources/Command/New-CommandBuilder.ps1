@@ -15,7 +15,7 @@ function New-CommandBuilder {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, ParameterSetName = "Connection", Position = 0)]
+		[Parameter(Mandatory, ParameterSetName = "Connection", Position = 1)]
 		[IDbConnection] $Connection,
 
 		#	The position of the catalog name in a qualified table name.

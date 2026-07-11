@@ -11,7 +11,7 @@ function Open-Connection {
 	[OutputType([void])]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[IDbConnection] $InputObject
 	)
 

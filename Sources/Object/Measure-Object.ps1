@@ -17,11 +17,11 @@ function Measure-Object {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The type of object to count.
-		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 2, ValueFromPipeline)]
 		[Type] $Class,
 
 		# Value indicating whether to count all entities.

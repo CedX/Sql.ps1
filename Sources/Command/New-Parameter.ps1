@@ -16,12 +16,12 @@ function New-Parameter {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The parameter name.
-		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+		[Parameter(Mandatory, Position = 1, ValueFromPipeline)]
 		[AllowEmptyString()]
 		[string] $Name,
 
 		# The parameter value.
-		[Parameter(Position = 1)]
+		[Parameter(Position = 2)]
 		[object] $Value,
 
 		# Value indicating whether this parameter is input-only, output-only, bidirectional, or a stored procedure return value parameter.

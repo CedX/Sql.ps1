@@ -20,7 +20,7 @@ Describe "New-ParameterCollection" {
 		$parameter = $collection[0]
 		$parameter.Name | Should -BeExactly "?1"
 		$parameter.Value | Should -Be 123
-		$parameter.DbType | Should -Be ([DbType]::Int64)
+		Should-Be ([DbType]::Int64) $parameter.DbType
 	}
 
 	It "should create a collection from an array of parameters" {
@@ -31,7 +31,7 @@ Describe "New-ParameterCollection" {
 		$parameter = $collection[$collection.Count - 1]
 		$parameter.Name | Should -BeExactly "@Key"
 		$parameter.Value | Should -BeExactly Unique
-		$parameter.DbType | Should -Be ([DbType]::AnsiString)
+		Should-Be ([DbType]::AnsiString) $parameter.DbType
 	}
 
 	Context "AddWithValue" {

@@ -13,11 +13,11 @@ function Start-Transaction {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection to the data source.
-		[Parameter(Mandatory, Position = 0)]
+		[Parameter(Mandatory, Position = 1)]
 		[IDbConnection] $Connection,
 
 		# The isolation level for the transaction to use.
-		[Parameter(Position = 1)]
+		[Parameter(Position = 2)]
 		[IsolationLevel] $IsolationLevel = [IsolationLevel]::Unspecified
 	)
 
