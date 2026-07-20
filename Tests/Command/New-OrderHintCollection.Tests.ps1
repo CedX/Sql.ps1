@@ -25,7 +25,7 @@ Describe "New-OrderHintCollection" {
 		$collection = New-SqlOrderHintCollection $orderHints
 		Should-Be 2 $collection.Count
 
-		$orderHint = $collection[$collection.Count - 1]
+		$orderHint = $collection[-1]
 		Should-BeString Name $orderHint.Column -CaseSensitive
 		Should-Be ([SortOrder]::Ascending) $orderHint.SortOrder
 	}

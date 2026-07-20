@@ -28,7 +28,7 @@ Describe "New-ParameterCollection" {
 		$collection = New-SqlParameterCollection $parameters
 		Should-Be 2 $collection.Count
 
-		$parameter = $collection[$collection.Count - 1]
+		$parameter = $collection[-1]
 		Should-BeString "@Key" $parameter.Name -CaseSensitive
 		Should-BeString Unique $parameter.Value -CaseSensitive
 		Should-Be ([DbType]::AnsiString) $parameter.DbType
