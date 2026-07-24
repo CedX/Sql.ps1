@@ -10,12 +10,12 @@ using module ../../Sql.psd1
 Describe "New-ParameterCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlParameterCollection
-		Should-Be 0 $collection.Count
+		Should-BeCollection $collection -Count 0
 	}
 
 	It "should create a collection from a single parameter" {
 		$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123 -DbType Int64)
-		Should-Be 1 $collection.Count
+		Should-BeCollection $collection -Count 1
 
 		$parameter = $collection[0]
 		Should-BeString "?1" $parameter.Name -CaseSensitive
@@ -26,7 +26,7 @@ Describe "New-ParameterCollection" {
 	It "should create a collection from an array of parameters" {
 		$parameters = (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 		$collection = New-SqlParameterCollection $parameters
-		Should-Be 2 $collection.Count
+		Should-BeCollection $collection -Count 2
 
 		$parameter = $collection[-1]
 		Should-BeString "@Key" $parameter.Name -CaseSensitive
@@ -37,15 +37,15 @@ Describe "New-ParameterCollection" {
 	Context "AddWithValue" {
 		It "should add a new parameter to the collection" {
 			$collection = New-SqlParameterCollection
-			Should-Be 0 $collection.Count
+			Should-BeCollection $collection -Count 0
 
 			$parameter = $collection.AddWithValue("Name", "Value1")
-			Should-Be 1 $collection.Count
+			Should-BeCollection $collection -Count 1
 			Should-BeString "@Name" $parameter.Name -CaseSensitive
 			Should-BeString Value1 $parameter.Value -CaseSensitive
 
 			$parameter = $collection.AddWithValue("Value2")
-			Should-Be 2 $collection.Count
+			Should-BeCollection $collection -Count 2
 			Should-BeString "?2" $parameter.Name -CaseSensitive
 			Should-BeString Value2 $parameter.Value -CaseSensitive
 		}
@@ -121,11 +121,11 @@ Describe "New-ParameterCollection" {
 	Context "RemoveAt" {
 		It "should remove the parameter with the specified name" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			Should-Be 2 $collection.Count
+			Should-BeCollection $collection -Count 2
 			$collection.RemoveAt("Key")
-			Should-Be 1 $collection.Count
+			Should-BeCollection $collection -Count 1
 			$collection.RemoveAt("?1")
-			Should-Be 0 $collection.Count
+			Should-BeCollection $collection -Count 0
 		}
 
 		It "should throw an error if the specified name does not exist" {

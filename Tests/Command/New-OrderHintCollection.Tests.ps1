@@ -8,12 +8,12 @@ using namespace System.Collections.Generic
 Describe "New-OrderHintCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlOrderHintCollection
-		Should-Be 0 $collection.Count
+		Should-BeCollection $collection -Count 0
 	}
 
 	It "should create a collection from a single order hint" {
 		$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending)
-		Should-Be 1 $collection.Count
+		Should-BeCollection $collection -Count 1
 
 		$orderHint = $collection[0]
 		Should-BeString ID $orderHint.Column -CaseSensitive
@@ -23,7 +23,7 @@ Describe "New-OrderHintCollection" {
 	It "should create a collection from an array of order hints" {
 		$orderHints = (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
 		$collection = New-SqlOrderHintCollection $orderHints
-		Should-Be 2 $collection.Count
+		Should-BeCollection $collection -Count 2
 
 		$orderHint = $collection[-1]
 		Should-BeString Name $orderHint.Column -CaseSensitive
@@ -98,11 +98,11 @@ Describe "New-OrderHintCollection" {
 	Context "RemoveAt" {
 		It "should remove the order hint with the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			Should-Be 2 $collection.Count
+			Should-BeCollection $collection -Count 2
 			$collection.RemoveAt("name")
-			Should-Be 1 $collection.Count
+			Should-BeCollection $collection -Count 1
 			$collection.RemoveAt("id")
-			Should-Be 0 $collection.Count
+			Should-BeCollection $collection -Count 0
 		}
 
 		It "should throw an error if the specified column name does not exist" {
