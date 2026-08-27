@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [3.2.0](https://github.com/CedX/Sql.ps1/compare/v3.1.0...v3.2.0)
+- Updated the package dependencies.
+
 ## Version [3.1.0](https://github.com/CedX/Sql.ps1/compare/v3.0.3...v3.1.0)
 - Added support for SQL parameter values wrapped in `[PSObject]` instances.
 
