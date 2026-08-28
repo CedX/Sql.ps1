@@ -1,7 +1,22 @@
-﻿using namespace System.Diagnostics.CodeAnalysis
+using namespace Belin.Sql
+using namespace System.Diagnostics.CodeAnalysis
 using assembly ../../Binaries/System.Data.SQLite.dll
 using module ../../Sql.psd1
 using module ../Character.psm1
+
+
+<#
+.SYNOPSIS
+	Tests the features of the `New-Command` cmdlet.
+#>
+Describe "New-Command" {
+	Context "ImplicitConversion" {
+		It "should create a command from the specified string" {
+			[Belin.Sql.SqlCommand] $command = "SELECT * FROM Characters"
+			Should-BeString "SELECT * FROM Characters" $command.Text -CaseSensitive
+		}
+	}
+}
 
 <#
 .SYNOPSIS
