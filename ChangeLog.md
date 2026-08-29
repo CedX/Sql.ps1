@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [3.2.2](https://github.com/CedX/Sql.ps1/compare/v3.2.1...v3.2.2)
+- Optimized the packaging.
+
 ## Version [3.2.1](https://github.com/CedX/Sql.ps1/compare/v3.2.0...v3.2.1)
 - Fixed a packaging issue.
 
