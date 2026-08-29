@@ -1,4 +1,4 @@
-using namespace Belin.Sql
+﻿using namespace Belin.Sql
 
 <#
 .SYNOPSIS

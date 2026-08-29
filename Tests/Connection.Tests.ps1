@@ -1,5 +1,5 @@
-﻿using namespace System.Data
-using assembly ../Binaries/System.Data.SQLite.dll
+﻿using assembly ../Binaries/System.Data.SQLite.dll
+using namespace System.Data
 using module ../Sql.psd1
 
 <#
