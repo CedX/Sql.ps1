@@ -10,7 +10,7 @@ If you like [SQL](https://en.wikipedia.org/wiki/SQL) but dislike the boilerplate
 Install the latest version of **SQL Mapper for PowerShell**
 with [PSResourceGet](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.psresourceget) package manager:
 
-```shell
+```powershell
 Install-PSResource Belin.Sql
 ```
 
