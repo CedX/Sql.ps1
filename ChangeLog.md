@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [4.0.0](https://github.com/CedX/Sql.net/compare/v3.3.0...v4.0.0)
+- Ported the cmdlets to [F#](https://learn.microsoft.com/en-us/dotnet/fsharp).
+
 ## Version [3.3.0](https://github.com/CedX/Sql.net/compare/v3.2.2...v3.3.0)
 - Updated the package dependencies.
 
