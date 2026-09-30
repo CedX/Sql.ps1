@@ -1,12 +1,13 @@
 namespace Belin.Sql
 
 open System.Data
+open System.Data.Common
 open System.Management.Automation
 
 /// Closes the specified database connection.
 [<Cmdlet(VerbsCommon.Close, "Connection")>]
 [<OutputType(typeof<unit>)>]
-type NewConnectionCommand() =
+type CloseConnectionCommand() =
   inherit Cmdlet()
 
   /// The connection to the data source.
@@ -19,7 +20,10 @@ type NewConnectionCommand() =
 
   /// Performs execution of this command.
   override this.ProcessRecord() =
-    // try this.InputObject.Close()
-    // catch this.WriteError "TODO"
-    // finally { if this.Dispose then this.InputObject.Dispose() }
-    ()
+    let connection = nonNull this.InputObject
+    try
+      try connection.Close()
+      with :? DbException as ex ->
+        this.WriteError (ErrorRecord(ex, "Db", ErrorCategory.CloseError, this.InputObject))
+    finally
+      if this.Dispose.IsPresent then connection.Dispose()
