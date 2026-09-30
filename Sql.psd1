@@ -17,6 +17,7 @@
 
 	CmdletsToExport = @(
 		"Close-Connection"
+		"Open-Connection"
 	)
 
 	FunctionsToExport = @(
@@ -36,7 +37,6 @@
 		"New-OrderHintCollection"
 		"New-Parameter"
 		"New-ParameterCollection"
-		"Open-Connection"
 		"Publish-Object"
 		"Remove-Object"
 		"Start-Transaction"
