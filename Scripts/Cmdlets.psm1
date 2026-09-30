@@ -64,6 +64,7 @@ function Publish-PSGalleryModule {
 	Copy-Item $root/Sql.psd1 $output/Belin.Sql.psd1
 	Copy-Item $root/*.md $output
 	$module.RootModule | Copy-Item -Destination $output/Binaries
+	$module.RequiredAssemblies | ForEach-Object { "$root/$_" } | Copy-Item -Destination $output/Binaries
 
 	$output = "$root/Temp/PSGallery"
 	New-Item $output -ItemType Directory | Out-Null

@@ -16,11 +16,10 @@
 	VariablesToExport = @()
 
 	CmdletsToExport = @(
-
+		"Close-Connection"
 	)
 
 	FunctionsToExport = @(
-		"Close-Connection"
 		"Complete-Transaction"
 		"Find-Object"
 		"Get-First"
