@@ -9,18 +9,24 @@
 
 	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AssemblyName>Belin.Sql.PowerShell.Tests</AssemblyName>
-		<BaseOutputPath>obj</BaseOutputPath>
+		<AssemblyName>Belin.Sql.PowerShell</AssemblyName>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<HotReloadAutoRestart>true</HotReloadAutoRestart>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<OutDir>../Binaries</OutDir>
 		<RootNamespace>Belin.Sql</RootNamespace>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<TargetFramework>net10.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SQLite" Version="3.53.4" />
-		<PackageReference Include="System.Data.SQLite" Version="2.0.4" />
+		<InternalsVisibleTo Include="$(RootNamespace).Tests" />
+		<PackageReference Include="Belin.Sql" Version="5.3.0" />
+		<PackageReference Include="System.Management.Automation" Version="7.6.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- <Compile Include="Validator.fs" /> -->
 	</ItemGroup>
 </Project>
