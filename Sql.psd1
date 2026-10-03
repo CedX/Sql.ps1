@@ -1,8 +1,9 @@
 @{
 	DefaultCommandPrefix = "Sql"
-	ModuleVersion = "3.3.0"
+	ModuleVersion = "4.0.0"
 	PowerShellVersion = "7.6"
-	RootModule = "Sources/Main.psm1"
+	RootModule = "Binaries/Belin.Sql.PowerShell.dll"
+	NestedModules = , "Sources/Main.psm1"
 
 	Author = "Cédric Belin <cedx@outlook.com>"
 	CompanyName = "Cedric-Belin.fr"
@@ -11,12 +12,15 @@
 	GUID = "d2b1c123-e1bc-4cca-84c5-af102244e3c5"
 
 	AliasesToExport = @()
-	CmdletsToExport = @()
 	RequiredAssemblies = , "Binaries/Belin.Sql.dll"
 	VariablesToExport = @()
 
-	FunctionsToExport = @(
+	CmdletsToExport = @(
 		"Close-Connection"
+		"Open-Connection"
+	)
+
+	FunctionsToExport = @(
 		"Complete-Transaction"
 		"Find-Object"
 		"Get-First"
@@ -33,13 +37,16 @@
 		"New-OrderHintCollection"
 		"New-Parameter"
 		"New-ParameterCollection"
-		"Open-Connection"
 		"Publish-Object"
 		"Remove-Object"
 		"Start-Transaction"
 		"Test-Object"
 		"Undo-Transaction"
 		"Update-Object"
+	)
+
+	RequiredModules = @(
+		@{ ModuleName = "Belin.FSharp"; ModuleVersion = "10.1.401" }
 	)
 
 	PrivateData = @{
