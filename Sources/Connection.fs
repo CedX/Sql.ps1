@@ -45,6 +45,10 @@ type NewConnection() =
   [<Parameter(Mandatory = true, Position = 2, ValueFromPipeline = true)>]
   member val ConnectionString = "" with get, set
 
+  /// Value indicating whether to open the connection.
+  [<Parameter>]
+  member val Open = SwitchParameter false with get, set
+
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connectionType =
@@ -62,7 +66,9 @@ type NewConnection() =
 
     try
       match Activator.CreateInstance(connectionType, this.ConnectionString) with
-      | :? IDbConnection as connection -> this.WriteObject connection
+      | :? IDbConnection as connection ->
+        if this.Open.IsPresent then connection.Open()
+        this.WriteObject connection
       | _ -> this.ThrowTerminatingError (ErrorRecord(ArgumentException errorMessage, errorId, errorCategory, connectionType))
     with ex ->
       this.ThrowTerminatingError (ErrorRecord(ArgumentException(errorMessage, ex), errorId, errorCategory, connectionType))

@@ -28,6 +28,13 @@ Describe "New-Connection" {
 	) {
 		$connection = New-SqlConnection $provider $connectionString
 		$connection | Should-HaveType $expected
+		$connection.State | Should-Be ([ConnectionState]::Closed)
+		$connection.Dispose()
+	}
+
+	It "should open the newly created connection" {
+		$connection = New-SqlConnection ([System.Data.SQLite.SQLiteConnection]) "DataSource=:memory:" -Open
+		$connection.State | Should-Be ([ConnectionState]::Open)
 		$connection.Dispose()
 	}
 }
