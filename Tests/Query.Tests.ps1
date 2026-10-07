@@ -38,7 +38,7 @@ Describe "Get-Scalar" {
 		Should-BeString Characters (Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "Characters"; Type = "table" }) -CaseSensitive
 
 		$sql = "SELECT tbl_name FROM sqlite_schema WHERE name = @Name"
-		Should-BeNull (Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "FooBarBazQux" })
+		Get-SqlScalar $connection -As ([string]) -Command $sql -Parameters @{ Name = "FooBarBazQux" } | Should-BeNull
 	}
 }
 
@@ -119,12 +119,12 @@ Describe "Invoke-Query" {
 		Should-Be 6 $left.ID
 		Should-BeString Frodo $left.firstName -CaseSensitive
 		Should-BeString Baggins $left.lastName -CaseSensitive
-		Should-BeNull $left.fullName
+		$left.fullName | Should-BeNull
 
 		$right = $records.Item2
 		Should-Be 6 $right.ID
 		Should-BeString "Frodo Baggins" $right.fullName -CaseSensitive
 		Should-BeString Hobbit $right.gender -CaseSensitive
-		Should-BeNull $right.firstName
+		$right.firstName | Should-BeNull
 	}
 }

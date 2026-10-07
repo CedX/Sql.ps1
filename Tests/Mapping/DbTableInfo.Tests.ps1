@@ -18,7 +18,7 @@ Describe "DbTableInfo" {
 
 	Context "IdentityColumn" {
 		It "should return the identity column associated with the specified entity class, if any" {
-			Should-BeNull ([Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).IdentityColumn)
+			[Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).IdentityColumn | Should-BeNull
 
 			$identityColumn = [Belin.Sql.DbTableInfo]::new([Character]).IdentityColumn
 			Should-NotBeNull $identityColumn
@@ -38,11 +38,11 @@ Describe "DbTableInfo" {
 
 	Context "Schema" {
 		It "should return `$null` when there is no [Table] attribute" {
-			Should-BeNull ([Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).Schema)
+			[Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).Schema | Should-BeNull
 		}
 
 		It "should return the value of the [Table] attribute when it is present" {
-			Should-BeString main ([Belin.Sql.DbTableInfo]::new([Character]).Schema) -CaseSensitive
+			[Belin.Sql.DbTableInfo]::new([Character]).Schema | Should-BeString "main" -CaseSensitive
 		}
 	}
 }

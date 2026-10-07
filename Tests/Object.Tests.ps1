@@ -63,7 +63,7 @@ Describe "Find-Object" {
 		}
 
 		It "should return `$null if the entity is not found" {
-			Should-BeNull (Find-SqlObject $connection -Class ([Character]) -Id 666)
+			Find-SqlObject $connection -Class ([Character]) -Id 666 | Should-BeNull
 		}
 	}
 }
@@ -93,7 +93,7 @@ Describe "Publish-Object" {
 
 	It "should insert the specified entity" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Cédric'"
-		Should-BeNull (Invoke-SqlQuery $connection -As ([Character]) -Command $sql)
+		Invoke-SqlQuery $connection -As ([Character]) -Command $sql | Should-BeNull
 
 		$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin"; Gender = "Istari" }
 		Should-Be 0 $record.Id
@@ -134,9 +134,9 @@ Describe "Remove-Object" {
 		It "should delete the entity with the specified identifier" {
 			$sql = "SELECT * FROM Characters WHERE ID = @Id"
 			$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 }
-			Should-BeTrue (Remove-SqlObject $connection -InputObject $record)
-			Should-BeFalse (Remove-SqlObject $connection -InputObject $record)
-			Should-BeNull (Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore)
+			Remove-SqlObject $connection -InputObject $record | Should-BeTrue
+			Remove-SqlObject $connection -InputObject $record | Should-BeFalse
+			Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore | Should-BeNull
 		}
 	}
 }
@@ -150,11 +150,11 @@ Describe "Test-Object" {
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
 	It "should `$true if the specified identifier exists" {
-		Should-BeTrue (Test-SqlObject $connection -Class ([Character]) -Id 1)
+		Test-SqlObject $connection -Class ([Character]) -Id 1 | Should-BeTrue
 	}
 
 	It "should `$false if the specified identifier does not exist" {
-		Should-BeFalse (Test-SqlObject $connection -Class ([Character]) -Id 666)
+		Test-SqlObject $connection -Class ([Character]) -Id 666 | Should-BeFalse
 	}
 }
 
