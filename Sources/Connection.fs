@@ -14,6 +14,10 @@ type CloseConnection() =
   [<Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)>]
   member val InputObject: IDbConnection | null = null with get, set
 
+  /// Value indicating whether the connection should also be disposed.
+  [<Parameter>]
+  member val Dispose = SwitchParameter false with get, set
+
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.InputObject
@@ -21,7 +25,7 @@ type CloseConnection() =
       try connection.Close()
       with :? DbException as ex -> this.WriteError (ErrorRecord(ex, "Connection.Close", ErrorCategory.CloseError, connection))
     finally
-      connection.Dispose()
+      if this.Dispose.IsPresent then connection.Dispose()
 
 /// Creates a new database connection.
 [<Cmdlet(VerbsCommon.New, "Connection", DefaultParameterSetName = "Class"); OutputType(typeof<IDbConnection>)>]
