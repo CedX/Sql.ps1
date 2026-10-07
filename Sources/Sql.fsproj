@@ -32,11 +32,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="Command.fs" />
-		<Compile Include="Connection.fs" />
+		<!-- <Compile Include="Command.fs" /> -->
+		<!-- <Compile Include="Connection.fs" /> -->
 		<Compile Include="Mapping.fs" />
-		<Compile Include="Object.fs" />
-		<Compile Include="Query.fs" />
+		<!-- <Compile Include="Object.fs" /> -->
+		<!-- <Compile Include="Query.fs" /> -->
 		<Compile Include="Transaction.fs" />
 	</ItemGroup>
 </Project>
