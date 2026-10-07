@@ -8,11 +8,11 @@ using module ../Character.psm1
 Describe "DbTableInfo" {
 	Context "Columns" {
 		It "should return all columns associated with the specified entity class" {
-			Should-Be 0 ([Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).Columns.Count)
+			[Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).Columns.Count | Should-Be 0
 
 			$columns = [Belin.Sql.DbTableInfo]::new([Character]).Columns
-			Should-Be 5 $columns.Count
-			Should-BeCollection ("firstName", "fullName", "gender", "ID", "lastName") $columns.Keys
+			$columns.Count | Should-Be 5
+			$columns.Keys | Should-BeCollection ("firstName", "fullName", "gender", "ID", "lastName")
 		}
 	}
 
@@ -21,18 +21,18 @@ Describe "DbTableInfo" {
 			[Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).IdentityColumn | Should-BeNull
 
 			$identityColumn = [Belin.Sql.DbTableInfo]::new([Character]).IdentityColumn
-			Should-NotBeNull $identityColumn
-			Should-BeString ID $identityColumn.Name -CaseSensitive
+			$identityColumn | Should-NotBeNull
+			$identityColumn.Name | Should-BeString "ID" -CaseSensitive
 		}
 	}
 
 	Context "Name" {
 		It "should return the class name when there is no [Table] attribute" {
-			Should-BeString ConsoleKeyInfo ([Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).Name) -CaseSensitive
+			[Belin.Sql.DbTableInfo]::new([ConsoleKeyInfo]).Name | Should-BeString "ConsoleKeyInfo" -CaseSensitive
 		}
 
 		It "should return the value of the [Table] attribute when it is present" {
-			Should-BeString Characters ([Belin.Sql.DbTableInfo]::new([Character]).Name) -CaseSensitive
+			[Belin.Sql.DbTableInfo]::new([Character]).Name | Should-BeString "Characters" -CaseSensitive
 		}
 	}
 

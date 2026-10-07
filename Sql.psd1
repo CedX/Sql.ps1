@@ -11,36 +11,34 @@
 	GUID = "d2b1c123-e1bc-4cca-84c5-af102244e3c5"
 
 	AliasesToExport = @()
+	FunctionsToExport = @()
 	RequiredAssemblies = , "Binaries/Belin.Sql.dll"
 	VariablesToExport = @()
 
 	CmdletsToExport = @(
 		"Close-Connection"
 		"Complete-Transaction"
+		"Find-Object"
 		"Get-First"
 		"Get-Mapper"
 		"Get-Scalar"
 		"Get-Single"
 		"Invoke-NonQuery"
 		"Invoke-Query"
-		"New-Connection"
-		"Open-Connection"
-		"Start-Transaction"
-		"Undo-Transaction"
-	)
-
-	FunctionsToExport = @(
-		"Find-Object"
 		"Measure-Object"
 		"New-Command"
 		"New-CommandBuilder"
+		"New-Connection"
 		"New-OrderHint"
 		"New-OrderHintCollection"
 		"New-Parameter"
 		"New-ParameterCollection"
+		"Open-Connection"
 		"Publish-Object"
 		"Remove-Object"
+		"Start-Transaction"
 		"Test-Object"
+		"Undo-Transaction"
 		"Update-Object"
 	)
 
