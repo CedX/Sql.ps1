@@ -3,7 +3,6 @@
 	ModuleVersion = "4.0.0"
 	PowerShellVersion = "7.6"
 	RootModule = "Binaries/Belin.Sql.PowerShell.dll"
-	NestedModules = , "Sources/Main.psm1"
 
 	Author = "Cédric Belin <cedx@outlook.com>"
 	CompanyName = "Cedric-Belin.fr"
@@ -16,15 +15,18 @@
 	VariablesToExport = @()
 
 	CmdletsToExport = @(
-		"Close-Connection"
-		"Open-Connection"
+		"Complete-Transaction"
+		"Get-Mapper"
+		"Start-Transaction"
+		"Undo-Transaction"
 	)
 
 	FunctionsToExport = @(
-		"Complete-Transaction"
+		"Close-Connection"
+		"New-Connection"
+		"Open-Connection"
 		"Find-Object"
 		"Get-First"
-		"Get-Mapper"
 		"Get-Scalar"
 		"Get-Single"
 		"Invoke-NonQuery"
@@ -32,16 +34,13 @@
 		"Measure-Object"
 		"New-Command"
 		"New-CommandBuilder"
-		"New-Connection"
 		"New-OrderHint"
 		"New-OrderHintCollection"
 		"New-Parameter"
 		"New-ParameterCollection"
 		"Publish-Object"
 		"Remove-Object"
-		"Start-Transaction"
 		"Test-Object"
-		"Undo-Transaction"
 		"Update-Object"
 	)
 
