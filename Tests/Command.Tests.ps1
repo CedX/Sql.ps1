@@ -234,13 +234,13 @@ Describe "New-OrderHintCollection" {
 	Context "Contains" {
 		It "should return `$true if the collection contains the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint Key)
-			Should-BeTrue $collection.Contains("key")
-			Should-BeTrue $collection.Contains("KEY")
+			$collection.Contains("key") | Should-BeTrue
+			$collection.Contains("KEY") | Should-BeTrue
 		}
 
 		It "should return `$false if the collection does not contain the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint Key)
-			Should-BeFalse $collection.Contains("foo")
+			$collection.Contains("foo") | Should-BeFalse
 		}
 	}
 
@@ -275,7 +275,7 @@ Describe "New-OrderHintCollection" {
 
 		It "should return `$null, or throw an error, if the specified column name does not exist" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			Should-BeNull $collection["foo"]
+			$collection["foo"] | Should-BeNull
 
 			Set-StrictMode -Version Latest
 			Should-Throw -ScriptBlock { $collection["foo"] }
@@ -445,14 +445,14 @@ Describe "New-ParameterCollection" {
 	Context "Contains" {
 		It "should return `$true if the collection contains the specified parameter" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
-			Should-BeTrue $collection.Contains("Key")
-			Should-BeTrue $collection.Contains("@Key")
+			$collection.Contains("Key") | Should-BeTrue
+			$collection.Contains("@Key") | Should-BeTrue
 		}
 
 		It "should return `$false if the collection does not contain the specified parameter" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "@Key")
-			Should-BeFalse $collection.Contains("Foo")
-			Should-BeFalse $collection.Contains("@Foo")
+			$collection.Contains("Foo") | Should-BeFalse
+			$collection.Contains("@Foo") | Should-BeFalse
 		}
 	}
 
@@ -471,8 +471,8 @@ Describe "New-ParameterCollection" {
 
 		It "should create a collection from the specified hash table of named parameters" {
 			[Belin.Sql.SqlParameterCollection] $collection = @{ foo = "bar"; baz = "qux" }
-			Should-BeNull (Compare-Object @("@foo", "@baz") $collection.PSForEach{ $_.Name })
-			Should-BeNull (Compare-Object @("bar", "qux") $collection.PSForEach{ $_.Value })
+			Compare-Object @("@foo", "@baz") $collection.PSForEach{ $_.Name } | Should-BeNull
+			Compare-Object @("bar", "qux") $collection.PSForEach{ $_.Value } | Should-BeNull
 		}
 	}
 
@@ -487,7 +487,7 @@ Describe "New-ParameterCollection" {
 
 		It "should return `$null, or throw an error, if the specified name does not exist" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			Should-BeNull $collection["@Foo"]
+			$collection["@Foo"] | Should-BeNull
 
 			Set-StrictMode -Version Latest
 			Should-Throw -ScriptBlock { $collection["@Foo"] }

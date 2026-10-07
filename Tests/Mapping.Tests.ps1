@@ -1,5 +1,4 @@
-﻿using namespace Belin.Sql
-using namespace System.Collections.Generic
+﻿using namespace System.Collections.Generic
 using namespace System.Diagnostics.CodeAnalysis
 using module ../Sql.psd1
 using module ./Character.psm1
@@ -10,8 +9,8 @@ using module ./Character.psm1
 #>
 Describe "Get-Mapper" {
 	It "should return the singleton instance of the SQL mapper" {
-		Should-BeSame ([SqlMapper]::Instance) (Get-SqlMapper)
-		Should-BeSame (Get-SqlMapper) (Get-SqlMapper)
+		Get-SqlMapper | Should-BeSame ([Belin.Sql.SqlMapper]::Instance)
+		Get-SqlMapper | Should-BeSame (Get-SqlMapper)
 	}
 
 	Context "ChangeType" {
@@ -82,7 +81,7 @@ Describe "Get-Mapper" {
 			@{ Value = "123"; ConversionType = [int]; IsNullable = $false; Expected = 123 }
 			@{ Value = "-123"; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = -123 }
 		) {
-			Should-Be $expected ([SqlMapper]::Instance.ChangeType($value, $conversionType, $isNullable))
+			[Belin.Sql.SqlMapper]::Instance.ChangeType($value, $conversionType, $isNullable) | Should-Be $expected
 		}
 	}
 
@@ -90,38 +89,38 @@ Describe "Get-Mapper" {
 		It "should support creating an object of type [psobject]" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$psObject = (Get-SqlMapper).CreateInstance([psobject], $properties)
-			Should-HaveType ([psobject]) $psObject
-			Should-BeString "Bard/minstrel" $psObject.CLASS -CaseSensitive
-			Should-BeString Cédric $psObject.firstName -CaseSensitive
-			Should-BeString ([CharacterGender]::Balrog.ToString()) $psObject.gender -CaseSensitive
-			Should-BeNull $psObject.lastName
+			$psObject | Should-HaveType ([psobject])
+			$psObject.CLASS | Should-BeString "Bard/minstrel" -CaseSensitive
+			$psObject.firstName | Should-BeString Cédric -CaseSensitive
+			$psObject.gender | Should-BeString ([CharacterGender]::Balrog.ToString()) -CaseSensitive
+			$psObject.lastName | Should-BeNull
 		}
 
 		It "should create an object of the specified type" {
 			$properties = @{ CLASS = "Bard/minstrel"; firstName = "Cédric"; gender = "Balrog"; lastName = $null }
 			$character = (Get-SqlMapper).CreateInstance([Character], $properties)
-			Should-HaveType ([Character]) $character
-			Should-BeString Cédric $character.FirstName -CaseSensitive
-			Should-Be ([CharacterGender]::Balrog) $character.Gender
-			Should-BeEmptyString $character.LastName
+			$character | Should-HaveType ([Character])
+			$character.FirstName | Should-BeString Cédric -CaseSensitive
+			$character.Gender | Should-Be ([CharacterGender]::Balrog)
+			$character.LastName | Should-BeEmptyString
 		}
 	}
 
 	Context "GetTable" {
 		It "should return detailed information about the database table associated with the specified entity class" {
 			$table = (Get-SqlMapper).GetTable([Character])
-			Should-BeString main $table.Schema -CaseSensitive
-			Should-BeString Characters $table.Name -CaseSensitive
-			Should-Be ([Character]) $table.Type
+			$table.Schema | Should-BeString "main" -CaseSensitive
+			$table.Name | Should-BeString Characters -CaseSensitive
+			$table.Type | Should-Be ([Character])
 
-			Should-Be 5 $table.Columns.Count
-			Should-Be $table.Columns.ID $table.IdentityColumn
-			Should-Be ([CharacterGender]) $table.Columns.gender.PropertyType
-			Should-Be ([string]) $table.Columns.lastName.PropertyType
+			$table.Columns.Count | Should-Be 5
+			$table.IdentityColumn | Should-Be $table.Columns.ID
+			$table.Columns.gender.PropertyType | Should-Be ([CharacterGender])
+			$table.Columns.lastName.PropertyType | Should-Be ([string])
 
-			Should-BeTrue $table.Columns.firstName.CanWrite
-			Should-BeTrue $table.Columns.fullName.IsComputed
-			Should-BeTrue $table.Columns.ID.IsIdentity
+			$table.Columns.firstName.CanWrite | Should-BeTrue
+			$table.Columns.fullName.IsComputed | Should-BeTrue
+			$table.Columns.ID.IsIdentity | Should-BeTrue
 		}
 	}
 }
