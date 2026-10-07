@@ -25,15 +25,15 @@
 		<InternalsVisibleTo Include="$(RootNamespace).Tests" />
 		<PackageReference Update="FSharp.Core" Version="10.1.401" />
 		<PackageReference Include="Belin.Sql" Version="5.3.0" />
-		<PackageReference Include="System.Data.Odbc" Version="10.0.12" />
-		<PackageReference Include="System.Data.OleDb" Version="10.0.12" />
+		<PackageReference Include="System.Data.Odbc" Version="10.0.5" />
+		<PackageReference Include="System.Data.OleDb" Version="10.0.5" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
 		<PackageReference Include="System.Management.Automation" Version="7.6.6" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<!-- <Compile Include="Command.fs" /> -->
-		<!-- <Compile Include="Connection.fs" /> -->
+		<Compile Include="Connection.fs" />
 		<Compile Include="Mapping.fs" />
 		<!-- <Compile Include="Object.fs" /> -->
 		<!-- <Compile Include="Query.fs" /> -->

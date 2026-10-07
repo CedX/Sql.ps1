@@ -19,12 +19,12 @@
 		"Get-Mapper"
 		"Start-Transaction"
 		"Undo-Transaction"
-	)
-
-	FunctionsToExport = @(
 		"Close-Connection"
 		"New-Connection"
 		"Open-Connection"
+	)
+
+	FunctionsToExport = @(
 		"Find-Object"
 		"Get-First"
 		"Get-Scalar"
