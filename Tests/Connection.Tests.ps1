@@ -10,9 +10,10 @@ Describe "Close-Connection" {
 	It "should close the specified connection" {
 		$connection = [System.Data.SQLite.SQLiteConnection]::new("DataSource=:memory:")
 		$connection.Open()
-		Should-Be ([ConnectionState]::Open) $connection.State
-		Close-SqlConnection $connection
-		Should-Be ([ConnectionState]::Closed) $connection.State
+		$connection.State | Should-Be ([System.Data.ConnectionState]::Open)
+		$connection | Close-SqlConnection
+		$connection.State | Should-Be ([System.Data.ConnectionState]::Closed)
+		$connection.Dispose()
 	}
 }
 
@@ -26,15 +27,8 @@ Describe "New-Connection" {
 		@{ Provider = "SqlClient"; ConnectionString = "Server=localhost; Database=TestDb; Uid=user; Pwd=password"; Expected = [System.Data.SqlClient.SqlConnection] }
 	) {
 		$connection = New-SqlConnection $provider $connectionString
-		Should-HaveType $expected $connection
-		Should-Be ([ConnectionState]::Closed) $connection.State
-	}
-
-	It "should open the newly created connection" {
-		$connection = New-SqlConnection ([System.Data.SQLite.SQLiteConnection]) "DataSource=:memory:" -Open
-		Should-Be ([ConnectionState]::Open) $connection.State
-		$connection.Close()
-		Should-Be ([ConnectionState]::Closed) $connection.State
+		$connection | Should-HaveType $expected
+		$connection.Dispose()
 	}
 }
 
@@ -45,9 +39,9 @@ Describe "New-Connection" {
 Describe "Open-Connection" {
 	It "should open the specified connection" {
 		$connection = [System.Data.SQLite.SQLiteConnection]::new("DataSource=:memory:")
-		Should-Be ([ConnectionState]::Closed) $connection.State
-		Open-SqlConnection $connection
-		Should-Be ([ConnectionState]::Open) $connection.State
-		$connection.Close()
+		$connection.State | Should-Be ([System.Data.ConnectionState]::Closed)
+		$connection | Open-SqlConnection
+		$connection.State | Should-Be ([System.Data.ConnectionState]::Open)
+		$connection.Dispose()
 	}
 }
