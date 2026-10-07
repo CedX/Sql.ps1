@@ -15,22 +15,22 @@
 	VariablesToExport = @()
 
 	CmdletsToExport = @(
-		"Complete-Transaction"
-		"Get-Mapper"
-		"Start-Transaction"
-		"Undo-Transaction"
 		"Close-Connection"
-		"New-Connection"
-		"Open-Connection"
-	)
-
-	FunctionsToExport = @(
-		"Find-Object"
+		"Complete-Transaction"
 		"Get-First"
+		"Get-Mapper"
 		"Get-Scalar"
 		"Get-Single"
 		"Invoke-NonQuery"
 		"Invoke-Query"
+		"New-Connection"
+		"Open-Connection"
+		"Start-Transaction"
+		"Undo-Transaction"
+	)
+
+	FunctionsToExport = @(
+		"Find-Object"
 		"Measure-Object"
 		"New-Command"
 		"New-CommandBuilder"
