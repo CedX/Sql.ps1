@@ -84,9 +84,7 @@ type MeasureObject() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
-    match this.ParameterSetName with
-    | "All" -> this.WriteObject (connection.CountAll(this.Class, this.Timeout, this.Transaction, this.Builder))
-    | _ -> this.WriteError (ErrorRecord(ArgumentException "The -All switch is required.", "Connection.Count", ErrorCategory.InvalidOperation, connection))
+    this.WriteObject (connection.CountAll(this.Class, this.Timeout, this.Transaction, this.Builder))
 
 /// Inserts the specified entity.
 /// Returns the generated primary key value.
@@ -100,7 +98,7 @@ type PublishObject() =
 
   /// The entity to insert.
   [<Parameter(Mandatory = true, Position = 2, ValueFromPipeline = true)>]
-  member val InputObject: objnull = null with get, set
+  member val InputObject = Object() with get, set
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
@@ -117,7 +115,8 @@ type PublishObject() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
-    this.WriteObject (connection.Insert(this.InputObject, this.Timeout, this.Transaction, this.Builder))
+    let inputObject = match this.InputObject with :? PSObject as object -> object.BaseObject | value -> value
+    this.WriteObject (connection.Insert(inputObject, this.Timeout, this.Transaction, this.Builder))
 
 /// Deletes either the specified entity, or all entities.
 /// Returns `true` if the specified entity has been deleted, otherwise `false`.
@@ -133,7 +132,7 @@ type RemoveObject() =
 
   /// The entity to delete.
   [<Parameter(Mandatory = true, ParameterSetName = "InputObject", Position = 2, ValueFromPipeline = true)>]
-  member val InputObject: objnull = null  with get, set
+  member val InputObject = Object() with get, set
 
   /// The type of object to delete.
   [<Parameter(Mandatory = true, ParameterSetName = "All", Position = 2)>]
@@ -162,9 +161,10 @@ type RemoveObject() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
+    let inputObject = match this.InputObject with :? PSObject as object -> object.BaseObject | value -> value
     match this.ParameterSetName with
     | "All" -> connection.DeleteAll(this.Class, this.Truncate.IsPresent, this.Timeout, this.Transaction, this.Builder)
-    | _ -> this.WriteObject (connection.Delete(this.InputObject, this.Timeout, this.Transaction, this.Builder))
+    | _ -> this.WriteObject (connection.Delete(inputObject, this.Timeout, this.Transaction, this.Builder))
 
 /// Checks whether an entity with the specified primary key exists.
 /// Returns `true` if an entity with the specified primary key exists, otherwise `false`.
@@ -213,7 +213,7 @@ type UpdateObject() =
 
   /// The entity to update.
   [<Parameter(Mandatory = true, Position = 2, ValueFromPipeline = true)>]
-  member val InputObject: objnull = null with get, set
+  member val InputObject = Object() with get, set
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
@@ -234,4 +234,5 @@ type UpdateObject() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
-    this.WriteObject (connection.Update(this.InputObject, this.Columns, this.Timeout, this.Transaction, this.Builder))
+    let inputObject = match this.InputObject with :? PSObject as object -> object.BaseObject | value -> value
+    this.WriteObject (connection.Update(inputObject, this.Columns, this.Timeout, this.Transaction, this.Builder))

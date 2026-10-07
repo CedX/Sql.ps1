@@ -140,5 +140,5 @@ type InvokeQuery() =
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
     match this.As.Length with
-    | 1 -> this.WriteObject (connection.Query(this.As[0], nonNull this.Command, nonNull this.Parameters))
-    | _ -> this.WriteObject (connection.Query(this.As, nonNull this.Command, nonNull this.Parameters, this.SplitOn))
+    | 1 -> this.WriteObject (connection.Query(this.As[0], nonNull this.Command, this.Parameters))
+    | _ -> this.WriteObject (connection.Query(this.As, nonNull this.Command, this.Parameters, this.SplitOn))

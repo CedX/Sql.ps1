@@ -5,7 +5,7 @@ using module ./Character.psm1
 .SYNOPSIS
 	Tests the features of the `Find-Object` cmdlet.
 #>
-Describe "Find-Object" -Skip {
+Describe "Find-Object" {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -41,29 +41,29 @@ Describe "Find-Object" -Skip {
 
 	Context "Id" {
 		It "should find the entity with the specified identifier" {
-			$record = Find-SqlObject $connection -Class ([Character]) -Id 2
+			$record = 2 | Find-SqlObject $connection -Class ([Character])
 			$record | Should-NotBeNull
 			$record.Id | Should-Be 2
 			$record.FullName | Should-BeString "Balin" -CaseSensitive
 
-			$record = Find-SqlObject $connection -Class ([Character]) -Id 14
+			$record = 14 | Find-SqlObject $connection -Class ([Character])
 			$record | Should-NotBeNull
 			$record.Id | Should-Be 14
 			$record.FullName | Should-BeString "Sam Gamgee"-CaseSensitive
 		}
 
 		It "should allow selecting a specific set of columns" {
-			$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
+			$record = 2 | Find-SqlObject $connection -Class ([Character]) -Columns gender
 			$record.FullName | Should-BeEmptyString
 			$record.Gender | Should-Be ([CharacterGender]::Dwarf)
 
-			$record = Find-SqlObject $connection -Class ([Character]) -Id 14 -Columns gender
+			$record = 14 | Find-SqlObject $connection -Class ([Character]) -Columns gender
 			$record.FullName | Should-BeEmptyString
 			$record.Gender | Should-Be ([CharacterGender]::Hobbit)
 		}
 
 		It "should return `$null if the entity is not found" {
-			Find-SqlObject $connection -Class ([Character]) -Id 666 | Should-BeNull
+			666 | Find-SqlObject $connection -Class ([Character]) | Should-BeNull
 		}
 	}
 }
@@ -72,13 +72,13 @@ Describe "Find-Object" -Skip {
 .SYNOPSIS
 	Tests the features of the `Measure-Object` cmdlet.
 #>
-Describe "Measure-Object" -Skip {
+Describe "Measure-Object" {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
 	Context "All" {
 		It "should return the total number of entities from the underlying table" {
-			Measure-SqlObject $connection -Class ([Character]) -All | Should-Be 16
+			[Character] | Measure-SqlObject $connection -All | Should-Be 16
 		}
 	}
 }
@@ -87,7 +87,7 @@ Describe "Measure-Object" -Skip {
 .SYNOPSIS
 	Tests the features of the `Publish-Object` cmdlet.
 #>
-Describe "Publish-Object" -Skip {
+Describe "Publish-Object" {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -99,7 +99,7 @@ Describe "Publish-Object" -Skip {
 		$record.Id | Should-Be 0
 		$record.FullName | Should-BeEmptyString
 
-		$id = Publish-SqlObject $connection -InputObject $record
+		$id = $record | Publish-SqlObject $connection
 		$id | Should-BeGreaterThan 16
 		$record.Id | Should-Be $id
 
@@ -117,7 +117,7 @@ Describe "Publish-Object" -Skip {
 .SYNOPSIS
 	Tests the features of the `Remove-Object` cmdlet.
 #>
-Describe "Remove-Object" -Skip {
+Describe "Remove-Object" {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -134,8 +134,8 @@ Describe "Remove-Object" -Skip {
 		It "should delete the entity with the specified identifier" {
 			$sql = "SELECT * FROM Characters WHERE ID = @Id"
 			$record = Get-SqlSingle $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 }
-			Remove-SqlObject $connection -InputObject $record | Should-BeTrue
-			Remove-SqlObject $connection -InputObject $record | Should-BeFalse
+			$record | Remove-SqlObject $connection | Should-BeTrue
+			$record | Remove-SqlObject $connection | Should-BeFalse
 			Get-SqlFirst $connection -As ([Character]) -Command $sql -Parameters @{ Id = 1 } -ErrorAction Ignore | Should-BeNull
 		}
 	}
@@ -150,11 +150,11 @@ Describe "Test-Object" -Skip {
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
 	It "should `$true if the specified identifier exists" {
-		Test-SqlObject $connection -Class ([Character]) -Id 1 | Should-BeTrue
+		1 | Test-SqlObject $connection -Class ([Character]) | Should-BeTrue
 	}
 
 	It "should `$false if the specified identifier does not exist" {
-		Test-SqlObject $connection -Class ([Character]) -Id 666 | Should-BeFalse
+		666 | Test-SqlObject $connection -Class ([Character]) | Should-BeFalse
 	}
 }
 
@@ -170,20 +170,19 @@ Describe "Update-Object" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Sauron'"
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
-		Write-Host ($sauron | ConvertTo-Json)
 		$sauron.FullName | Should-BeString "Sauron" -CaseSensitive
 		$sauron.Gender | Should-Be ([CharacterGender]::DarkLord)
 
 		$sauron.LastName = "The big bad guy"
 		$sauron.Gender = [CharacterGender]::Istari
-		Update-SqlObject $connection -InputObject $sauron | Should-Be 1
+		$sauron | Update-SqlObject $connection  | Should-Be 1
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$sauron.FullName | Should-BeString "Sauron The big bad guy" -CaseSensitive
 		$sauron.Gender | Should-Be ([CharacterGender]::Istari)
 	}
 
-	It "should allow updating a specific set of columns" -Skip {
+	It "should allow updating a specific set of columns" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Saruman'"
 
 		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
@@ -192,7 +191,7 @@ Describe "Update-Object" {
 
 		$saruman.LastName = "The traitor"
 		$saruman.Gender = [CharacterGender]::DarkLord
-		Update-SqlObject $connection -InputObject $saruman -Columns gender | Should-Be 1
+		$saruman | Update-SqlObject $connection -Columns gender | Should-Be 1
 
 		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
 		$saruman.FullName | Should-BeString "Saruman" -CaseSensitive

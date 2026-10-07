@@ -3,6 +3,6 @@
 "Running the test suite..."
 pwsh -Command {
 	Import-Module Pester
-	Invoke-Pester Tests/Object.Tests.ps1
+	Invoke-Pester Tests
 	exit $LASTEXITCODE
 }

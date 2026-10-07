@@ -165,7 +165,8 @@ type NewParameter() =
 
   /// Performs execution of this command.
   override this.ProcessRecord () = this.WriteObject (SqlParameter (
-    this.Name, this.Value,
+    this.Name,
+    this.Value,
     DbType = this.DbType,
     Direction = this.Direction,
     Precision = this.Precision,
