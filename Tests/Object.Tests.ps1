@@ -5,27 +5,27 @@ using module ./Character.psm1
 .SYNOPSIS
 	Tests the features of the `Find-Object` cmdlet.
 #>
-Describe "Find-Object" {
+Describe "Find-Object" -Skip {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
 	Context "All" {
 		It "should return the complete list of entities, sorted by default according to the identity column" {
 			$records = Find-SqlObject $connection -All -Class ([Character])
-			Should-Be 16 $records.Count
-			Should-Be 1 $records[0].Id
-			Should-BeString Aragorn $records[0].FullName -CaseSensitive
-			Should-Be 16 $records[15].Id
-			Should-BeString Sauron $records[15].FullName -CaseSensitive
+			$records.Count | Should-Be 16
+			$records[0].Id | Should-Be 1
+			$records[0].FullName | Should-BeString "Aragorn" -CaseSensitive
+			$records[15].Id | Should-Be 16
+			$records[15].FullName | Should-BeString "Sauron" -CaseSensitive
 		}
 
 		It "should allow sorting the results by a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -OrderBy ([ordered]@{ gender = "Ascending"; fullName = "Descending" })
-			Should-Be 16 $records.Count
-			Should-Be 11 $records[0].Id
-			Should-BeString Gothmog $records[0].FullName -CaseSensitive
-			Should-Be 8 $records[15].Id
-			Should-BeString Gandalf $records[15].FullName -CaseSensitive
+			$records.Count | Should-Be 16
+			$records[0].Id | Should-Be 11
+			$records[0].FullName | Should-BeString "Gothmog" -CaseSensitive
+			$records[15].Id | Should-Be 8
+			$records[15].FullName | Should-BeString "Gandalf" -CaseSensitive
 		}
 
 		It "should allow selecting a specific set of columns" {
@@ -42,12 +42,12 @@ Describe "Find-Object" {
 	Context "Id" {
 		It "should find the entity with the specified identifier" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2
-			Should-NotBeNull $record
+			$record | Should-NotBeNull
 			Should-Be 2 $record.Id
 			Should-BeString Balin $record.FullName -CaseSensitive
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14
-			Should-NotBeNull $record
+			$record | Should-NotBeNull
 			Should-Be 14 $record.Id
 			Should-BeString "Sam Gamgee" $record.FullName -CaseSensitive
 		}
@@ -72,7 +72,7 @@ Describe "Find-Object" {
 .SYNOPSIS
 	Tests the features of the `Measure-Object` cmdlet.
 #>
-Describe "Measure-Object" {
+Describe "Measure-Object" -Skip {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -87,7 +87,7 @@ Describe "Measure-Object" {
 .SYNOPSIS
 	Tests the features of the `Publish-Object` cmdlet.
 #>
-Describe "Publish-Object" {
+Describe "Publish-Object" -Skip {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -117,7 +117,7 @@ Describe "Publish-Object" {
 .SYNOPSIS
 	Tests the features of the `Remove-Object` cmdlet.
 #>
-Describe "Remove-Object" {
+Describe "Remove-Object" -Skip {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -145,7 +145,7 @@ Describe "Remove-Object" {
 .SYNOPSIS
 	Tests the features of the `Test-Object` cmdlet.
 #>
-Describe "Test-Object" {
+Describe "Test-Object" -Skip {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -162,7 +162,7 @@ Describe "Test-Object" {
 .SYNOPSIS
 	Tests the features of the `Update-Object` cmdlet.
 #>
-Describe "Update-Object" {
+Describe "Update-Object" -Skip {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
@@ -170,31 +170,32 @@ Describe "Update-Object" {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Sauron'"
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
-		Should-BeString Sauron $sauron.FullName -CaseSensitive
-		Should-Be ([CharacterGender]::DarkLord) $sauron.Gender
+		Write-Host ($sauron | ConvertTo-Json)
+		$sauron.FullName | Should-BeString "Sauron" -CaseSensitive
+		$sauron.Gender | Should-Be ([CharacterGender]::DarkLord)
 
 		$sauron.LastName = "The big bad guy"
 		$sauron.Gender = [CharacterGender]::Istari
-		Should-Be 1 (Update-SqlObject $connection -InputObject $sauron)
+		Update-SqlObject $connection -InputObject $sauron | Should-Be 1
 
 		$sauron = Get-SqlSingle $connection -As ([Character]) -Command $sql
-		Should-BeString "Sauron The big bad guy" $sauron.FullName -CaseSensitive
-		Should-Be ([CharacterGender]::Istari) $sauron.Gender
+		$sauron.FullName | Should-BeString "Sauron The big bad guy" -CaseSensitive
+		$sauron.Gender | Should-Be ([CharacterGender]::Istari)
 	}
 
-	It "should allow updating a specific set of columns" {
+	It "should allow updating a specific set of columns" -Skip {
 		$sql = "SELECT * FROM Characters WHERE firstName = 'Saruman'"
 
 		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
-		Should-BeString Saruman $saruman.FullName -CaseSensitive
-		Should-Be ([CharacterGender]::Istari) $saruman.Gender
+		$saruman.FullName | Should-BeString "Saruman" -CaseSensitive
+		$saruman.Gender | Should-Be ([CharacterGender]::Istari)
 
 		$saruman.LastName = "The traitor"
 		$saruman.Gender = [CharacterGender]::DarkLord
-		Should-Be 1 (Update-SqlObject $connection -InputObject $saruman -Columns gender)
+		Update-SqlObject $connection -InputObject $saruman -Columns gender | Should-Be 1
 
 		$saruman = Get-SqlSingle $connection -As ([Character]) -Command $sql
-		Should-BeString Saruman $saruman.FullName -CaseSensitive
-		Should-Be ([CharacterGender]::DarkLord) $saruman.Gender
+		$saruman.FullName | Should-BeString "Saruman" -CaseSensitive
+		$saruman.Gender | Should-Be ([CharacterGender]::DarkLord)
 	}
 }

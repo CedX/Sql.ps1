@@ -13,7 +13,7 @@ Describe "New-Command" {
 	Context "ImplicitConversion" {
 		It "should create a command from the specified string" {
 			[Belin.Sql.SqlCommand] $command = "SELECT * FROM Characters"
-			Should-BeString "SELECT * FROM Characters" $command.Text -CaseSensitive
+			$command.Text | Should-BeString "SELECT * FROM Characters" -CaseSensitive
 		}
 	}
 }
@@ -34,14 +34,14 @@ Describe "New-CommandBuilder" {
 	Context "GetDeleteCommand" {
 		It "should return the SQL command to delete an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteCommand($character)
-			Should-BeLikeString 'DELETE FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'DELETE FROM "main"."Characters"*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*WHERE "ID" = @ID' -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteCommand($character)
-			Should-BeString "@ID" $command.Item2[0].Name -CaseSensitive
-			Should-Be 1000 $command.Item2[0].Value
+			$command.Item2[0].Name | Should-BeString "@ID" -CaseSensitive
+			$command.Item2[0].Value | Should-Be 1000
 		}
 	}
 

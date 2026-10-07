@@ -27,7 +27,7 @@ Describe "DbColumnInfo" {
 			@{ Name = "Gender"; Expected = [DbType]::AnsiString }
 			@{ Name = "Id"; Expected = [DbType]::Int32 }
 		) {
-			Should-Be $expected ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).DbType)
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).DbType | Should-Be $expected
 		}
 	}
 
@@ -68,7 +68,7 @@ Describe "DbColumnInfo" {
 			@{ Name = "Gender"; Expected = "gender" }
 			@{ Name = "Id"; Expected = "ID" }
 		) {
-			Should-BeString $expected ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).Name) -CaseSensitive
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).Name | Should-BeString $expected -CaseSensitive
 		}
 	}
 
@@ -79,15 +79,15 @@ Describe "DbColumnInfo" {
 			@{ Name = "Gender"; Expected = [CharacterGender] }
 			@{ Name = "Id"; Expected = [int] }
 		) {
-			Should-Be $expected ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).PropertyType)
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty($name)).PropertyType | Should-Be $expected
 		}
 	}
 
 	Context "GetValue" {
 		It "should return the value of the spcified property" {
 			$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
-			Should-BeString Cédric ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($record)) -CaseSensitive
-			Should-BeString Belin ([Belin.Sql.DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($record)) -CaseSensitive
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("FirstName")).GetValue($record) | Should-BeString "Cédric" -CaseSensitive
+			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("LastName")).GetValue($record) | Should-BeString "Belin" -CaseSensitive
 		}
 	}
 
@@ -96,8 +96,8 @@ Describe "DbColumnInfo" {
 			$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin" }
 			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("FirstName")).SetValue($record, "Jeffrey")
 			[Belin.Sql.DbColumnInfo]::new([Character].GetProperty("LastName")).SetValue($record, "Snover")
-			Should-BeString Jeffrey $record.FirstName -CaseSensitive
-			Should-BeString Snover $record.LastName -CaseSensitive
+			$record.FirstName | Should-BeString "Jeffrey" -CaseSensitive
+			$record.LastName | Should-BeString "Snover" -CaseSensitive
 		}
 	}
 }
