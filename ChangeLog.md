@@ -1,9 +1,7 @@
 # Changelog
 
 ## Version [4.0.0](https://github.com/CedX/Sql.net/compare/v3.3.0...v4.0.0)
-- Breaking change: ported the cmdlets to [F#](https://learn.microsoft.com/en-us/dotnet/fsharp).
-- Breaking change: removed the `-Dispose` parameter from the `Close-Connection` cmdlet.
-- Breaking change: removed the `-Open` parameter from the `New-Connection` cmdlet.
+- Ported the cmdlets to [F#](https://learn.microsoft.com/en-us/dotnet/fsharp).
 
 ## Version [3.3.0](https://github.com/CedX/Sql.net/compare/v3.2.2...v3.3.0)
 - Updated the package dependencies.
