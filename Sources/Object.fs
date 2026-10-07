@@ -45,10 +45,6 @@ type FindObject() =
   [<Parameter>]
   member val Transaction: IDbTransaction | null = null with get, set
 
-  /// Performs initialization of command execution.
-  override this.BeginProcessing () =
-    if isNull this.Builder then this.Builder <- SqlCommandBuilder.Create (nonNull this.Connection)
-
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
@@ -85,10 +81,6 @@ type MeasureObject() =
   [<Parameter>]
   member val Transaction: IDbTransaction | null = null with get, set
 
-  /// Performs initialization of command execution.
-  override this.BeginProcessing () =
-    if isNull this.Builder then this.Builder <- SqlCommandBuilder.Create (nonNull this.Connection)
-
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
@@ -121,10 +113,6 @@ type PublishObject() =
   /// The transaction within which the command executes.
   [<Parameter>]
   member val Transaction: IDbTransaction | null = null with get, set
-
-  /// Performs initialization of command execution.
-  override this.BeginProcessing () =
-    if isNull this.Builder then this.Builder <- SqlCommandBuilder.Create (nonNull this.Connection)
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
@@ -171,10 +159,6 @@ type RemoveObject() =
   [<Parameter>]
   member val Transaction: IDbTransaction | null = null with get, set
 
-  /// Performs initialization of command execution.
-  override this.BeginProcessing () =
-    if isNull this.Builder then this.Builder <- SqlCommandBuilder.Create (nonNull this.Connection)
-
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
@@ -212,10 +196,6 @@ type TestObject() =
   [<Parameter>]
   member val Transaction: IDbTransaction | null = null with get, set
 
-  /// Performs initialization of command execution.
-  override this.BeginProcessing () =
-    if isNull this.Builder then this.Builder <- SqlCommandBuilder.Create (nonNull this.Connection)
-
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
@@ -250,10 +230,6 @@ type UpdateObject() =
   /// The transaction within which the command executes.
   [<Parameter>]
   member val Transaction: IDbTransaction | null = null with get, set
-
-  /// Performs initialization of command execution.
-  override this.BeginProcessing () =
-    if isNull this.Builder then this.Builder <- SqlCommandBuilder.Create (nonNull this.Connection)
 
   /// Performs execution of this command.
   override this.ProcessRecord () =

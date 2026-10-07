@@ -30,12 +30,12 @@ Describe "Find-Object" -Skip {
 
 		It "should allow selecting a specific set of columns" {
 			$records = Find-SqlObject $connection -All -Class ([Character]) -Columns gender
-			Should-Be 1 $records[0].Id
-			Should-Be ([CharacterGender]::Human) $records[0].Gender
-			Should-BeEmptyString $records[0].FullName
-			Should-Be 16 $records[15].Id
-			Should-Be ([CharacterGender]::DarkLord) $records[15].Gender
-			Should-BeEmptyString $records[15].FullName
+			$records[0].Id | Should-Be 1
+			$records[0].Gender | Should-Be ([CharacterGender]::Human)
+			$records[0].FullName | Should-BeEmptyString
+			$records[15].Id | Should-Be 16
+			$records[15].Gender | Should-Be ([CharacterGender]::DarkLord)
+			$records[15].FullName | Should-BeEmptyString
 		}
 	}
 
@@ -43,23 +43,23 @@ Describe "Find-Object" -Skip {
 		It "should find the entity with the specified identifier" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2
 			$record | Should-NotBeNull
-			Should-Be 2 $record.Id
-			Should-BeString Balin $record.FullName -CaseSensitive
+			$record.Id | Should-Be 2
+			$record.FullName | Should-BeString "Balin" -CaseSensitive
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14
 			$record | Should-NotBeNull
-			Should-Be 14 $record.Id
-			Should-BeString "Sam Gamgee" $record.FullName -CaseSensitive
+			$record.Id | Should-Be 14
+			$record.FullName | Should-BeString "Sam Gamgee"-CaseSensitive
 		}
 
 		It "should allow selecting a specific set of columns" {
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 2 -Columns gender
-			Should-BeEmptyString $record.FullName
-			Should-Be ([CharacterGender]::Dwarf) $record.Gender
+			$record.FullName | Should-BeEmptyString
+			$record.Gender | Should-Be ([CharacterGender]::Dwarf)
 
 			$record = Find-SqlObject $connection -Class ([Character]) -Id 14 -Columns gender
-			Should-BeEmptyString $record.FullName
-			Should-Be ([CharacterGender]::Hobbit) $record.Gender
+			$record.FullName | Should-BeEmptyString
+			$record.Gender | Should-Be ([CharacterGender]::Hobbit)
 		}
 
 		It "should return `$null if the entity is not found" {
@@ -78,7 +78,7 @@ Describe "Measure-Object" -Skip {
 
 	Context "All" {
 		It "should return the total number of entities from the underlying table" {
-			Should-Be 16 (Measure-SqlObject $connection -Class ([Character]) -All)
+			Measure-SqlObject $connection -Class ([Character]) -All | Should-Be 16
 		}
 	}
 }
@@ -96,20 +96,20 @@ Describe "Publish-Object" -Skip {
 		Invoke-SqlQuery $connection -As ([Character]) -Command $sql | Should-BeNull
 
 		$record = [Character]@{ FirstName = "Cédric"; LastName = "Belin"; Gender = "Istari" }
-		Should-Be 0 $record.Id
-		Should-BeEmptyString $record.FullName
+		$record.Id | Should-Be 0
+		$record.FullName | Should-BeEmptyString
 
 		$id = Publish-SqlObject $connection -InputObject $record
-		Should-BeGreaterThan 16 $id
-		Should-Be $id $record.Id
+		$id | Should-BeGreaterThan 16
+		$record.Id | Should-Be $id
 
 		$records = Invoke-SqlQuery $connection -As ([Character]) -Command $sql
-		Should-Be 1 $records.Count
+		$records.Count | Should-Be 1
 
 		$cedric = $records[0]
-		Should-Be $id $cedric.Id
-		Should-BeString "Cédric Belin" $cedric.FullName -CaseSensitive
-		Should-Be $record.Gender $cedric.Gender
+		$cedric.Id | Should-Be $id
+		$cedric.FullName | Should-BeString "Cédric Belin" -CaseSensitive
+		$cedric.Gender | Should-Be $record.Gender
 	}
 }
 
@@ -124,9 +124,9 @@ Describe "Remove-Object" -Skip {
 	Context "All" {
 		It "should remove all entities from the underlying table" {
 			$sql = "SELECT COUNT(*) FROM Characters"
-			Should-BeGreaterThan 0 (Get-SqlScalar $connection -As ([int]) -Command $sql)
+			Get-SqlScalar $connection -As ([int]) -Command $sql | Should-BeGreaterThan 0
 			Remove-SqlObject $connection -Class ([Character]) -All -Truncate
-			Should-Be 0 (Get-SqlScalar $connection -As ([int]) -Command $sql)
+			Get-SqlScalar $connection -As ([int]) -Command $sql | Should-Be 0
 		}
 	}
 
@@ -162,7 +162,7 @@ Describe "Test-Object" -Skip {
 .SYNOPSIS
 	Tests the features of the `Update-Object` cmdlet.
 #>
-Describe "Update-Object" -Skip {
+Describe "Update-Object" {
 	BeforeEach { . "$PSScriptRoot/BeforeEach.ps1" }
 	AfterEach { . "$PSScriptRoot/AfterEach.ps1" }
 
