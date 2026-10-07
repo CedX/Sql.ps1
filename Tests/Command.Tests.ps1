@@ -140,7 +140,7 @@ Describe "New-CommandBuilder" {
 			Should-Be 3 $command.Item2.Count
 			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
 			Should-Be ([CharacterGender]::DarkLord) $command.Item2["gender"].Value
-			Should-BeEmptyString $command.Item2["lastName"].Value
+			$command.Item2["lastName"].Value | Should-BeEmptyString
 		}
 	}
 
@@ -158,7 +158,7 @@ Describe "New-CommandBuilder" {
 			Should-Be 1000 $command.Item2["ID"].Value
 			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
 			Should-Be ([CharacterGender]::DarkLord) $command.Item2["gender"].Value
-			Should-BeEmptyString $command.Item2["lastName"].Value
+			$command.Item2["lastName"].Value | Should-BeEmptyString
 		}
 
 		It "should allow updating a specific set of columns" {
