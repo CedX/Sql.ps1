@@ -48,98 +48,98 @@ Describe "New-CommandBuilder" {
 	Context "GetDeleteAllCommand" {
 		It "should return the SQL command to delete an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteAllCommand([Character])
-			Should-BeString 'DELETE FROM "main"."Characters"' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeString 'DELETE FROM "main"."Characters"' -CaseSensitive
 		}
 
 		It "should also return an empty parameter collection" {
 			$command = (New-SqlCommandBuilder $connection).GetDeleteAllCommand([Character])
-			Should-Be 0 $command.Item2.Count
+			$command.Item2.Count | Should-Be 0
 		}
 	}
 
 	Context "GetExistsCommand" {
 		It "should return the SQL command to check the existence of an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetExistsCommand([Character], $character.Id)
-			Should-BeLikeString "SELECT 1*" $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString "SELECT 1*" -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*FROM "main"."Characters"*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*WHERE "ID" = @ID' -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetExistsCommand([Character], $character.Id)
-			Should-BeString "@ID" $command.Item2[0].Name -CaseSensitive
-			Should-Be 1000 $command.Item2[0].Value
+			$command.Item2[0].Name | Should-BeString "@ID" -CaseSensitive
+			$command.Item2[0].Value | Should-Be 1000
 		}
 	}
 
 	Context "GetFindCommand" {
 		It "should return the SQL command to find an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetFindCommand([Character], $character.Id)
-			Should-BeLikeString 'SELECT "*' $command.Item1.Text -CaseSensitive
-			Should-NotBeLikeString '*`**' $command.Item1.Text
-			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'SELECT "*' -CaseSensitive
+			$command.Item1.Text | Should-NotBeLikeString '*`**'
+			$command.Item1.Text | Should-BeLikeString '*FROM "main"."Characters"*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*WHERE "ID" = @ID' -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetFindCommand([Character], $character.Id)
-			Should-BeString "@ID" $command.Item2[0].Name -CaseSensitive
-			Should-Be 1000 $command.Item2[0].Value
+			$command.Item2[0].Name | Should-BeString "@ID" -CaseSensitive
+			$command.Item2[0].Value | Should-Be 1000
 		}
 
 		It "should allow selecting a specific set of columns" {
 			$command = (New-SqlCommandBuilder $connection).GetFindCommand([Character], $character.Id, "firstName")
-			Should-BeLikeString 'SELECT "firstName"*' $command.Item1.Text -CaseSensitive
-			Should-NotBeLikeString "*gender*" $command.Item1.Text
-			Should-NotBeLikeString "*lastName*" $command.Item1.Text
-			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'SELECT "firstName"*' -CaseSensitive
+			$command.Item1.Text | Should-NotBeLikeString "*gender*"
+			$command.Item1.Text | Should-NotBeLikeString "*lastName*"
+			$command.Item1.Text | Should-BeLikeString '*WHERE "ID" = @ID' -CaseSensitive
 		}
 	}
 
 	Context "GetFindAllCommand" {
 		It "should return the SQL command to find all entities" {
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character])
-			Should-BeLikeString 'SELECT "*' $command.Item1.Text -CaseSensitive
-			Should-NotBeLikeString '*`**' $command.Item1.Text
-			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*ORDER BY "ID" ASC' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'SELECT "*' -CaseSensitive
+			$command.Item1.Text | Should-NotBeLikeString '*`**'
+			$command.Item1.Text | Should-BeLikeString '*FROM "main"."Characters"*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*ORDER BY "ID" ASC' -CaseSensitive
 		}
 
 		It "should also return an empty parameter collection" {
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character])
-			Should-Be 0 $command.Item2.Count
+			$command.Item2.Count | Should-Be 0
 		}
 
 		It "should allow sorting the results by a specific set of columns" {
 			$orderHints = [ordered]@{ gender = "Ascending"; fullName = "Descending" }
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character], $orderHints)
-			Should-BeLikeString 'SELECT "*' $command.Item1.Text -CaseSensitive
-			Should-NotBeLikeString '*`**' $command.Item1.Text
-			Should-BeLikeString '*FROM "main"."Characters"*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*ORDER BY "gender" ASC, "fullName" DESC' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'SELECT "*' -CaseSensitive
+			$command.Item1.Text | Should-NotBeLikeString '*`**'
+			$command.Item1.Text | Should-BeLikeString '*FROM "main"."Characters"*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*ORDER BY "gender" ASC, "fullName" DESC' -CaseSensitive
 		}
 
 		It "should allow selecting a specific set of columns" {
 			$command = (New-SqlCommandBuilder $connection).GetFindAllCommand([Character], "firstName")
-			Should-BeLikeString 'SELECT "firstName"*' $command.Item1.Text -CaseSensitive
-			Should-NotBeLikeString "*gender*" $command.Item1.Text
-			Should-NotBeLikeString "*lastName*" $command.Item1.Text
-			Should-BeLikeString '*ORDER BY "ID" ASC' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'SELECT "firstName"*' -CaseSensitive
+			$command.Item1.Text | Should-NotBeLikeString "*gender*"
+			$command.Item1.Text | Should-NotBeLikeString "*lastName*"
+			$command.Item1.Text | Should-BeLikeString '*ORDER BY "ID" ASC' -CaseSensitive
 		}
 	}
 
 	Context "GetInsertCommand" {
 		It "should return the SQL command to insert an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetInsertCommand($character)
-			Should-BeLikeString 'INSERT INTO "main"."Characters" (*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString "*VALUES (*" $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'INSERT INTO "main"."Characters" (*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString "*VALUES (*" -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetInsertCommand($character)
-			Should-Be 3 $command.Item2.Count
-			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
-			Should-Be ([CharacterGender]::DarkLord) $command.Item2["gender"].Value
+			$command.Item2.Count | Should-Be 3
+			$command.Item2["firstName"].Value | Should-BeString "Cédric" -CaseSensitive
+			$command.Item2["gender"].Value | Should-Be ([CharacterGender]::DarkLord)
 			$command.Item2["lastName"].Value | Should-BeEmptyString
 		}
 	}
@@ -147,25 +147,25 @@ Describe "New-CommandBuilder" {
 	Context "GetUpdateCommand" {
 		It "should return the SQL command to update an entity" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character)
-			Should-BeLikeString 'UPDATE "main"."Characters"*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*SET "*' $command.Item1.Text -CaseSensitive
-			Should-BeLikeString '*WHERE "ID" = @ID' $command.Item1.Text -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString 'UPDATE "main"."Characters"*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*SET "*' -CaseSensitive
+			$command.Item1.Text | Should-BeLikeString '*WHERE "ID" = @ID' -CaseSensitive
 		}
 
 		It "should also return the parameters used by the SQL command" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character)
-			Should-Be 4 $command.Item2.Count
-			Should-Be 1000 $command.Item2["ID"].Value
-			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
-			Should-Be ([CharacterGender]::DarkLord) $command.Item2["gender"].Value
+			$command.Item2.Count | Should-Be 4
+			$command.Item2["ID"].Value | Should-Be 1000
+			$command.Item2["firstName"].Value | Should-BeString "Cédric" -CaseSensitive
+			$command.Item2["gender"].Value | Should-Be ([CharacterGender]::DarkLord)
 			$command.Item2["lastName"].Value | Should-BeEmptyString
 		}
 
 		It "should allow updating a specific set of columns" {
 			$command = (New-SqlCommandBuilder $connection).GetUpdateCommand($character, "firstName")
-			Should-Be 2 $command.Item2.Count
-			Should-Be 1000 $command.Item2["ID"].Value
-			Should-BeString Cédric $command.Item2["firstName"].Value -CaseSensitive
+			$command.Item2.Count | Should-Be 2
+			$command.Item2["ID"].Value | Should-Be 1000
+			$command.Item2["firstName"].Value | Should-BeString Cédric -CaseSensitive
 		}
 	}
 }
@@ -178,26 +178,26 @@ Describe "New-OrderHint" {
 	Context "ImplicitConversion" {
 		It "should create an order hint from the specified column name" {
 			[Belin.Sql.SqlOrderHint] $orderHint = "Name"
-			Should-BeString Name $orderHint.Column -CaseSensitive
-			Should-Be ([Belin.Sql.SortOrder]::Ascending) $orderHint.SortOrder
+			$orderHint.Column | Should-BeString "Name" -CaseSensitive
+			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Ascending)
 		}
 
 		It "should create an order hint from the specified array" {
 			[Belin.Sql.SqlOrderHint] $orderHint = "ID", "Descending"
-			Should-BeString ID $orderHint.Column -CaseSensitive
-			Should-Be ([Belin.Sql.SortOrder]::Descending) $orderHint.SortOrder
+			$orderHint.Column | Should-BeString ID -CaseSensitive
+			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Descending)
 		}
 
 		It "should create an order hint from the specified tuple" {
 			[Belin.Sql.SqlOrderHint] $orderHint = [ValueTuple]::Create("ID", [Belin.Sql.SortOrder]::Descending)
-			Should-BeString ID $orderHint.Column -CaseSensitive
-			Should-Be ([Belin.Sql.SortOrder]::Descending) $orderHint.SortOrder
+			$orderHint.Column | Should-BeString ID -CaseSensitive
+			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Descending)
 		}
 
 		It "should create an order hint from the specified key/value pair" {
 			[Belin.Sql.SqlOrderHint] $orderHint = [KeyValuePair[string, Belin.Sql.SortOrder]]::new("Name", "Ascending")
-			Should-BeString Name $orderHint.Column -CaseSensitive
-			Should-Be ([Belin.Sql.SortOrder]::Ascending) $orderHint.SortOrder
+			$orderHint.Column | Should-BeString Name -CaseSensitive
+			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Ascending)
 		}
 	}
 }
@@ -209,26 +209,26 @@ Describe "New-OrderHint" {
 Describe "New-OrderHintCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlOrderHintCollection
-		Should-BeCollection $collection -Count 0
+		$collection | Should-BeCollection -Count 0
 	}
 
 	It "should create a collection from a single order hint" {
 		$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending)
-		Should-BeCollection $collection -Count 1
+		$collection | Should-BeCollection -Count 1
 
 		$orderHint = $collection[0]
-		Should-BeString ID $orderHint.Column -CaseSensitive
-		Should-Be ([Belin.Sql.SortOrder]::Descending) $orderHint.SortOrder
+		$orderHint.Column | Should-BeString "ID" -CaseSensitive
+		$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Descending)
 	}
 
 	It "should create a collection from an array of order hints" {
 		$orderHints = (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
 		$collection = New-SqlOrderHintCollection $orderHints
-		Should-BeCollection $collection -Count 2
+		$collection | Should-BeCollection -Count 2
 
 		$orderHint = $collection[-1]
-		Should-BeString Name $orderHint.Column -CaseSensitive
-		Should-Be ([Belin.Sql.SortOrder]::Ascending) $orderHint.SortOrder
+		$orderHint.Column | Should-BeString Name -CaseSensitive
+		$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Ascending)
 	}
 
 	Context "Contains" {
@@ -247,20 +247,20 @@ Describe "New-OrderHintCollection" {
 	Context "ImplicitConversion" {
 		It "should create a collection from the specified array of column names" {
 			[Belin.Sql.SqlOrderHintCollection] $collection = "ID", "Name"
-			Should-BeCollection ("ID", "Name") $collection.PSForEach{ $_.Column }
-			Should-BeCollection ([Belin.Sql.SortOrder]::Ascending, [Belin.Sql.SortOrder]::Ascending) $collection.PSForEach{ $_.SortOrder }
+			$collection | ForEach-Object { $_.Column } | Should-BeCollection ("ID", "Name")
+			$collection | ForEach-Object { $_.SortOrder } | Should-BeCollection ([Belin.Sql.SortOrder]::Ascending, [Belin.Sql.SortOrder]::Ascending)
 		}
 
 		It "should create a collection from the specified list of column names" {
 			[Belin.Sql.SqlOrderHintCollection] $collection = [List[string]]::new([string[]] ("ID", "Name"))
-			Should-BeCollection ("ID", "Name") $collection.PSForEach{ $_.Column }
-			Should-BeCollection ([Belin.Sql.SortOrder]::Ascending, [Belin.Sql.SortOrder]::Ascending) $collection.PSForEach{ $_.SortOrder }
+			$collection | ForEach-Object { $_.Column } | Should-BeCollection ("ID", "Name")
+			$collection | ForEach-Object { $_.SortOrder } | Should-BeCollection ([Belin.Sql.SortOrder]::Ascending, [Belin.Sql.SortOrder]::Ascending)
 		}
 
 		It "should create a collection from the specified dictionary of column names and sort orders" {
 			[Belin.Sql.SqlOrderHintCollection] $collection = [ordered]@{ ID = [Belin.Sql.SortOrder]::Descending; Name = [Belin.Sql.SortOrder]::Ascending }
-			Should-BeCollection ("ID", "Name") $collection.PSForEach{ $_.Column }
-			Should-BeCollection ([Belin.Sql.SortOrder]::Descending, [Belin.Sql.SortOrder]::Ascending) $collection.PSForEach{ $_.SortOrder }
+			$collection | ForEach-Object { $_.Column }| Should-BeCollection ("ID", "Name")
+			$collection | ForEach-Object { $_.SortOrder } | Should-BeCollection ([Belin.Sql.SortOrder]::Descending, [Belin.Sql.SortOrder]::Ascending)
 		}
 	}
 
@@ -268,9 +268,9 @@ Describe "New-OrderHintCollection" {
 		It "should return the order hint with the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
 			$orderHint = $collection["id"]
-			Should-BeString ID $orderHint.Column -CaseSensitive
-			Should-Be ([Belin.Sql.SortOrder]::Descending) $orderHint.SortOrder
-			Should-Be $orderHint $collection[0]
+			$orderHint.Column | Should-BeString "ID" -CaseSensitive
+			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Descending)
+			$collection[0] | Should-Be $orderHint
 		}
 
 		It "should return `$null, or throw an error, if the specified column name does not exist" {
@@ -278,7 +278,7 @@ Describe "New-OrderHintCollection" {
 			$collection["foo"] | Should-BeNull
 
 			Set-StrictMode -Version Latest
-			Should-Throw -ScriptBlock { $collection["foo"] }
+			{ $collection["foo"] } | Should-Throw
 			Set-StrictMode -Off
 		}
 	}
@@ -286,29 +286,29 @@ Describe "New-OrderHintCollection" {
 	Context "IndexOf" {
 		It "should return the index if the order hint is found" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			Should-Be 0 $collection.IndexOf("id")
-			Should-Be 1 $collection.IndexOf("name")
+			$collection.IndexOf("id") | Should-Be 0
+			$collection.IndexOf("name") | Should-Be 1
 		}
 
 		It "should return -1 if the order hint is not found" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			Should-Be -1 $collection.IndexOf("foo")
+			$collection.IndexOf("foo") | Should-Be -1
 		}
 	}
 
 	Context "RemoveAt" {
 		It "should remove the order hint with the specified column name" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			Should-BeCollection $collection -Count 2
+			$collection | Should-BeCollection -Count 2
 			$collection.RemoveAt("name")
-			Should-BeCollection $collection -Count 1
+			$collection | Should-BeCollection -Count 1
 			$collection.RemoveAt("id")
-			Should-BeCollection $collection -Count 0
+			$collection | Should-BeCollection -Count 0
 		}
 
 		It "should throw an error if the specified column name does not exist" {
 			$collection = New-SqlOrderHintCollection (New-SqlOrderHint ID Descending), (New-SqlOrderHint Name)
-			Should-Throw -ScriptBlock { $collection.RemoveAt("Foo") }
+			{ $collection.RemoveAt("Foo") } | Should-Throw
 		}
 	}
 }
@@ -321,40 +321,40 @@ Describe "New-Parameter" {
 	Context "ImplicitConversion" {
 		It "should create a parameter from the specified array" {
 			[Belin.Sql.SqlParameter] $parameter = "", $null
-			Should-BeString "?" $parameter.Name -CaseSensitive
-			Should-Be ([DBNull]::Value) $parameter.Value
+			$parameter.Name | Should-BeString "?" -CaseSensitive
+			$parameter.Value | Should-Be ([DBNull]::Value)
 
 			$parameter = ":foo", "bar"
-			Should-BeString ":foo" $parameter.Name -CaseSensitive
-			Should-BeString "bar" $parameter.Value -CaseSensitive
+			$parameter.Name | Should-BeString ":foo" -CaseSensitive
+			$parameter.Value | Should-BeString "bar" -CaseSensitive
 
 			$parameter = "bar", 123
-			Should-BeString "@bar" $parameter.Name -CaseSensitive
-			Should-Be 123 $parameter.Value
+			$parameter.Name | Should-BeString "@bar" -CaseSensitive
+			$parameter.Value | Should-Be 123
 		}
 
 		It "should create a parameter from the specified tuple" {
 			[Belin.Sql.SqlParameter] $parameter = [ValueTuple]::Create("", [object] $null)
-			Should-BeString "?" $parameter.Name -CaseSensitive
-			Should-Be ([DBNull]::Value) $parameter.Value
+			$parameter.Name | Should-BeString "?" -CaseSensitive
+			$parameter.Value | Should-Be ([DBNull]::Value)
 
 			$parameter = [ValueTuple]::Create(":foo", [object] "bar")
-			Should-BeString ":foo" $parameter.Name -CaseSensitive
-			Should-BeString "bar" $parameter.Value -CaseSensitive
+			$parameter.Name | Should-BeString ":foo" -CaseSensitive
+			$parameter.Value | Should-BeString "bar" -CaseSensitive
 
 			$parameter = [ValueTuple]::Create("bar", [object] 123)
-			Should-BeString "@bar" $parameter.Name -CaseSensitive
-			Should-Be 123 $parameter.Value
+			$parameter.Name | Should-BeString "@bar" -CaseSensitive
+			$parameter.Value | Should-Be 123
 		}
 
 		It "should create a parameter from the specified key/value pair" {
 			[Belin.Sql.SqlParameter] $parameter = [KeyValuePair[string, object]]::new("foo", $null)
-			Should-BeString "@foo" $parameter.Name -CaseSensitive
-			Should-Be ([DBNull]::Value) $parameter.Value
+			$parameter.Name | Should-BeString "@foo" -CaseSensitive
+			$parameter.Value | Should-Be ([DBNull]::Value)
 
 			$parameter = [KeyValuePair[string, object]]::new(":bar", "Baz")
-			Should-BeString ":bar" $parameter.Name -CaseSensitive
-			Should-BeString Baz $parameter.Value -CaseSensitive
+			$parameter.Name | Should-BeString ":bar" -CaseSensitive
+			$parameter.Value | Should-BeString Baz -CaseSensitive
 		}
 	}
 
@@ -369,7 +369,7 @@ Describe "New-Parameter" {
 			@{ Name = "`$qux"; Expected = "`$qux" }
 		) {
 			$parameter = New-SqlParameter $name
-			Should-BeString $expected $parameter.Name -CaseSensitive
+			$parameter.Name | Should-BeString $expected -CaseSensitive
 		}
 	}
 
@@ -384,12 +384,12 @@ Describe "New-Parameter" {
 			@{ Value = [datetime]::UnixEpoch; Expected = [datetime]::UnixEpoch }
 		) {
 			$parameter = New-SqlParameter Name $value
-			Should-Be $expected $parameter.Value
+			$parameter.Value | Should-Be $expected
 		}
 
 		It "should support the values wrapped in a [psobject] instance" -ForEach ([DBNull]::Value, "Foo", [datetime]::UnixEpoch) {
 			$parameter = New-SqlParameter Name ([psobject]::AsPSObject($_))
-			Should-Be $_ $parameter.Value
+			$parameter.Value | Should-Be $_
 		}
 	}
 }
@@ -401,44 +401,44 @@ Describe "New-Parameter" {
 Describe "New-ParameterCollection" {
 	It "should create an empty collection by default" {
 		$collection = New-SqlParameterCollection
-		Should-BeCollection $collection -Count 0
+		$collection | Should-BeCollection -Count 0
 	}
 
 	It "should create a collection from a single parameter" {
 		$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123 -DbType Int64)
-		Should-BeCollection $collection -Count 1
+		$collection | Should-BeCollection -Count 1
 
 		$parameter = $collection[0]
-		Should-BeString "?1" $parameter.Name -CaseSensitive
-		Should-Be 123 $parameter.Value
-		Should-Be ([DbType]::Int64) $parameter.DbType
+		$parameter.Name | Should-BeString "?1" -CaseSensitive
+		$parameter.Value | Should-Be 123
+		$parameter.DbType | Should-Be ([DbType]::Int64)
 	}
 
 	It "should create a collection from an array of parameters" {
 		$parameters = (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 		$collection = New-SqlParameterCollection $parameters
-		Should-BeCollection $collection -Count 2
+		$collection | Should-BeCollection -Count 2
 
 		$parameter = $collection[-1]
-		Should-BeString "@Key" $parameter.Name -CaseSensitive
-		Should-BeString Unique $parameter.Value -CaseSensitive
-		Should-Be ([DbType]::AnsiString) $parameter.DbType
+		$parameter.Name | Should-BeString "@Key" -CaseSensitive
+		$parameter.Value | Should-BeString "Unique" -CaseSensitive
+		$parameter.DbType | Should-Be ([DbType]::AnsiString)
 	}
 
 	Context "AddWithValue" {
 		It "should add a new parameter to the collection" {
 			$collection = New-SqlParameterCollection
-			Should-BeCollection $collection -Count 0
+			$collection | Should-BeCollection -Count 0
 
 			$parameter = $collection.AddWithValue("Name", "Value1")
-			Should-BeCollection $collection -Count 1
-			Should-BeString "@Name" $parameter.Name -CaseSensitive
-			Should-BeString Value1 $parameter.Value -CaseSensitive
+			$collection | Should-BeCollection -Count 1
+			$parameter.Name | Should-BeString "@Name" -CaseSensitive
+			$parameter.Value | Should-BeString "Value1" -CaseSensitive
 
 			$parameter = $collection.AddWithValue("Value2")
-			Should-BeCollection $collection -Count 2
-			Should-BeString "?2" $parameter.Name -CaseSensitive
-			Should-BeString Value2 $parameter.Value -CaseSensitive
+			$collection | Should-BeCollection -Count 2
+			$parameter.Name | Should-BeString "?2" -CaseSensitive
+			$parameter.Value | Should-BeString "Value2" -CaseSensitive
 		}
 	}
 
@@ -459,20 +459,20 @@ Describe "New-ParameterCollection" {
 	Context "ImplicitConversion" {
 		It "should create a collection from the specified array of postional parameters" {
 			[Belin.Sql.SqlParameterCollection] $collection = "foo", "bar"
-			Should-BeCollection ("?1", "?2") $collection.PSForEach{ $_.Name }
-			Should-BeCollection ("foo", "bar") $collection.PSForEach{ $_.Value }
+			$collection | ForEach-Object { $_.Name } | Should-BeCollection ("?1", "?2")
+			$collection | ForEach-Object { $_.Value } | Should-BeCollection ("foo", "bar")
 		}
 
 		It "should create a collection from the specified list of postional parameters" {
 			[Belin.Sql.SqlParameterCollection] $collection = [List[object]]::new(("foo", "bar"))
-			Should-BeCollection ("?1", "?2") $collection.PSForEach{ $_.Name }
-			Should-BeCollection ("foo", "bar") $collection.PSForEach{ $_.Value }
+			$collection | ForEach-Object { $_.Name } | Should-BeCollection ("?1", "?2")
+			$collection | ForEach-Object { $_.Value } | Should-BeCollection ("foo", "bar")
 		}
 
 		It "should create a collection from the specified hash table of named parameters" {
 			[Belin.Sql.SqlParameterCollection] $collection = @{ foo = "bar"; baz = "qux" }
-			Compare-Object @("@foo", "@baz") $collection.PSForEach{ $_.Name } | Should-BeNull
-			Compare-Object @("bar", "qux") $collection.PSForEach{ $_.Value } | Should-BeNull
+			Compare-Object @("@foo", "@baz") ($collection | ForEach-Object { $_.Name }) | Should-BeNull
+			Compare-Object @("bar", "qux") ($collection | ForEach-Object { $_.Value }) | Should-BeNull
 		}
 	}
 
@@ -480,9 +480,9 @@ Describe "New-ParameterCollection" {
 		It "should return the parameter with the specified name" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
 			$parameter = $collection["Key"]
-			Should-BeString "@Key" $parameter.Name -CaseSensitive
-			Should-BeString Unique $parameter.Value -CaseSensitive
-			Should-Be $parameter $collection[1]
+			$parameter.Name | Should-BeString "@Key" -CaseSensitive
+			$parameter.Value | Should-BeString "Unique" -CaseSensitive
+			$collection[1] | Should-Be $parameter
 		}
 
 		It "should return `$null, or throw an error, if the specified name does not exist" {
@@ -490,7 +490,7 @@ Describe "New-ParameterCollection" {
 			$collection["@Foo"] | Should-BeNull
 
 			Set-StrictMode -Version Latest
-			Should-Throw -ScriptBlock { $collection["@Foo"] }
+			{ $collection["@Foo"] } | Should-Throw
 			Set-StrictMode -Off
 		}
 	}
@@ -498,30 +498,30 @@ Describe "New-ParameterCollection" {
 	Context "IndexOf" {
 		It "should return the index if the parameter is found" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			Should-Be 1 $collection.IndexOf("Key")
-			Should-Be 1 $collection.IndexOf("@Key")
+			$collection.IndexOf("Key") | Should-Be 1
+			$collection.IndexOf("@Key") | Should-Be 1
 		}
 
 		It "should return -1 if the parameter is not found" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			Should-Be -1 $collection.IndexOf("Foo")
-			Should-Be -1 $collection.IndexOf("@Foo")
+			$collection.IndexOf("Foo") | Should-Be -1
+			$collection.IndexOf("@Foo") | Should-Be -1
 		}
 	}
 
 	Context "RemoveAt" {
 		It "should remove the parameter with the specified name" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			Should-BeCollection $collection -Count 2
+			$collection | Should-BeCollection -Count 2
 			$collection.RemoveAt("Key")
-			Should-BeCollection $collection -Count 1
+			$collection | Should-BeCollection -Count 1
 			$collection.RemoveAt("?1")
-			Should-BeCollection $collection -Count 0
+			$collection | Should-BeCollection -Count 0
 		}
 
 		It "should throw an error if the specified name does not exist" {
 			$collection = New-SqlParameterCollection (New-SqlParameter "?1" 123), (New-SqlParameter "@Key" Unique -DbType AnsiString)
-			Should-Throw -ScriptBlock { $collection.RemoveAt("Foo") }
+			{ $collection.RemoveAt("Foo") } | Should-Throw
 		}
 	}
 }
