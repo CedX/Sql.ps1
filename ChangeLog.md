@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [4.1.0](https://github.com/CedX/Sql.net/compare/v4.0.0...v4.1.0)
+- Added the `-NoEnumerate` parameter to the `Find-Object` and `Invoke-Query` cmdlets.
+
 ## Version [4.0.0](https://github.com/CedX/Sql.net/compare/v3.3.0...v4.0.0)
 - Ported the cmdlets to [F#](https://learn.microsoft.com/en-us/dotnet/fsharp).
 - Updated the package dependencies.
