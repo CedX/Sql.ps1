@@ -1,6 +1,6 @@
 @{
 	DefaultCommandPrefix = "Sql"
-	ModuleVersion = "4.0.0"
+	ModuleVersion = "4.1.0"
 	PowerShellVersion = "7.6"
 	RootModule = "Binaries/Belin.Sql.PowerShell.dll"
 
