@@ -27,7 +27,7 @@ type NewCommand() =
   member val Type = CommandType.Text with get, set
 
   /// Performs execution of this command.
-  override this.ProcessRecord () = this.WriteObject (SqlCommand (
+  override this.ProcessRecord () = this.WriteObject(SqlCommand (
     this.Text,
     Timeout = this.Timeout,
     Transaction = this.Transaction,
@@ -88,8 +88,8 @@ type NewCommandBuilder() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     match this.ParameterSetName with
-    | "Connection" -> this.WriteObject (SqlCommandBuilder.Create(nonNull this.Connection))
-    | _ -> this.WriteObject (SqlCommandBuilder(
+    | "Connection" -> this.WriteObject(SqlCommandBuilder.Create(nonNull this.Connection))
+    | _ -> this.WriteObject(SqlCommandBuilder(
       CatalogLocation = this.CatalogLocation,
       CatalogSeparator = this.CatalogSeparator,
       LastInsertIdFunction = this.LastInsertIdFunction,
@@ -115,7 +115,7 @@ type NewOrderHint() =
   member val SortOrder = SortOrder.Ascending with get, set
 
   /// Performs execution of this command.
-  override this.ProcessRecord () = this.WriteObject (SqlOrderHint(this.Column, this.SortOrder))
+  override this.ProcessRecord () = this.WriteObject(SqlOrderHint(this.Column, this.SortOrder))
 
 /// Creates a new order hint collection.
 [<Cmdlet(VerbsCommon.New, "OrderHintCollection"); OutputType(typeof<SqlOrderHintCollection>)>]
@@ -128,7 +128,7 @@ type NewOrderHintCollection() =
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
-    this.WriteObject(SqlOrderHintCollection this.OrderHints, enumerateCollection = false)
+    this.WriteObject(SqlOrderHintCollection this.OrderHints)
 
 /// Creates a new parameter.
 [<Cmdlet(VerbsCommon.New, "Parameter"); OutputType(typeof<SqlParameter>)>]
@@ -164,7 +164,7 @@ type NewParameter() =
   member val Scale = Nullable<byte>() with get, set
 
   /// Performs execution of this command.
-  override this.ProcessRecord () = this.WriteObject (SqlParameter (
+  override this.ProcessRecord () = this.WriteObject(SqlParameter (
     this.Name,
     this.Value,
     DbType = this.DbType,
@@ -185,4 +185,4 @@ type NewParameterCollection() =
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
-    this.WriteObject(SqlParameterCollection this.Parameters, enumerateCollection = false)
+    this.WriteObject(SqlParameterCollection this.Parameters)

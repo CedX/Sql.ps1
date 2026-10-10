@@ -29,6 +29,10 @@ type FindObject() =
   [<Parameter(ParameterSetName = "All")>]
   member val OrderBy = SqlOrderHintCollection [||] with get, set
 
+  /// Value indicating whether to prevent this cmdlet from enumerating its output.
+  [<Parameter(ParameterSetName = "All")>]
+  member val NoEnumerate = SwitchParameter false with get, set
+
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
   member val Builder: SqlCommandBuilder | null = null with get, set
@@ -48,9 +52,10 @@ type FindObject() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
+    let enumerateCollection = not this.NoEnumerate.IsPresent
     match this.ParameterSetName with
-    | "All" -> this.WriteObject (connection.FindAll(this.Class, this.OrderBy, this.Columns, this.Timeout, this.Transaction, this.Builder))
-    | _ -> this.WriteObject (connection.Find(this.Class, this.Id, this.Columns, this.Timeout, this.Transaction, this.Builder))
+    | "All" -> this.WriteObject(connection.FindAll(this.Class, this.OrderBy, this.Columns, this.Timeout, this.Transaction, this.Builder), enumerateCollection)
+    | _ -> this.WriteObject(connection.Find(this.Class, this.Id, this.Columns, this.Timeout, this.Transaction, this.Builder))
 
 /// Counts all entities.
 [<Cmdlet(VerbsDiagnostic.Measure, "Object"); OutputType(typeof<int>)>]
@@ -84,7 +89,7 @@ type MeasureObject() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
-    this.WriteObject (connection.CountAll(this.Class, this.Timeout, this.Transaction, this.Builder))
+    this.WriteObject(connection.CountAll(this.Class, this.Timeout, this.Transaction, this.Builder))
 
 /// Inserts the specified entity.
 /// Returns the generated primary key value.
@@ -116,7 +121,7 @@ type PublishObject() =
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
     let inputObject = match this.InputObject with :? PSObject as object -> object.BaseObject | value -> value
-    this.WriteObject (connection.Insert(inputObject, this.Timeout, this.Transaction, this.Builder))
+    this.WriteObject(connection.Insert(inputObject, this.Timeout, this.Transaction, this.Builder))
 
 /// Deletes either the specified entity, or all entities.
 /// Returns `true` if the specified entity has been deleted, otherwise `false`.
@@ -164,7 +169,7 @@ type RemoveObject() =
     let inputObject = match this.InputObject with :? PSObject as object -> object.BaseObject | value -> value
     match this.ParameterSetName with
     | "All" -> connection.DeleteAll(this.Class, this.Truncate.IsPresent, this.Timeout, this.Transaction, this.Builder)
-    | _ -> this.WriteObject (connection.Delete(inputObject, this.Timeout, this.Transaction, this.Builder))
+    | _ -> this.WriteObject(connection.Delete(inputObject, this.Timeout, this.Transaction, this.Builder))
 
 /// Checks whether an entity with the specified primary key exists.
 /// Returns `true` if an entity with the specified primary key exists, otherwise `false`.
@@ -199,7 +204,7 @@ type TestObject() =
   /// Performs execution of this command.
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
-    this.WriteObject (connection.Exists(this.Class, this.Id, this.Timeout, this.Transaction, this.Builder))
+    this.WriteObject(connection.Exists(this.Class, this.Id, this.Timeout, this.Transaction, this.Builder))
 
 /// Updates the specified entity.
 /// Returns the number of rows affected.
@@ -235,4 +240,4 @@ type UpdateObject() =
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
     let inputObject = match this.InputObject with :? PSObject as object -> object.BaseObject | value -> value
-    this.WriteObject (connection.Update(inputObject, this.Columns, this.Timeout, this.Transaction, this.Builder))
+    this.WriteObject(connection.Update(inputObject, this.Columns, this.Timeout, this.Transaction, this.Builder))

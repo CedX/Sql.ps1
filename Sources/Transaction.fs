@@ -33,7 +33,7 @@ type StartTransaction() =
   override this.ProcessRecord () =
     let connection = nonNull this.Connection
     if connection.State = ConnectionState.Closed then connection.Open()
-    this.WriteObject (connection.BeginTransaction this.IsolationLevel)
+    this.WriteObject(connection.BeginTransaction this.IsolationLevel)
 
 /// Rolls back the specified transaction.
 [<Cmdlet(VerbsCommon.Undo, "Transaction"); OutputType(typeof<Void>)>]
