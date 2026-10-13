@@ -52,7 +52,7 @@ class Character {
 	Defines the gender of a character.
 #>
 enum CharacterGender {
-	Balrog
+	Balrog = 1
 	DarkLord
 	Dwarf
 	Elf
