@@ -4,7 +4,7 @@
 		<Copyright>© Cédric Belin</Copyright>
 		<Description>A simple micro-ORM, based on ADO.NET and data annotations.</Description>
 		<Product>SQL Mapper for PowerShell</Product>
-		<Version>4.1.0</Version>
+		<Version>2026.10.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -24,7 +24,7 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="$(RootNamespace).Tests" />
 		<PackageReference Update="FSharp.Core" Version="10.1.402" />
-		<PackageReference Include="Belin.Sql" Version="6.0.0" />
+		<PackageReference Include="Belin.Sql" Version="2026.10.0" />
 		<PackageReference Include="System.Data.Odbc" Version="10.0.5" />
 		<PackageReference Include="System.Data.OleDb" Version="10.0.5" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
