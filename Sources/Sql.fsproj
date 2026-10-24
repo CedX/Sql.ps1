@@ -26,10 +26,10 @@
 		<InternalsVisibleTo Include="$(RootNamespace).Tests" />
 		<PackageReference Update="FSharp.Core" Version="10.1.402" />
 		<PackageReference Include="Belin.Sql" Version="2026.11.0" />
-		<PackageReference Include="System.Data.Odbc" Version="10.0.5" />
-		<PackageReference Include="System.Data.OleDb" Version="10.0.5" />
+		<PackageReference Include="System.Data.Odbc" Version="10.0.13" />
+		<PackageReference Include="System.Data.OleDb" Version="10.0.13" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
-		<PackageReference Include="System.Management.Automation" Version="7.6.7" />
+		<PackageReference Include="System.Management.Automation" Version="7.6.8" />
 	</ItemGroup>
 
 	<ItemGroup>
