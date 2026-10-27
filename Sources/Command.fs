@@ -27,7 +27,7 @@ type NewCommand() =
   member val Type = CommandType.Text with get, set
 
   /// Performs execution of this command.
-  override this.ProcessRecord () = this.WriteObject(SqlCommand (
+  override this.ProcessRecord () = this.WriteObject(SqlCommand(
     this.Text,
     Timeout = this.Timeout,
     Transaction = this.Transaction,
@@ -164,7 +164,7 @@ type NewParameter() =
   member val Scale = Nullable<byte>() with get, set
 
   /// Performs execution of this command.
-  override this.ProcessRecord () = this.WriteObject(SqlParameter (
+  override this.ProcessRecord () = this.WriteObject(SqlParameter(
     this.Name,
     this.Value,
     DbType = this.DbType,
