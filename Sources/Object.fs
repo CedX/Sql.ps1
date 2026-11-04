@@ -27,7 +27,7 @@ type FindObject() =
 
   /// The hints describing the sort order of columns.
   [<Parameter(ParameterSetName = "All")>]
-  member val OrderBy = SqlOrderHintCollection [||] with get, set
+  member val OrderBy = OrderHintCollection [||] with get, set
 
   /// Value indicating whether to prevent this cmdlet from enumerating its output.
   [<Parameter(ParameterSetName = "All")>]
@@ -35,7 +35,7 @@ type FindObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: SqlCommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder | null = null with get, set
 
   /// The list of columns to select. By default, all columns.
   [<Parameter; ValidateNotNull>]
@@ -76,7 +76,7 @@ type MeasureObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: SqlCommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder | null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -107,7 +107,7 @@ type PublishObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: SqlCommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder | null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -153,7 +153,7 @@ type RemoveObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: SqlCommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder | null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -191,7 +191,7 @@ type TestObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: SqlCommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder | null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -222,7 +222,7 @@ type UpdateObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: SqlCommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder | null = null with get, set
 
   /// The list of columns to update. By default, all columns.
   [<Parameter; ValidateNotNull>]

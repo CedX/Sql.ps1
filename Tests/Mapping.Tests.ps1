@@ -9,7 +9,7 @@ using module ./Character.psm1
 #>
 Describe "Get-Mapper" {
 	It "should return the singleton instance of the SQL mapper" {
-		Get-SqlMapper | Should-BeSame ([Belin.Sql.SqlMapper]::Instance)
+		Get-SqlMapper | Should-BeSame ([Belin.Sql.Mapper]::Instance)
 		Get-SqlMapper | Should-BeSame (Get-SqlMapper)
 	}
 
@@ -81,7 +81,7 @@ Describe "Get-Mapper" {
 			@{ Value = "123"; ConversionType = [int]; IsNullable = $false; Expected = 123 }
 			@{ Value = "-123"; ConversionType = [Nullable[int]]; IsNullable = $true; Expected = -123 }
 		) {
-			[Belin.Sql.SqlMapper]::Instance.ChangeType($value, $conversionType, $isNullable) | Should-Be $expected
+			[Belin.Sql.Mapper]::Instance.ChangeType($value, $conversionType, $isNullable) | Should-Be $expected
 		}
 	}
 

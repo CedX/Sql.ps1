@@ -12,7 +12,7 @@ using module ./Character.psm1
 Describe "New-Command" {
 	Context "ImplicitConversion" {
 		It "should create a command from the specified string" {
-			[Belin.Sql.SqlCommand] $command = "SELECT * FROM Characters"
+			[Belin.Sql.Command] $command = "SELECT * FROM Characters"
 			$command.Text | Should-BeString "SELECT * FROM Characters" -CaseSensitive
 		}
 	}
@@ -177,25 +177,25 @@ Describe "New-CommandBuilder" {
 Describe "New-OrderHint" {
 	Context "ImplicitConversion" {
 		It "should create an order hint from the specified column name" {
-			[Belin.Sql.SqlOrderHint] $orderHint = "Name"
+			[Belin.Sql.OrderHint] $orderHint = "Name"
 			$orderHint.Column | Should-BeString "Name" -CaseSensitive
 			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Ascending)
 		}
 
 		It "should create an order hint from the specified array" {
-			[Belin.Sql.SqlOrderHint] $orderHint = "ID", "Descending"
+			[Belin.Sql.OrderHint] $orderHint = "ID", "Descending"
 			$orderHint.Column | Should-BeString ID -CaseSensitive
 			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Descending)
 		}
 
 		It "should create an order hint from the specified tuple" {
-			[Belin.Sql.SqlOrderHint] $orderHint = [ValueTuple]::Create("ID", [Belin.Sql.SortOrder]::Descending)
+			[Belin.Sql.OrderHint] $orderHint = [ValueTuple]::Create("ID", [Belin.Sql.SortOrder]::Descending)
 			$orderHint.Column | Should-BeString ID -CaseSensitive
 			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Descending)
 		}
 
 		It "should create an order hint from the specified key/value pair" {
-			[Belin.Sql.SqlOrderHint] $orderHint = [KeyValuePair[string, Belin.Sql.SortOrder]]::new("Name", "Ascending")
+			[Belin.Sql.OrderHint] $orderHint = [KeyValuePair[string, Belin.Sql.SortOrder]]::new("Name", "Ascending")
 			$orderHint.Column | Should-BeString Name -CaseSensitive
 			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Ascending)
 		}
@@ -246,19 +246,19 @@ Describe "New-OrderHintCollection" {
 
 	Context "ImplicitConversion" {
 		It "should create a collection from the specified array of column names" {
-			[Belin.Sql.SqlOrderHintCollection] $collection = "ID", "Name"
+			[Belin.Sql.OrderHintCollection] $collection = "ID", "Name"
 			$collection | ForEach-Object { $_.Column } | Should-BeCollection ("ID", "Name")
 			$collection | ForEach-Object { $_.SortOrder } | Should-BeCollection ([Belin.Sql.SortOrder]::Ascending, [Belin.Sql.SortOrder]::Ascending)
 		}
 
 		It "should create a collection from the specified list of column names" {
-			[Belin.Sql.SqlOrderHintCollection] $collection = [List[string]]::new([string[]] ("ID", "Name"))
+			[Belin.Sql.OrderHintCollection] $collection = [List[string]]::new([string[]] ("ID", "Name"))
 			$collection | ForEach-Object { $_.Column } | Should-BeCollection ("ID", "Name")
 			$collection | ForEach-Object { $_.SortOrder } | Should-BeCollection ([Belin.Sql.SortOrder]::Ascending, [Belin.Sql.SortOrder]::Ascending)
 		}
 
 		It "should create a collection from the specified dictionary of column names and sort orders" {
-			[Belin.Sql.SqlOrderHintCollection] $collection = [ordered]@{ ID = [Belin.Sql.SortOrder]::Descending; Name = [Belin.Sql.SortOrder]::Ascending }
+			[Belin.Sql.OrderHintCollection] $collection = [ordered]@{ ID = [Belin.Sql.SortOrder]::Descending; Name = [Belin.Sql.SortOrder]::Ascending }
 			$collection | ForEach-Object { $_.Column }| Should-BeCollection ("ID", "Name")
 			$collection | ForEach-Object { $_.SortOrder } | Should-BeCollection ([Belin.Sql.SortOrder]::Descending, [Belin.Sql.SortOrder]::Ascending)
 		}
@@ -320,7 +320,7 @@ Describe "New-OrderHintCollection" {
 Describe "New-Parameter" {
 	Context "ImplicitConversion" {
 		It "should create a parameter from the specified array" {
-			[Belin.Sql.SqlParameter] $parameter = "", $null
+			[Belin.Sql.Parameter] $parameter = "", $null
 			$parameter.Name | Should-BeString "?" -CaseSensitive
 			$parameter.Value | Should-Be ([DBNull]::Value)
 
@@ -334,7 +334,7 @@ Describe "New-Parameter" {
 		}
 
 		It "should create a parameter from the specified tuple" {
-			[Belin.Sql.SqlParameter] $parameter = [ValueTuple]::Create("", [object] $null)
+			[Belin.Sql.Parameter] $parameter = [ValueTuple]::Create("", [object] $null)
 			$parameter.Name | Should-BeString "?" -CaseSensitive
 			$parameter.Value | Should-Be ([DBNull]::Value)
 
@@ -348,7 +348,7 @@ Describe "New-Parameter" {
 		}
 
 		It "should create a parameter from the specified key/value pair" {
-			[Belin.Sql.SqlParameter] $parameter = [KeyValuePair[string, object]]::new("foo", $null)
+			[Belin.Sql.Parameter] $parameter = [KeyValuePair[string, object]]::new("foo", $null)
 			$parameter.Name | Should-BeString "@foo" -CaseSensitive
 			$parameter.Value | Should-Be ([DBNull]::Value)
 
@@ -458,19 +458,19 @@ Describe "New-ParameterCollection" {
 
 	Context "ImplicitConversion" {
 		It "should create a collection from the specified array of postional parameters" {
-			[Belin.Sql.SqlParameterCollection] $collection = "foo", "bar"
+			[Belin.Sql.ParameterCollection] $collection = "foo", "bar"
 			$collection | ForEach-Object { $_.Name } | Should-BeCollection ("?1", "?2")
 			$collection | ForEach-Object { $_.Value } | Should-BeCollection ("foo", "bar")
 		}
 
 		It "should create a collection from the specified list of postional parameters" {
-			[Belin.Sql.SqlParameterCollection] $collection = [List[object]]::new(("foo", "bar"))
+			[Belin.Sql.ParameterCollection] $collection = [List[object]]::new(("foo", "bar"))
 			$collection | ForEach-Object { $_.Name } | Should-BeCollection ("?1", "?2")
 			$collection | ForEach-Object { $_.Value } | Should-BeCollection ("foo", "bar")
 		}
 
 		It "should create a collection from the specified hash table of named parameters" {
-			[Belin.Sql.SqlParameterCollection] $collection = @{ foo = "bar"; baz = "qux" }
+			[Belin.Sql.ParameterCollection] $collection = @{ foo = "bar"; baz = "qux" }
 			Compare-Object @("@foo", "@baz") ($collection | ForEach-Object { $_.Name }) | Should-BeNull
 			Compare-Object @("bar", "qux") ($collection | ForEach-Object { $_.Value }) | Should-BeNull
 		}
