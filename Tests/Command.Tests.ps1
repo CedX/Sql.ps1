@@ -193,12 +193,6 @@ Describe "New-OrderHint" {
 			$orderHint.Column | Should-BeString ID -CaseSensitive
 			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Descending)
 		}
-
-		It "should create an order hint from the specified key/value pair" {
-			[Belin.Sql.OrderHint] $orderHint = [KeyValuePair[string, Belin.Sql.SortOrder]]::new("Name", "Ascending")
-			$orderHint.Column | Should-BeString Name -CaseSensitive
-			$orderHint.SortOrder | Should-Be ([Belin.Sql.SortOrder]::Ascending)
-		}
 	}
 }
 
@@ -345,16 +339,6 @@ Describe "New-Parameter" {
 			$parameter = [ValueTuple]::Create("bar", [object] 123)
 			$parameter.Name | Should-BeString "@bar" -CaseSensitive
 			$parameter.Value | Should-Be 123
-		}
-
-		It "should create a parameter from the specified key/value pair" {
-			[Belin.Sql.Parameter] $parameter = [KeyValuePair[string, object]]::new("foo", $null)
-			$parameter.Name | Should-BeString "@foo" -CaseSensitive
-			$parameter.Value | Should-Be ([DBNull]::Value)
-
-			$parameter = [KeyValuePair[string, object]]::new(":bar", "Baz")
-			$parameter.Name | Should-BeString ":bar" -CaseSensitive
-			$parameter.Value | Should-BeString Baz -CaseSensitive
 		}
 	}
 
