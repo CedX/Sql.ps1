@@ -26,8 +26,8 @@
 		<InternalsVisibleTo Include="$(RootNamespace).Tests" />
 		<PackageReference Update="FSharp.Core" Version="11.0.101" />
 		<!-- <PackageReference Include="Belin.Sql" Version="2027.01.0" /> TODO enable this line -->
-		<PackageReference Include="System.Data.Odbc" Version="10.0.14" />
-		<PackageReference Include="System.Data.OleDb" Version="10.0.14" />
+		<PackageReference Include="System.Data.Odbc" Version="11.0.0" />
+		<PackageReference Include="System.Data.OleDb" Version="11.0.0" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
 		<PackageReference Include="System.Management.Automation" Version="7.7.0" />
 		<ProjectReference Include="D:/DotNet/Sql/Sources/Sql.csproj" /> <!-- TODO remove this line -->
