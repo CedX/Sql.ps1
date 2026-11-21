@@ -1,6 +1,6 @@
 # Changelog
 
-## Version [2027.01.0](https://github.com/CedX/Sql.ps1/compare/v2026.12.0...v2027.01.0)
+## Version [2027.1.0](https://github.com/CedX/Sql.ps1/compare/v2026.12.0...v2027.1.0)
 - Updated the package dependencies.
 
 ## Version [2026.12.0](https://github.com/CedX/Sql.ps1/compare/v2026.11.0...v2026.12.0)

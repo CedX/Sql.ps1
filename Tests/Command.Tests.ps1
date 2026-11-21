@@ -409,17 +409,17 @@ Describe "New-ParameterCollection" {
 		$parameter.DbType | Should-Be ([DbType]::AnsiString)
 	}
 
-	Context "AddWithValue" {
+	Context "AddParameter" {
 		It "should add a new parameter to the collection" {
 			$collection = New-SqlParameterCollection
 			$collection | Should-BeCollection -Count 0
 
-			$parameter = $collection.AddWithValue("Name", "Value1")
+			$parameter = $collection.AddParameter("Name", "Value1")
 			$collection | Should-BeCollection -Count 1
 			$parameter.Name | Should-BeString "@Name" -CaseSensitive
 			$parameter.Value | Should-BeString "Value1" -CaseSensitive
 
-			$parameter = $collection.AddWithValue("Value2")
+			$parameter = $collection.AddParameter("Value2")
 			$collection | Should-BeCollection -Count 2
 			$parameter.Name | Should-BeString "?2" -CaseSensitive
 			$parameter.Value | Should-BeString "Value2" -CaseSensitive
