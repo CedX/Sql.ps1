@@ -34,7 +34,7 @@ type GetFirst() =
       this.WriteError (ErrorRecord(ex, "Connection.QueryFirst", ErrorCategory.InvalidOperation, connection))
 
 /// Executes a parameterized SQL query that selects a single value.
-[<Cmdlet(VerbsCommon.Get, "Scalar"); OutputType(typeof<objnull>)>]
+[<Cmdlet(VerbsCommon.Get, "Scalar"); OutputType(typeof<obj>)>]
 type GetScalar() =
   inherit Cmdlet()
 
@@ -52,7 +52,7 @@ type GetScalar() =
 
   /// The type of object to return.
   [<Parameter; ValidateNotNull>]
-  member val As = typeof<objnull> with get, set
+  member val As = typeof<obj> with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
