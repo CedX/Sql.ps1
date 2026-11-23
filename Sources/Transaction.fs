@@ -11,7 +11,7 @@ type CompleteTransaction() =
 
   /// The transaction to commit.
   [<Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)>]
-  member val InputObject: IDbTransaction | null = null with get, set
+  member val InputObject: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () = (nonNull this.InputObject).Commit()
@@ -23,7 +23,7 @@ type StartTransaction() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The isolation level for the transaction to use.
   [<Parameter(Position = 2)>]
@@ -42,7 +42,7 @@ type UndoTransaction() =
 
   /// The transaction to roll back.
   [<Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)>]
-  member val InputObject: IDbTransaction | null = null with get, set
+  member val InputObject: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () = (nonNull this.InputObject).Rollback()

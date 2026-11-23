@@ -20,7 +20,7 @@ type NewCommand() =
 
   /// The transaction within which the command executes.
   [<Parameter>]
-  member val Transaction: IDbTransaction | null = null with get, set
+  member val Transaction: IDbTransaction|null = null with get, set
 
   /// Value indicating how the command is interpreted.
   [<Parameter>]
@@ -41,7 +41,7 @@ type NewCommandBuilder() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, ParameterSetName = "Connection", Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The position of the catalog name in a qualified table name.
   [<Parameter(ParameterSetName = "LastInsertIdFunction"); Parameter(ParameterSetName = "SupportsReturningClause")>]

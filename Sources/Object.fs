@@ -11,7 +11,7 @@ type FindObject() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The type of object to find.
   [<Parameter(Mandatory = true, Position = 2)>]
@@ -35,7 +35,7 @@ type FindObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: CommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder|null = null with get, set
 
   /// The list of columns to select. By default, all columns.
   [<Parameter; ValidateNotNull>]
@@ -47,7 +47,7 @@ type FindObject() =
 
   /// The transaction within which the command executes.
   [<Parameter>]
-  member val Transaction: IDbTransaction | null = null with get, set
+  member val Transaction: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
@@ -64,7 +64,7 @@ type MeasureObject() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The type of object to count.
   [<Parameter(Mandatory = true, Position = 2, ValueFromPipeline = true)>]
@@ -76,7 +76,7 @@ type MeasureObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: CommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder|null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -84,7 +84,7 @@ type MeasureObject() =
 
   /// The transaction within which the command executes.
   [<Parameter>]
-  member val Transaction: IDbTransaction | null = null with get, set
+  member val Transaction: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
@@ -99,7 +99,7 @@ type PublishObject() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The entity to insert.
   [<Parameter(Mandatory = true, Position = 2, ValueFromPipeline = true)>]
@@ -107,7 +107,7 @@ type PublishObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: CommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder|null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -115,7 +115,7 @@ type PublishObject() =
 
   /// The transaction within which the command executes.
   [<Parameter>]
-  member val Transaction: IDbTransaction | null = null with get, set
+  member val Transaction: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
@@ -133,7 +133,7 @@ type RemoveObject() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The entity to delete.
   [<Parameter(Mandatory = true, ParameterSetName = "InputObject", Position = 2, ValueFromPipeline = true)>]
@@ -153,7 +153,7 @@ type RemoveObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: CommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder|null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -161,7 +161,7 @@ type RemoveObject() =
 
   /// The transaction within which the command executes.
   [<Parameter>]
-  member val Transaction: IDbTransaction | null = null with get, set
+  member val Transaction: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
@@ -179,7 +179,7 @@ type TestObject() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The type of object to check.
   [<Parameter(Mandatory = true, Position = 2)>]
@@ -191,7 +191,7 @@ type TestObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: CommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder|null = null with get, set
 
   /// The wait time, in seconds, before terminating the attempt to execute the command and generating an error.
   [<Parameter; ValidateRange(ValidateRangeKind.NonNegative)>]
@@ -199,7 +199,7 @@ type TestObject() =
 
   /// The transaction within which the command executes.
   [<Parameter>]
-  member val Transaction: IDbTransaction | null = null with get, set
+  member val Transaction: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
@@ -214,7 +214,7 @@ type UpdateObject() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The entity to update.
   [<Parameter(Mandatory = true, Position = 2, ValueFromPipeline = true)>]
@@ -222,7 +222,7 @@ type UpdateObject() =
 
   /// An optional command builder used to build the SQL query to be executed.
   [<Parameter>]
-  member val Builder: CommandBuilder | null = null with get, set
+  member val Builder: CommandBuilder|null = null with get, set
 
   /// The list of columns to update. By default, all columns.
   [<Parameter; ValidateNotNull>]
@@ -234,7 +234,7 @@ type UpdateObject() =
 
   /// The transaction within which the command executes.
   [<Parameter>]
-  member val Transaction: IDbTransaction | null = null with get, set
+  member val Transaction: IDbTransaction|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =

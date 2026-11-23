@@ -12,15 +12,15 @@ type GetFirst() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The command to be executed.
   [<Parameter(Mandatory = true, Position = 2)>]
-  member val Command: Command | null = null with get, set
+  member val Command: Command|null = null with get, set
 
   /// The parameters of the SQL statement.
   [<Parameter(Position = 3)>]
-  member val Parameters: ParameterCollection | null = null with get, set
+  member val Parameters: ParameterCollection|null = null with get, set
 
   /// The type of objects to return.
   [<Parameter; ValidateNotNull>]
@@ -40,15 +40,15 @@ type GetScalar() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The command to be executed.
   [<Parameter(Mandatory = true, Position = 2)>]
-  member val Command: Command | null = null with get, set
+  member val Command: Command|null = null with get, set
 
   /// The parameters of the SQL statement.
   [<Parameter(Position = 3)>]
-  member val Parameters: ParameterCollection | null = null with get, set
+  member val Parameters: ParameterCollection|null = null with get, set
 
   /// The type of object to return.
   [<Parameter; ValidateNotNull>]
@@ -66,15 +66,15 @@ type GetSingle() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The command to be executed.
   [<Parameter(Mandatory = true, Position = 2)>]
-  member val Command: Command | null = null with get, set
+  member val Command: Command|null = null with get, set
 
   /// The parameters of the SQL statement.
   [<Parameter(Position = 3)>]
-  member val Parameters: ParameterCollection | null = null with get, set
+  member val Parameters: ParameterCollection|null = null with get, set
 
   /// The type of objects to return.
   [<Parameter; ValidateNotNull>]
@@ -95,15 +95,15 @@ type InvokeNonQuery() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The command to be executed.
   [<Parameter(Mandatory = true, Position = 2)>]
-  member val Command: Command | null = null with get, set
+  member val Command: Command|null = null with get, set
 
   /// The parameters of the SQL statement.
   [<Parameter(Position = 3)>]
-  member val Parameters: ParameterCollection | null = null with get, set
+  member val Parameters: ParameterCollection|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
@@ -117,15 +117,15 @@ type InvokeQuery() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1)>]
-  member val Connection: IDbConnection | null = null with get, set
+  member val Connection: IDbConnection|null = null with get, set
 
   /// The command to be executed.
   [<Parameter(Mandatory = true, Position = 2)>]
-  member val Command: Command | null = null with get, set
+  member val Command: Command|null = null with get, set
 
   /// The parameters of the SQL statement.
   [<Parameter(Position = 3)>]
-  member val Parameters: ParameterCollection | null = null with get, set
+  member val Parameters: ParameterCollection|null = null with get, set
 
   /// The type of objects to return.
   [<Parameter; ValidateCount(1, 7)>]

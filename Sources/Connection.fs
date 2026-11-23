@@ -12,7 +12,7 @@ type CloseConnection() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)>]
-  member val InputObject: IDbConnection | null = null with get, set
+  member val InputObject: IDbConnection|null = null with get, set
 
   /// Value indicating whether the connection should also be disposed.
   [<Parameter>]
@@ -80,7 +80,7 @@ type OpenConnection() =
 
   /// The connection to the data source.
   [<Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)>]
-  member val InputObject: IDbConnection | null = null with get, set
+  member val InputObject: IDbConnection|null = null with get, set
 
   /// Performs execution of this command.
   override this.ProcessRecord () =
